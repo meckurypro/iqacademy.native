@@ -9,6 +9,7 @@ import { copyShareClosed, fileSize, mergeMessages, type ClassMessage } from "@/s
 import { getPending, setPending } from "@/shared/verify";
 import { setClockSkew } from "@/shared/web/time";
 import { kv } from "@/core/kv";
+import { guardIncomingUrl, MAX_ESCAPES } from "@/shell/incomingLink";
 
 describe("naira", () => {
   it("matches the web's toLocaleString('en-NG') output", () => {
@@ -100,5 +101,19 @@ describe("pending verification", () => {
     expect(getPending()?.email).toBe("a@b.com");
     kv.setJson("iq:pending-verify", { email: "a@b.com", at: Date.now() - 25 * 3600 * 1000 });
     expect(getPending()).toBeNull();
+  });
+});
+
+describe("deep link guard (decode-uri-component DoS, ADR-015)", () => {
+  it("lets real links through, including a realistic auth callback with a long JWT fragment", () => {
+    const jwt = "eyJ" + "a".repeat(900) + "." + "b".repeat(300) + "." + "c".repeat(60);
+    for (const u of ["iqacademy://class/7b0c2f1e-1111-2222-3333-444455556666", "iqacademy://notifications", "https://classes.promptiq.com.ng/pay/callback?reference=IQA-ABC123&trxref=IQA-ABC123",
+      `iqacademy://auth/callback#access_token=${jwt}&refresh_token=abcdef123456&expires_in=3600&token_type=bearer&type=signup`, "iqacademy://messages?q=hello%20world%21"]) expect(guardIncomingUrl(u)).toBe(u);
+  });
+  it("drops the crafted inputs that make decode-uri-component 0.2.2 quadratic, and absurdly long links", () => {
+    expect(guardIncomingUrl("iqacademy://x?a=" + "%FF%FE".repeat(400))).toBeNull();
+    expect(guardIncomingUrl("iqacademy://x?a=" + "%".repeat(MAX_ESCAPES + 1))).toBeNull();
+    expect(guardIncomingUrl("iqacademy://x?a=" + "%".repeat(MAX_ESCAPES))).not.toBeNull();
+    expect(guardIncomingUrl("iqacademy://x/" + "a".repeat(9000))).toBeNull();
   });
 });

@@ -39,8 +39,20 @@ Files under `src/shared/web/`, `*.generated.ts(x)` are written by `scripts/sync-
 ## ADR-011 One native baseline for every module
 All planned native modules are installed and their permissions configured **now** (`port/NATIVE_DEPS.md`), so parallel sessions never each demand a new binary. Verified by offline `expo prebuild` for both platforms.
 
+## ADR-012 Payments: poll verify with the reference, no deep-link return (verified 2026-10-08)
+`paystack-init-payment` already returns `reference`, and `paystack-verify-payment` is idempotent. Native opens `authorization_url` in the in-app browser, then polls verify with that reference when the browser closes / the app resumes; the webhook finishes the payment server-side regardless. `callback_url` must share the origin of the `SITE_URL` secret or it is ignored, so native passes the web's own `https://classes.promptiq.com.ng/pay/callback`. Backend change B6 is dropped. See `port/BACKEND.md`.
+
+## ADR-013 Push and reminders
+Server: enable `pg_net`, trigger on `notifications` INSERT → `send-push` Edge Function → Expo Push (B1/B2). The in-app row stays the source of truth (`channel = in_app`; the enum's `push` value is unused). Class reminders are created by a minute-level cron (`class_clock_tick`) using `app_settings.class_reminder_minutes_before`; native schedules local reminders from cached classes using that same setting, registers `local_reminders = true` on its token, and the server skips `class_reminder`, `class_reminder_staff` and `class_tomorrow` pushes for such devices (no double alert, works offline).
+
+## ADR-014 Domain
+`classes.promptiq.com.ng` is both `WEB_HOST` (universal/app links) and the base of `EXPO_PUBLIC_WEB_BASE_URL`. Hosting the association files is web-repo work (W1).
+
 ## Open (needs the owner)
 - iOS bundle id / Android package default to `ng.com.promptiq.iqacademy` (from the web domain). Confirm or set `APP_BUNDLE_ID`.
 - `EAS_PROJECT_ID`, Apple/Google accounts, APNs key, FCM v1 credentials.
-- `WEB_HOST` (production web domain) for universal/app links and `EXPO_PUBLIC_WEB_BASE_URL`.
-- Where Edge Function / base-schema source lives (D1).
+- Confirm the `SITE_URL` Edge Function secret equals `https://classes.promptiq.com.ng` (ADR-012).
+- ~~Where Edge Function / base-schema source lives (D1)~~ resolved: Edge Functions live only in Supabase (read with the connector); base schema is the live database (`port/BACKEND.md`).
+
+## ADR-015 Dependency audit (2026-10-08, `npm audit --omit=dev`: 44 findings, 5 root advisories)
+All five are **transitive** in Expo/React Native tooling; none is a package we chose. Checked against the Android bundle's source map (88 packages shipped): `braces`, `node-forge`, `sprintf-js`, `uuid` are **not** in the app bundle. **`decode-uri-component` is** (expo-router 57.0.25 → query-string 7.1.3 → decode-uri-component 0.2.2, GHSA-vcc3-ghjq-m6fr). The only upstream fix is expo-router 58 (an SDK major), so `npm audit fix --force` is **not** used (it would break the SDK pins). Measured impact: quadratic CPU cost on crafted percent-escapes (256 chars 135 ms, 1024 chars 2.4 s, 2048 chars 10.9 s on a desktop), so one malicious link could freeze the app. **Mitigation shipped:** `src/app/+native-intent.tsx` drops incoming links with more than 40 `%` escapes or longer than 8192 characters before the router parses them (`src/shell/incomingLink.ts`, unit-tested; real links and JWT fragments pass). Revisit at the next SDK upgrade, then remove the guard if the dependency is fixed. iOS bundle not inspected separately (same JavaScript).

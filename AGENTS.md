@@ -1,10 +1,10 @@
 # IQ Academy native app: rules for every AI session
 
-This is the React Native (Expo) port of the web app `meckurypro/iqacademy`. It is built by **parallel sessions, one module each**, against a web app that is **still changing**. Read `port/PLAN.md` first (modules, owned paths, order), then `port/DECISIONS.md`.
+This is the React Native (Expo) port of the web app `meckurypro/iqacademy`. It is built by **parallel sessions, one module each**, against a web app that is **still changing**. Read `port/PLAN.md` first (modules, owned paths, order), then `port/DECISIONS.md` and `port/BACKEND.md` (verified facts about the live Supabase project). Kickoff prompts for each kind of session are in `port/prompts/`.
 
 ## Start of every session (about 5 minutes)
 1. Clone/update the web repo next to this one (`../iqacademy`, or set `WEB_REPO`). `git pull` here.
-2. `node scripts/web-drift.mjs` (fetches web, compares with `last_reviewed_web_sha` in `port/WEB_SYNC.md`, lists affected files **by owner module**, migrations, unmapped files, route drift).
+2. `node scripts/web-drift.mjs` (and, if the Supabase connector is attached, run `port/sql/inventory.sql` read-only and diff it against `port/BACKEND.md`: the database is sometimes ahead of the web) (fetches web, compares with `last_reviewed_web_sha` in `port/WEB_SYNC.md`, lists affected files **by owner module**, migrations, unmapped files, route drift).
 3. Triage what it prints. **Yours** → port it. **Someone else's** → append to `port/inbox/<module>.md` and do not touch their files. **Migration** → update `port/CONTRACTS.md` (`node scripts/gen-contracts.mjs`) and tell M3/M4. **New route** → add to `port/route-manifest.json`, run `node scripts/routes.mjs`. **Generated file affected** → `npm run sync-web`.
 4. Write the triage in `port/WEB_SYNC.md`, **then** bump `last_reviewed_web_sha`. Never bump first.
 5. Pick your module: read `port/PLAN.md` status, take the highest-priority module whose dependencies are done and that nobody has claimed (open PR or branch `port/<module>-*`). Claim it by opening a draft PR immediately.
@@ -15,7 +15,7 @@ This is the React Native (Expo) port of the web app `meckurypro/iqacademy`. It i
 - **Never import the Supabase client** in screens (`@supabase/supabase-js`, `@/core/supabase`). Use `useQuery` / `useRpc` / `mutate` from `@/data`. ESLint enforces it. New writes: add the RPC to `src/data/policies.ts` only if it is safe to repeat; otherwise it is online-only by default.
 - **Use `@/ui` primitives** and `useFeedback()` (`run` for every write, `confirm` for destructive actions, `friendly()` for errors). Show times only through `@/shared/web/time` helpers (Lagos time, server-corrected clock); never `new Date()` / `toLocale*` for anything displayed.
 - **No new native module, plugin option or permission without recording it in `port/NATIVE_DEPS.md` first.** It forces a new binary.
-- **Migrations and Edge Functions belong to the web repo / `iq-academy-db`**, never here. Propose them in your PR description.
+- **Never write to the Supabase project** (no `apply_migration`, `deploy_edge_function`, DML/DDL through `execute_sql`, `merge_branch`). Read-only SELECTs and `get_edge_function` are fine. Backend changes are made only by the backend session (`port/prompts/01-backend-web-session.md`) after the owner approves; list what you need under "Backend requests" in your PR.
 - **Never guess an Expo/RN API.** Read the installed package's types in `node_modules` or the versioned docs. Say what you could not verify.
 - Replace the M5 route stub with the real screen and keep the default export. Role guards live in `port/route-manifest.json`.
 

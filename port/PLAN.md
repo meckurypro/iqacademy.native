@@ -116,7 +116,7 @@ All of these land in the **web repo's `supabase/migrations/` (53+)** or the Edge
 | B3 | Idempotency key on `send_class_message` (and receipt submit) | safe offline retry |
 | B4 | In‑app **account deletion** RPC/flow | Apple requires it for apps with sign‑up **[verify current guideline text]** |
 | B5 | Auth redirect allow‑list: app scheme + universal‑link domain; decide PKCE vs implicit for native | email confirm / reset |
-| B6 | Paystack return: web passes `callback_url` already (`payment.ts`); either bounce `https` page → app scheme, or have `paystack-init-payment` return `reference` so native polls `paystack-verify-payment` | payments |
+| ~~B6~~ | ~~Paystack return~~: **not needed**. Verified: init already returns `reference`, verify is idempotent (ADR-012) | payments |
 | B7 | `app_settings.min_native_version` + RPC, force‑update screen | web/backend can change RPC contracts faster than users update (`check_in` was replaced 3 times) |
 
 ---
@@ -242,7 +242,7 @@ Big sessions can split: M7a (check‑in vs home), M9a (class screen vs instructo
 
 | # | Decision | Default |
 |---|---|---|
-| D1 | Where do base schema + Edge Function source live, and where do new migrations/functions go? | **web repo `supabase/` for migrations; functions where the existing ones live** |
+| D1 | ~~Where do base schema + Edge Function source live?~~ **Resolved:** Edge Functions live only in Supabase; schema is the live DB. New migrations go in the web repo's `supabase/migrations/` (53+) *and* are applied by the backend session; see `port/BACKEND.md` | resolved |
 | D2 | Native repo name, iOS bundle id, Android package, EAS org, Apple/Google dev account status | needed |
 | D3 | Offline check‑in | **Online‑only** (server decides window, entitlement, PIN) |
 | D4 | Biometric scope | **App lock + quick unlock + step‑up on admin money actions, each toggleable** |

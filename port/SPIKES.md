@@ -10,5 +10,5 @@ Run on a **development build** (`eas build --profile development`), open `/dev/s
 | S4 SQLCipher | **code written, needs device** | `/dev/spikes` → S4. Passes only if `PRAGMA cipher_version` returns a version, the right key reads, wrong/no key is rejected |
 | S5 Realtime on RN | needs account + M11a | sign in, background the app 2 min, create a notification row server-side, foreground: the bell must update without a manual refresh. If not, adjust `DataProvider` resume logic |
 | S6 Push round trip | needs M11a + B1/B2 + APNs/FCM | physical device only |
-| S7 Paystack return | needs M7b + B6 | `openAuthSessionAsync`; cancel / fail / success paths |
+| S7 Paystack return | needs M7b (B6 dropped, ADR-012) | in-app browser, then poll `paystack-verify-payment` with the reference; test cancel / fail / success / app-killed-mid-payment (webhook should still complete it) |
 | S8 Door QR scan | needs M7a | low light, glare, torch, 20 scans at arm's length |

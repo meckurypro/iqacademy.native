@@ -1,0 +1,40 @@
+# Backend facts (verified against the live Supabase project on 2026-10-08)
+
+Source: read-only queries through the Supabase connector (project `IQ Academy App`, ref `hwphintmgluqfhtljadg`, region eu-west-1, Postgres 17). Re-verify before relying on anything here: the web team changes the backend daily. `port/sql/inventory.sql` re-runs the checks. **Sessions never write to this project.** Backend changes are made only by the backend session (port/prompts/01-backend-web-session.md), after the owner approves.
+
+## Domain and URLs
+Web app: `https://classes.promptiq.com.ng`. Native deep-link scheme: `iqacademy://`. Universal/app links host (`WEB_HOST`): `classes.promptiq.com.ng`.
+
+## Edge Functions (source lives only in Supabase; read it with the connector's `get_edge_function`)
+| function | JWT | what native needs to know |
+|---|---|---|
+| `paystack-init-payment` | yes | POST `{ instalment_id, callback_url? }` → `{ authorization_url, access_code, reference }`. **Returns `reference`.** `callback_url` is honoured only if its origin equals the `SITE_URL` secret, otherwise it silently falls back to `SITE_URL/payment/callback`. Pay instalments in order; older unfinished attempts are marked abandoned |
+| `paystack-verify-payment` | yes | POST `{ reference }` → `{ status: succeeded \| pending \| failed \| needs_review }`. **Idempotent, safe to poll.** Already-succeeded payments return `succeeded` without calling Paystack |
+| `paystack-webhook` | **no** (Paystack calls it) | completes payments server-side even if the app never reports back |
+| `paystack-create-recipient`, `process-payouts`, `process-refund`, `create-staff-user` | yes | admin-only flows (M10a/M10c); read the source before porting |
+
+Consequence for M7b: no deep-link return page is needed. Open `authorization_url` in the in-app browser, keep `reference`, and when the browser closes or the app returns to the foreground, poll `paystack-verify-payment` (e.g. every 2 s for up to 30 s). Pass `callback_url = https://classes.promptiq.com.ng/pay/callback` (same origin as the web). Backend change B6 is therefore **not needed**. Open question for the owner: confirm the `SITE_URL` secret is `https://classes.promptiq.com.ng`.
+
+## Database
+- Extensions installed: `pg_cron`, `supabase_vault`, `pgcrypto`, `pg_trgm`, `btree_gist`, `uuid-ossp`, `pg_stat_statements`. **`pg_net` is available but NOT installed**: a trigger cannot call an Edge Function until it is enabled (needed for push, B2).
+- Realtime publication (`supabase_realtime`): `attendance, checkin_denials, class_messages, class_sessions, notifications, refunds, user_roles`.
+- `notifications`: columns `id, user_id, broadcast_id, type, title, body, data jsonb, channel (in_app|email|sms|whatsapp|push), status (pending|sent|failed), send_after, sent_at, read_at, error, created_at, sender_label`. RLS: own rows only (select / update read / delete). A trigger `notifications_sender` fills `sender_label`. **All 54 rows are `channel = in_app`.** Types seen: `class_assigned, role_changed, class_reminder, announcement, class_reminder_staff, run_cancelled, start_changed, custom_class_staff, custom_class_admin, custom_class_invite, pin_changed, class_tomorrow, session_cancelled, centre_earning, offline_receipt, emergency_class_admin, enrolment_active, payment_received`.
+- `app_settings(key text pk, value jsonb, ...)`: policy `settings_select` = **readable by everyone**, `settings_admin` = admin only. Keys today: `auto_close_after_hours, auto_issue_certificates, checkin_grace_minutes_after_end, checkin_opens_minutes_before, class_clock_catchup_hours, class_reminder_minutes_before, currency, enrolment_expiry_days, makeup_max_classes, makeup_window_months, min_payout_kobo, offline_payment_details, withdraw_opens_days_before_month_end`. Local reminders (M11a) must read `class_reminder_minutes_before`, never hard-code 60.
+- pg_cron jobs: `iqa-class-clock` every minute (`private.class_clock_tick()`), `iqa-class-reminders` 07:00 UTC daily (`remind_upcoming_classes()`), `iqa-run-reminders` 06:00 UTC, `iqa-generate-sessions` 01:00, `iqa-expire-enrolments` 01:30, `iqa-auto-close-classes` hourly :15, `iqa-close-month-statements` monthly.
+- PIN: `student_pins(student_id, pin_hash, failed_attempts, locked_until, pw_failed_attempts, pw_locked_until)`; RPCs `pin_required, has_pin, set_pin(p_pin), change_pin(p_new_pin, p_password, p_password_confirm)`. **Staff PIN RPCs exist in the database but the web does not call them yet:** `set_staff_pin, change_staff_pin, has_staff_pin, verify_staff_pin` (table `staff_pins`, 0 rows). Expect a web feature; check the web before porting hand check-in.
+- `send_class_message(p_session_id, p_body, p_media_path, p_media_name, p_media_mime, p_media_size)` has **no client id**; `class_messages` has no client id column. Not safely repeatable (B3).
+- `profiles` has `deleted_at`, `is_active`; there is **no account-deletion RPC** (B4).
+- No push-token table, no push function (B1/B2).
+- All 89 RPCs the web calls exist. Database functions the web does **not** call yet (36): `admin_save_package, approve_payout, auto_close_overdue_sessions, begin_paystack_refund, cancel_payout, centre_statement, centre_students, change_staff_pin, class_message_feed, complete_session, create_payout_drafts, expire_stale_enrolments, fail_payout, fail_refund, generate_class_sessions, generate_upcoming_sessions, get_user_detail, handle_transfer_event, has_staff_pin, instructor_active_classes, instructor_message_feed, issue_certificate, mark_messages_read, public_centre_count, record_manual_payment, record_payment_failure, record_payment_success, remind_run_endings, remind_upcoming_classes, review_project, revoke_certificate, save_course_outline, set_staff_pin, set_user_active, verify_certificate, verify_staff_pin`. Most are cron/webhook internals; staff PIN, certificates, project review and `set_user_active` look like upcoming web features. Re-run `port/sql/inventory.sql` at the start of a session and diff.
+
+## Backend changes the native app needs (owner approves each; backend session applies)
+| ID | Change | Notes from verification |
+|---|---|---|
+| B1 | `device_push_tokens` table + RLS + `register_push_token` / `unregister_push_token` RPCs | columns: user_id, expo_push_token (unique), platform, device_name, app_version, `local_reminders boolean`, created_at, last_seen_at |
+| B2 | Push sender: enable `pg_net`; AFTER INSERT trigger on `notifications` → Edge Function `send-push` (verify_jwt false, shared secret in Vault) → Expo Push API; mark `status/error`; skip `class_reminder, class_reminder_staff, class_tomorrow` for devices with `local_reminders = true`; payload `{ route, notification_id }` | `channel` already has a `push` value; keep rows `in_app` as the source of truth |
+| B3 | `send_class_message(..., p_client_id uuid default null)` + unique `(sender_id, client_id)` | additive; old callers unaffected. Unblocks queueing chat sends offline |
+| B4 | In-app account deletion | Apple requires it for apps with sign-up (verify current guideline). Financial rows reference profiles, so design = deactivate + anonymise PII + disable auth user, keep ledger rows. Needs owner decision |
+| B5 | Auth redirect allow-list: `iqacademy://auth/callback`, `https://classes.promptiq.com.ng/**` | Supabase dashboard setting, not SQL |
+| ~~B6~~ | ~~Paystack return~~ | **not needed** (see above) |
+| B7 | `app_settings` row `min_native_version` `{ "ios": "1.0.0", "android": "1.0.0" }` | already readable by everyone: no new RPC |
+| W1 (web repo) | `public/.well-known/apple-app-site-association` and `assetlinks.json` on `classes.promptiq.com.ng` | needs Apple Team ID + bundle id, and the Android package + release SHA-256 (after first EAS build) |
