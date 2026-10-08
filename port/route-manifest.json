@@ -1,0 +1,308 @@
+{
+  "_doc": "Single source of truth for routes. web = the web route path; file = expo-router file under src/app; module = owner (port/PLAN.md); page = web page file; guard = roles allowed (omit = any signed-in role; the database is the real gatekeeper). Run `node scripts/routes.mjs` to create missing stubs and `node scripts/routes.mjs --check` to compare with the web App.tsx.",
+  "routes": [
+    {
+      "web": "/",
+      "file": "(app)/index.tsx",
+      "module": "M5",
+      "page": "RoleHome (StudentHome/InstructorHome/AdminHome/CoordinatorHome/DirectorHome/StaffHome)",
+      "stub": false
+    },
+    {
+      "web": "/welcome",
+      "file": "(public)/welcome.tsx",
+      "module": "M6",
+      "page": "src/pages/Landing.tsx",
+      "note": "web serves Landing at '/' when signed out; native uses /welcome because '/' is the signed-in home"
+    },
+    {
+      "web": "/login",
+      "file": "(public)/login.tsx",
+      "module": "M6",
+      "page": "src/pages/Login.tsx"
+    },
+    {
+      "web": "/reset-password",
+      "file": "reset-password.tsx",
+      "module": "M6",
+      "page": "src/pages/ResetPassword.tsx",
+      "note": "reachable signed in or out (recovery link signs the user in)"
+    },
+    {
+      "web": "/verify-email",
+      "file": "verify-email.tsx",
+      "module": "M6",
+      "page": "src/pages/VerifyEmail.tsx",
+      "note": "reachable signed in or out"
+    },
+    {
+      "web": "(auth callback)",
+      "file": "auth/callback.tsx",
+      "module": "M6",
+      "page": "(native only)",
+      "note": "email confirmation / recovery deep link: iqacademy://auth/callback"
+    },
+    {
+      "web": "/history",
+      "file": "(app)/history.tsx",
+      "module": "M9a",
+      "page": "src/pages/InstructorHistory.tsx"
+    },
+    {
+      "web": "/class/:id",
+      "file": "(app)/class/[id].tsx",
+      "module": "M9a",
+      "page": "src/pages/ClassScreen.tsx"
+    },
+    {
+      "web": "/users",
+      "file": "(app)/users.tsx",
+      "module": "M10a",
+      "page": "src/pages/Users.tsx"
+    },
+    {
+      "web": "/announce",
+      "file": "(app)/announce.tsx",
+      "module": "M10a",
+      "page": "src/pages/Announce.tsx"
+    },
+    {
+      "web": "/notifications",
+      "file": "(app)/notifications.tsx",
+      "module": "M11a",
+      "page": "src/pages/Notifications.tsx"
+    },
+    {
+      "web": "/messages",
+      "file": "(app)/messages/index.tsx",
+      "module": "M8",
+      "page": "src/pages/Messages.tsx via MessagesRoute"
+    },
+    {
+      "web": "/messages/:id",
+      "file": "(app)/messages/[id].tsx",
+      "module": "M8",
+      "page": "src/pages/ClassChannel.tsx via MessagesRoute"
+    },
+    {
+      "web": "/class-messages",
+      "file": "(app)/class-messages.tsx",
+      "module": "M8",
+      "page": "src/pages/ClassMessagesAdmin.tsx",
+      "guard": [
+        "admin",
+        "super_admin"
+      ]
+    },
+    {
+      "web": "/check-ins",
+      "file": "(app)/check-ins.tsx",
+      "module": "M10a",
+      "page": "src/pages/HandCheckIns.tsx",
+      "guard": [
+        "admin",
+        "super_admin"
+      ]
+    },
+    {
+      "web": "/reviews",
+      "file": "(app)/reviews.tsx",
+      "module": "M10a",
+      "page": "src/pages/ClassReviews.tsx",
+      "guard": [
+        "admin",
+        "super_admin"
+      ]
+    },
+    {
+      "web": "/profile",
+      "file": "(app)/profile.tsx",
+      "module": "M13",
+      "page": "src/pages/Profile.tsx"
+    },
+    {
+      "web": "/manage",
+      "file": "(app)/manage.tsx",
+      "module": "M10a",
+      "page": "src/pages/Manage.tsx"
+    },
+    {
+      "web": "/centres",
+      "file": "(app)/centres.tsx",
+      "module": "M10a",
+      "page": "src/pages/Centres.tsx"
+    },
+    {
+      "web": "/roster",
+      "file": "(app)/roster.tsx",
+      "module": "M10b",
+      "page": "src/pages/Roster.tsx",
+      "guard": [
+        "admin",
+        "super_admin"
+      ]
+    },
+    {
+      "web": "/custom",
+      "file": "(app)/custom.tsx",
+      "module": "M9b",
+      "page": "src/pages/CustomClasses.tsx",
+      "guard": [
+        "admin",
+        "super_admin",
+        "instructor"
+      ]
+    },
+    {
+      "web": "/my-classes",
+      "file": "(app)/my-classes.tsx",
+      "module": "M9a",
+      "page": "src/pages/MyClasses.tsx",
+      "guard": [
+        "instructor"
+      ]
+    },
+    {
+      "web": "/schedule",
+      "file": "(app)/schedule.tsx",
+      "module": "M9b",
+      "page": "src/pages/Schedule.tsx",
+      "guard": [
+        "instructor",
+        "coordinator",
+        "centre_director",
+        "admin",
+        "super_admin"
+      ]
+    },
+    {
+      "web": "/payouts",
+      "file": "(app)/payouts.tsx",
+      "module": "M10c",
+      "page": "src/pages/Payouts.tsx"
+    },
+    {
+      "web": "/prices",
+      "file": "(app)/prices.tsx",
+      "module": "M10b",
+      "page": "src/pages/Prices.tsx"
+    },
+    {
+      "web": "/courses",
+      "file": "(app)/courses/index.tsx",
+      "module": "M10b",
+      "page": "src/pages/CourseBuilder.tsx"
+    },
+    {
+      "web": "/courses/:id",
+      "file": "(app)/courses/[id].tsx",
+      "module": "M10b",
+      "page": "src/pages/CourseBuilder.tsx"
+    },
+    {
+      "web": "/payments",
+      "file": "(app)/payments.tsx",
+      "module": "M10c",
+      "page": "src/pages/Payments.tsx"
+    },
+    {
+      "web": "/offline-payments",
+      "file": "(app)/offline-payments.tsx",
+      "module": "M10c",
+      "page": "src/pages/OfflinePayments.tsx"
+    },
+    {
+      "web": "/pay/offline/:id",
+      "file": "(app)/pay/offline/[id].tsx",
+      "module": "M7b",
+      "page": "src/pages/OfflinePay.tsx"
+    },
+    {
+      "web": "/pay/callback",
+      "file": "(app)/pay/callback.tsx",
+      "module": "M7b",
+      "page": "src/pages/PayCallback.tsx"
+    },
+    {
+      "web": "/team",
+      "file": "(app)/team/index.tsx",
+      "module": "M9b",
+      "page": "src/pages/Team.tsx"
+    },
+    {
+      "web": "/team/:centreId",
+      "file": "(app)/team/[centreId].tsx",
+      "module": "M9b",
+      "page": "src/pages/Team.tsx"
+    },
+    {
+      "web": "/instructors",
+      "file": "(app)/instructors.tsx",
+      "module": "M10a",
+      "page": "src/pages/Instructors.tsx"
+    },
+    {
+      "web": "/enrol",
+      "file": "(app)/enrol.tsx",
+      "module": "M7b",
+      "page": "src/pages/Enrol.tsx"
+    }
+  ],
+  "homes": [
+    {
+      "role": [
+        "student"
+      ],
+      "component": "src/features/student/Home.tsx",
+      "module": "M7a",
+      "page": "src/pages/StudentHome.tsx",
+      "export": "StudentHome"
+    },
+    {
+      "role": [
+        "instructor"
+      ],
+      "component": "src/features/class/InstructorHome.tsx",
+      "module": "M9a",
+      "page": "src/pages/InstructorHome.tsx",
+      "export": "InstructorHome"
+    },
+    {
+      "role": [
+        "admin",
+        "super_admin"
+      ],
+      "component": "src/features/admin-people/AdminHome.tsx",
+      "module": "M10a",
+      "page": "src/pages/AdminHome.tsx",
+      "export": "AdminHome"
+    },
+    {
+      "role": [
+        "coordinator"
+      ],
+      "component": "src/features/staff/CoordinatorHome.tsx",
+      "module": "M9b",
+      "page": "src/pages/CoordinatorHome.tsx",
+      "export": "CoordinatorHome"
+    },
+    {
+      "role": [
+        "centre_director"
+      ],
+      "component": "src/features/staff/DirectorHome.tsx",
+      "module": "M9b",
+      "page": "src/pages/DirectorHome.tsx",
+      "export": "DirectorHome"
+    },
+    {
+      "role": [
+        "(other)"
+      ],
+      "component": "src/features/staff/StaffHome.tsx",
+      "module": "M9b",
+      "page": "src/pages/StaffHome.tsx",
+      "export": "StaffHome"
+    }
+  ]
+}

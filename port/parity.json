@@ -1,0 +1,832 @@
+{
+  "rows": [
+    {
+      "web": "src/App.tsx",
+      "module": "M5",
+      "mode": "port",
+      "native": "src/app/_layout.tsx, src/app/(app)/_layout.tsx, src/shell/*",
+      "status": "wip",
+      "ported_from_sha": "0081e66",
+      "note": "shell, gate, guards, tab bar done; routes are stubs"
+    },
+    {
+      "web": "src/components/AssignSheet.tsx",
+      "module": "M10b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/ChannelRow.tsx",
+      "module": "M8",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/ChatBubble.tsx",
+      "module": "M8",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/CheckInVerdict.tsx",
+      "module": "M7a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/ClassComposer.tsx",
+      "module": "M8",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/ClassCountdown.tsx",
+      "module": "M7a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/ClockWatch.tsx",
+      "module": "M3",
+      "mode": "port",
+      "native": "src/core/clock.ts, src/shell/ClockNotice.tsx",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": ""
+    },
+    {
+      "web": "src/components/CourseOutline.tsx",
+      "module": "M7a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/CustomClassCard.tsx",
+      "module": "M9b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/CustomClassSheet.tsx",
+      "module": "M9b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/CustomClassStudents.tsx",
+      "module": "M9b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/DoorToday.tsx",
+      "module": "M9b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/ErrorBoundary.tsx",
+      "module": "M0",
+      "mode": "port",
+      "native": "src/shell/ErrorBoundary.tsx",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": ""
+    },
+    {
+      "web": "src/components/feedback.tsx",
+      "module": "M2",
+      "mode": "port",
+      "native": "src/ui/feedback.tsx",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": "toasts render in the root view, not a Modal (an open sheet covers them)"
+    },
+    {
+      "web": "src/components/Icon.tsx",
+      "module": "M2",
+      "mode": "generated",
+      "native": "src/ui/icons.generated.tsx + src/ui/Icon.tsx",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": ""
+    },
+    {
+      "web": "src/components/MakeupCard.tsx",
+      "module": "M7a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/MessageBubble.tsx",
+      "module": "M8",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/MessagesRoute.tsx",
+      "module": "M5",
+      "mode": "port",
+      "native": "src/app/(app)/messages/*",
+      "status": "wip",
+      "ported_from_sha": "0081e66",
+      "note": "route stubs only; M8 implements"
+    },
+    {
+      "web": "src/components/MyCentres.tsx",
+      "module": "M13",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/NavMenu.tsx",
+      "module": "M5",
+      "mode": "port",
+      "native": "src/shell/NavMenu.tsx",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": ""
+    },
+    {
+      "web": "src/components/PasswordFields.tsx",
+      "module": "M6",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/PinGate.tsx",
+      "module": "M7a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/PinInput.tsx",
+      "module": "M2",
+      "mode": "port",
+      "native": "src/ui/PinInput.tsx",
+      "status": "wip",
+      "ported_from_sha": "0081e66",
+      "note": "keypad input only; PinSetup / PinGate are M7a"
+    },
+    {
+      "web": "src/components/Place.tsx",
+      "module": "M2",
+      "mode": "port",
+      "native": "src/ui/Place.tsx",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": "takes an explicit size (no em units)"
+    },
+    {
+      "web": "src/components/QrScanner.tsx",
+      "module": "M7a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/ReviewSheet.tsx",
+      "module": "M7a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/RunReminder.tsx",
+      "module": "M9b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/ShareToChats.tsx",
+      "module": "M8",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/Sidebar.tsx",
+      "module": "skip",
+      "mode": "skip",
+      "native": null,
+      "status": "skip",
+      "ported_from_sha": null,
+      "note": "desktop-only / not used on phones"
+    },
+    {
+      "web": "src/components/SoloCourses.tsx",
+      "module": "M7a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/SoloPrices.tsx",
+      "module": "M10b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/components/Stars.tsx",
+      "module": "M2",
+      "mode": "port",
+      "native": "src/ui/Stars.tsx",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": ""
+    },
+    {
+      "web": "src/components/ui.tsx",
+      "module": "M2",
+      "mode": "port",
+      "native": "src/ui/ui.tsx, src/ui/Sheet.tsx, src/ui/SelectSheet.tsx",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": "Split/Main/Rail are single-column on phones"
+    },
+    {
+      "web": "src/index.css",
+      "module": "M2",
+      "mode": "generated",
+      "native": "src/theme/tokens.generated.ts",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": ""
+    },
+    {
+      "web": "src/lib/auth.tsx",
+      "module": "M3",
+      "mode": "port",
+      "native": "src/core/auth.tsx, src/core/session.tsx",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": "roles via data layer (cached/offline) + rolesReady"
+    },
+    {
+      "web": "src/lib/centre.ts",
+      "module": "M3",
+      "mode": "generated",
+      "native": "src/shared/web/centre.ts",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": ""
+    },
+    {
+      "web": "src/lib/channels.ts",
+      "module": "M3",
+      "mode": "generated",
+      "native": "src/shared/web/channels.ts",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": ""
+    },
+    {
+      "web": "src/lib/checkin.ts",
+      "module": "M7a",
+      "mode": "port",
+      "native": "src/shared/checkin.ts",
+      "status": "wip",
+      "ported_from_sha": "0081e66",
+      "note": "types/doorState only; useCheckedIn hook is M7a"
+    },
+    {
+      "web": "src/lib/classClock.ts",
+      "module": "M7a",
+      "mode": "port",
+      "native": "src/shared/classClock.ts",
+      "status": "wip",
+      "ported_from_sha": "0081e66",
+      "note": "pure part only; useTicker/useClassClock are M7a/M9a"
+    },
+    {
+      "web": "src/lib/db.ts",
+      "module": "M3",
+      "mode": "generated",
+      "native": "src/shared/web/db.ts",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": ""
+    },
+    {
+      "web": "src/lib/messages.ts",
+      "module": "M8",
+      "mode": "port",
+      "native": "src/shared/messages.ts",
+      "status": "wip",
+      "ported_from_sha": "0081e66",
+      "note": "pure part only; download/share/copy/forward + unread hook are M8"
+    },
+    {
+      "web": "src/lib/nav.ts",
+      "module": "M5",
+      "mode": "generated",
+      "native": "src/shell/nav.generated.ts",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": ""
+    },
+    {
+      "web": "src/lib/notifications.ts",
+      "module": "M11a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/lib/offline.ts",
+      "module": "M7b",
+      "mode": "port",
+      "native": "src/shared/offline.ts",
+      "status": "wip",
+      "ported_from_sha": "0081e66",
+      "note": "types/limits only; prepareReceipt → expo-image-manipulator in M7b"
+    },
+    {
+      "web": "src/lib/password.ts",
+      "module": "M3",
+      "mode": "generated",
+      "native": "src/shared/web/password.ts",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": ""
+    },
+    {
+      "web": "src/lib/payment.ts",
+      "module": "M7b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/lib/roster.ts",
+      "module": "M3",
+      "mode": "generated",
+      "native": "src/shared/web/roster.ts",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": ""
+    },
+    {
+      "web": "src/lib/supabase.ts",
+      "module": "M3",
+      "mode": "generated",
+      "native": "src/shared/web/errors.ts (MESSAGES, friendly) + src/core/errors.ts",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": ""
+    },
+    {
+      "web": "src/lib/theme.ts",
+      "module": "M2",
+      "mode": "port",
+      "native": "src/theme/ThemeProvider.tsx",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": ""
+    },
+    {
+      "web": "src/lib/time.ts",
+      "module": "M3",
+      "mode": "generated",
+      "native": "src/shared/web/time.ts",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": ""
+    },
+    {
+      "web": "src/lib/useMedia.ts",
+      "module": "skip",
+      "mode": "skip",
+      "native": null,
+      "status": "skip",
+      "ported_from_sha": null,
+      "note": "desktop-only / not used on phones"
+    },
+    {
+      "web": "src/lib/verify.ts",
+      "module": "M3",
+      "mode": "port",
+      "native": "src/shared/verify.ts",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": "localStorage → kv"
+    },
+    {
+      "web": "src/main.tsx",
+      "module": "M0",
+      "mode": "port",
+      "native": "src/app/_layout.tsx",
+      "status": "ported",
+      "ported_from_sha": "0081e66",
+      "note": ""
+    },
+    {
+      "web": "src/pages/AdminHome.tsx",
+      "module": "M10a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/Announce.tsx",
+      "module": "M10a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/Centres.tsx",
+      "module": "M10a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/ClassChannel.tsx",
+      "module": "M8",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/ClassMessagesAdmin.tsx",
+      "module": "M10a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/ClassReviews.tsx",
+      "module": "M10a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/ClassScreen.tsx",
+      "module": "M9a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/CoordinatorHome.tsx",
+      "module": "M9b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/CourseBuilder.tsx",
+      "module": "M10b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/CustomClasses.tsx",
+      "module": "M9b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/DirectorHome.tsx",
+      "module": "M9b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/Enrol.tsx",
+      "module": "M7b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/HandCheckIns.tsx",
+      "module": "M10a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/InstructorHistory.tsx",
+      "module": "M9a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/InstructorHome.tsx",
+      "module": "M9a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/InstructorMessages.tsx",
+      "module": "M8",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/Instructors.tsx",
+      "module": "M10a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/Landing.tsx",
+      "module": "M6",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/Login.tsx",
+      "module": "M6",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/Manage.tsx",
+      "module": "M10a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/Messages.tsx",
+      "module": "M8",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/MyClasses.tsx",
+      "module": "M9a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/Notifications.tsx",
+      "module": "M11a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/OfflinePay.tsx",
+      "module": "M7b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/OfflinePayments.tsx",
+      "module": "M10c",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/PayCallback.tsx",
+      "module": "M7b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/Payments.tsx",
+      "module": "M10c",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/Payouts.tsx",
+      "module": "M10c",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/Prices.tsx",
+      "module": "M10b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/Profile.tsx",
+      "module": "M13",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/ResetPassword.tsx",
+      "module": "M6",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/Roster.tsx",
+      "module": "M10b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/Schedule.tsx",
+      "module": "M9b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/StaffHome.tsx",
+      "module": "M9b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/StudentHome.tsx",
+      "module": "M7a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/Team.tsx",
+      "module": "M9b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/Users.tsx",
+      "module": "M10a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/VerifyEmail.tsx",
+      "module": "M6",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    }
+  ]
+}
