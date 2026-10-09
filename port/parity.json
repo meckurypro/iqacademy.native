@@ -6,8 +6,8 @@
       "mode": "port",
       "native": "src/app/_layout.tsx, src/app/(app)/_layout.tsx, src/shell/*",
       "status": "wip",
-      "ported_from_sha": "0081e66",
-      "note": "shell, gate, guards, tab bar done; routes are stubs"
+      "ported_from_sha": "64bc5f7",
+      "note": "shell, gate, guards, tab bars (student/instructor/coordinator/director/admin), avatar button, drawer done; 3 new routes are stubs"
     },
     {
       "web": "src/components/AssignSheet.tsx",
@@ -109,6 +109,15 @@
       "note": ""
     },
     {
+      "web": "src/components/DoorPinSheet.tsx",
+      "module": "M9a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
       "web": "src/components/DoorToday.tsx",
       "module": "M9b",
       "mode": "port",
@@ -132,8 +141,8 @@
       "mode": "port",
       "native": "src/ui/feedback.tsx",
       "status": "ported",
-      "ported_from_sha": "0081e66",
-      "note": "toasts render in the root view, not a Modal (an open sheet covers them)"
+      "ported_from_sha": "64bc5f7",
+      "note": "offline notice + Back online/Refresh added (64bc5f7); toasts in root view, covered by an open sheet; Refresh revalidates instead of reloading"
     },
     {
       "web": "src/components/Icon.tsx",
@@ -141,7 +150,7 @@
       "mode": "generated",
       "native": "src/ui/icons.generated.tsx + src/ui/Icon.tsx",
       "status": "ported",
-      "ported_from_sha": "0081e66",
+      "ported_from_sha": "64bc5f7",
       "note": ""
     },
     {
@@ -186,8 +195,8 @@
       "mode": "port",
       "native": "src/shell/NavMenu.tsx",
       "status": "ported",
-      "ported_from_sha": "0081e66",
-      "note": ""
+      "ported_from_sha": "64bc5f7",
+      "note": "slimmed to MENU_EXTRA leftovers; no hamburger when empty (64bc5f7)"
     },
     {
       "web": "src/components/PasswordFields.tsx",
@@ -214,7 +223,7 @@
       "native": "src/ui/PinInput.tsx",
       "status": "wip",
       "ported_from_sha": "0081e66",
-      "note": "keypad input only; PinSetup / PinGate are M7a"
+      "note": "keypad input only; PinSetup/ChangePinForm now take a `staff` flag (set_staff_pin / change_staff_pin): M7a builds them, M9a/M13 reuse"
     },
     {
       "web": "src/components/Place.tsx",
@@ -303,8 +312,8 @@
       "mode": "port",
       "native": "src/ui/ui.tsx, src/ui/Sheet.tsx, src/ui/SelectSheet.tsx",
       "status": "ported",
-      "ported_from_sha": "0081e66",
-      "note": "Split/Main/Rail are single-column on phones"
+      "ported_from_sha": "64bc5f7",
+      "note": "Stat compact, StatStrip, Chip, ChipRow added (64bc5f7); Split/Main/Rail single-column on phones"
     },
     {
       "web": "src/index.css",
@@ -312,7 +321,7 @@
       "mode": "generated",
       "native": "src/theme/tokens.generated.ts",
       "status": "ported",
-      "ported_from_sha": "0081e66",
+      "ported_from_sha": "64bc5f7",
       "note": ""
     },
     {
@@ -330,7 +339,7 @@
       "mode": "generated",
       "native": "src/shared/web/centre.ts",
       "status": "ported",
-      "ported_from_sha": "0081e66",
+      "ported_from_sha": "64bc5f7",
       "note": ""
     },
     {
@@ -339,7 +348,7 @@
       "mode": "generated",
       "native": "src/shared/web/channels.ts",
       "status": "ported",
-      "ported_from_sha": "0081e66",
+      "ported_from_sha": "64bc5f7",
       "note": ""
     },
     {
@@ -366,7 +375,16 @@
       "mode": "generated",
       "native": "src/shared/web/db.ts",
       "status": "ported",
-      "ported_from_sha": "0081e66",
+      "ported_from_sha": "64bc5f7",
+      "note": ""
+    },
+    {
+      "web": "src/lib/doorLock.ts",
+      "module": "M9a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
       "note": ""
     },
     {
@@ -384,7 +402,7 @@
       "mode": "generated",
       "native": "src/shell/nav.generated.ts",
       "status": "ported",
-      "ported_from_sha": "0081e66",
+      "ported_from_sha": "64bc5f7",
       "note": ""
     },
     {
@@ -406,12 +424,21 @@
       "note": "types/limits only; prepareReceipt → expo-image-manipulator in M7b"
     },
     {
+      "web": "src/lib/online.ts",
+      "module": "M4a",
+      "mode": "port",
+      "native": "src/data/net.ts",
+      "status": "ported",
+      "ported_from_sha": "64bc5f7",
+      "note": "NetInfo link + same server probe, 2-strike rule, 20s/4s cadence; pauses in background (ADR-016)"
+    },
+    {
       "web": "src/lib/password.ts",
       "module": "M3",
       "mode": "generated",
       "native": "src/shared/web/password.ts",
       "status": "ported",
-      "ported_from_sha": "0081e66",
+      "ported_from_sha": "64bc5f7",
       "note": ""
     },
     {
@@ -429,7 +456,7 @@
       "mode": "generated",
       "native": "src/shared/web/roster.ts",
       "status": "ported",
-      "ported_from_sha": "0081e66",
+      "ported_from_sha": "64bc5f7",
       "note": ""
     },
     {
@@ -438,7 +465,7 @@
       "mode": "generated",
       "native": "src/shared/web/errors.ts (MESSAGES, friendly) + src/core/errors.ts",
       "status": "ported",
-      "ported_from_sha": "0081e66",
+      "ported_from_sha": "64bc5f7",
       "note": ""
     },
     {
@@ -456,7 +483,7 @@
       "mode": "generated",
       "native": "src/shared/web/time.ts",
       "status": "ported",
-      "ported_from_sha": "0081e66",
+      "ported_from_sha": "64bc5f7",
       "note": ""
     },
     {
@@ -467,6 +494,15 @@
       "status": "skip",
       "ported_from_sha": null,
       "note": "desktop-only / not used on phones"
+    },
+    {
+      "web": "src/lib/useStaffCentres.ts",
+      "module": "M9b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
     },
     {
       "web": "src/lib/verify.ts",
@@ -498,6 +534,15 @@
     {
       "web": "src/pages/Announce.tsx",
       "module": "M10a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/CentreClasses.tsx",
+      "module": "M9b",
       "mode": "port",
       "native": null,
       "status": "todo",
@@ -751,10 +796,10 @@
       "web": "src/pages/Profile.tsx",
       "module": "M13",
       "mode": "port",
-      "native": null,
+      "native": "src/shell/ProfileInterim.tsx (interim)",
       "status": "todo",
-      "ported_from_sha": null,
-      "note": ""
+      "ported_from_sha": "64bc5f7",
+      "note": "web moved sign-out + theme here, adds Door PIN card for instructors/coordinators and hides reg no/PIN for non-students; M13 replaces the interim screen"
     },
     {
       "web": "src/pages/ResetPassword.tsx",
@@ -793,8 +838,26 @@
       "note": ""
     },
     {
+      "web": "src/pages/Statement.tsx",
+      "module": "M9b",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
       "web": "src/pages/StudentHome.tsx",
       "module": "M7a",
+      "mode": "port",
+      "native": null,
+      "status": "todo",
+      "ported_from_sha": null,
+      "note": ""
+    },
+    {
+      "web": "src/pages/Students.tsx",
+      "module": "M9b",
       "mode": "port",
       "native": null,
       "status": "todo",

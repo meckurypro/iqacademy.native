@@ -1,12 +1,14 @@
 // Port of web components/feedback.tsx. Same API:  run(label, fn, opts)  ·  confirm(opts)  ·  toast(msg, tone)
 // Nothing in the app should change data without going through run().
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Modal, StyleSheet, useWindowDimensions, View } from "react-native";
+import { Modal, Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import Animated, { Easing, FadeIn, FadeInUp, FadeOut, SlideInDown, SlideOutDown, useAnimatedStyle, useReducedMotion, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { friendly } from "@/core/errors";
+import { isOnline, subscribeNet, useOnline } from "@/data/net";
+import { getRuntime } from "@/data/runtime";
 import { useTheme } from "@/theme/ThemeProvider";
 import { radius, shadow } from "@/theme/tokens";
 import { haptic } from "@/native/haptics";
@@ -93,6 +95,19 @@ export function FeedbackProvider({ children }: { children: ReactNode }) {
   const seq = useRef(0); const shownAt = useRef(0);
   const pending = useRef<((v: boolean) => void) | null>(null);
 
+  // No internet: a notice that stays until the connection is back (it can't be dismissed: the screens beneath it can't load).
+  // When the connection returns, a short "Back online" note offers a refresh for anything that failed to load meanwhile. (web 64bc5f7)
+  const online = useOnline(); const [back, setBack] = useState(false);
+  useEffect(() => {
+    let wasOffline = !isOnline(), timer: ReturnType<typeof setTimeout> | undefined;
+    const off = subscribeNet(() => {
+      if (!isOnline()) { wasOffline = true; clearTimeout(timer); setBack(false); return; }
+      if (!wasOffline) return;
+      wasOffline = false; setBack(true); clearTimeout(timer); timer = setTimeout(() => setBack(false), 9000);
+    });
+    return () => { off(); clearTimeout(timer); };
+  }, []);
+
   const toast = useCallback((msg: string, tone: ToastTone = "ok") => {
     const id = ++seq.current;
     if (tone === "bad") haptic.error();
@@ -133,7 +148,7 @@ export function FeedbackProvider({ children }: { children: ReactNode }) {
       {ask && <ConfirmDialog o={ask.o} done={ask.done} />}
       {label !== null && <BusyOverlay label={label} />}
       {/* Toasts sit in the root view (a Modal would block touches for the whole toast). An open sheet covers them; they reappear when it closes. */}
-      {toasts.length > 0 && (
+      {(toasts.length > 0 || !online || back) && (
         <View pointerEvents="box-none" accessibilityLiveRegion="polite" style={{ position: "absolute", left: 0, right: 0, top: 0, paddingTop: insets.top + 12, paddingHorizontal: 16, alignItems: "center", gap: 8, zIndex: 110, elevation: 110 }}>
           {toasts.map((t) => (
             <Animated.View key={t.id} entering={FadeInUp.duration(260)} exiting={FadeOut.duration(160)} accessibilityRole="alert"
@@ -143,6 +158,27 @@ export function FeedbackProvider({ children }: { children: ReactNode }) {
               <Text size={14} weight="medium" style={{ color: t.tone === "bad" ? "#fff" : p.c.ink, flexShrink: 1 }}>{t.msg}</Text>
             </Animated.View>
           ))}
+          {!online && (
+            <Animated.View key="offline" entering={FadeInUp.duration(260)} accessibilityRole="alert" accessibilityLiveRegion="polite"
+              style={{ width: "100%", maxWidth: Math.min(384, width - 32), flexDirection: "row", alignItems: "flex-start", gap: 12, borderRadius: radius["2xl"], backgroundColor: p.c.ink, paddingHorizontal: 16, paddingVertical: 12, ...shadow.lift, shadowOpacity: 0.25 }}>
+              <View style={{ marginTop: 2 }}><Icon name="wifiOff" size={20} color={p.c.bg} /></View>
+              <View style={{ flex: 1, minWidth: 0 }}>
+                <Text size={14} weight="semibold" style={{ color: p.c.bg }}>You&apos;re offline</Text>
+                <Text size={14} style={{ color: p.a("bg", 0.8) }}>Pages that need data won&apos;t load, and changes can&apos;t be saved, until you&apos;re back online.</Text>
+              </View>
+            </Animated.View>
+          )}
+          {online && back && (
+            <Animated.View key="back" entering={FadeInUp.duration(260)} exiting={FadeOut.duration(160)} accessibilityRole="alert" accessibilityLiveRegion="polite"
+              style={{ width: "100%", maxWidth: Math.min(384, width - 32), flexDirection: "row", alignItems: "center", gap: 12, borderRadius: radius["2xl"], backgroundColor: p.c.surface, borderWidth: 1, borderColor: p.c.line, paddingHorizontal: 16, paddingVertical: 12, ...shadow.lift, shadowOpacity: 0.25 }}>
+              <Icon name="check" size={18} color={p.c.ok} />
+              <Text size={14} weight="medium" style={{ flex: 1 }}>Back online</Text>
+              {/* web reloads the page; native has no page to reload, so it refreshes everything on screen */}
+              <Pressable accessibilityRole="button" onPress={() => { getRuntime()?.engine.invalidateAll(); setBack(false); }} style={({ pressed }) => ({ borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4, transform: [{ scale: pressed ? 0.95 : 1 }] })}>
+                <Text size={14} weight="semibold" tone="accent">Refresh</Text>
+              </Pressable>
+            </Animated.View>
+          )}
         </View>
       )}
     </FeedbackCtx.Provider>

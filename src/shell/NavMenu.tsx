@@ -4,25 +4,26 @@ import { Linking, Modal, Pressable, ScrollView, StyleSheet, View } from "react-n
 import { useRouter, usePathname, type Href } from "expo-router";
 import Animated, { FadeIn, FadeOut, SlideInRight, SlideOutRight } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { primaryRole, roleLabel, useAuth } from "@/core/auth";
-import { signOutAndWipe } from "@/data";
+import { primaryRole, useAuth } from "@/core/auth";
 import { useTheme } from "@/theme/ThemeProvider";
 import { radius, shadow } from "@/theme/tokens";
 import { haptic } from "@/native/haptics";
-import { Avatar, BLUR, Icon, Text, useFeedback } from "@/ui";
+import { BLUR, Icon, Text } from "@/ui";
 import { useExitMount } from "@/ui/useExitMount";
 import { BlurView } from "expo-blur";
-import { EXTRA, TABS, type NavItem } from "./nav.generated";
+import { MENU_EXTRA } from "./nav.generated";
 
 export default function NavMenu() {
   const { p } = useTheme(); const insets = useSafeAreaInsets(); const router = useRouter(); const path = usePathname();
-  const { name, avatar, roles } = useAuth(); const { run, confirm } = useFeedback();
+  const { roles } = useAuth();
   const role = primaryRole(roles);
   const [open, setOpen] = useState(false); const mounted = useExitMount(open);
-  const items: NavItem[] = [...(TABS[role] ? [] : [["/", "Home", "home"] as NavItem]), ...(EXTRA[role] ?? [])];
+  // The bottom bar lists the tabs and the avatar opens Profile (theme, password, sign out), so the drawer only holds what is left over.
+  const items = MENU_EXTRA[role] ?? [];
 
   const close = useCallback(() => setOpen(false), []);
   const go = (to: string) => { close(); router.navigate(to as Href); };
+  if (items.length === 0) return null; // a role with nothing here has no hamburger (hooks above must stay unconditional)
 
   return (
     <>
@@ -48,11 +49,6 @@ export default function NavMenu() {
                   <Icon name="close" size={18} color={p.c.muted} />
                 </Pressable>
               </View>
-              <Pressable accessibilityRole="link" onPress={() => go("/profile")} style={({ pressed }) => ({ marginBottom: 12, flexDirection: "row", alignItems: "center", gap: 12, borderRadius: radius["2xl"], backgroundColor: p.a("sunken", 0.7), borderWidth: 1, borderColor: p.c.line, padding: 12, transform: [{ scale: pressed ? 0.98 : 1 }] })}>
-                <Avatar name={name || "?"} url={avatar} size={44} />
-                <View style={{ flex: 1, minWidth: 0 }}><Text weight="medium" lh={20} numberOfLines={1}>{name}</Text><Text size={12} tone="muted">{roleLabel[role]}</Text></View>
-                <Icon name="chevronRight" size={18} color={p.c.muted} />
-              </Pressable>
               <ScrollView style={{ flexGrow: 0 }} contentContainerStyle={{ gap: 4 }}>
                 {items.map(([to, label, icon]) => {
                   const active = path === to;
@@ -66,11 +62,6 @@ export default function NavMenu() {
                 })}
               </ScrollView>
               <View style={{ flex: 1 }} />
-              <Pressable accessibilityRole="button" onPress={() => { close(); run("Signing out…", () => signOutAndWipe(confirm)); }}
-                style={({ pressed }) => ({ marginBottom: 12, flexDirection: "row", alignItems: "center", gap: 12, borderRadius: radius.xl, paddingHorizontal: 12, paddingVertical: 12, backgroundColor: pressed ? p.c.sunken : "transparent" })}>
-                <View style={{ width: 36, height: 36, borderRadius: 8, alignItems: "center", justifyContent: "center", backgroundColor: p.c.sunken }}><Icon name="arrowLeft" size={18} color={p.c.muted} /></View>
-                <Text size={15} tone="muted">Sign out</Text>
-              </Pressable>
               <Text size={12} lh={19.5} style={{ color: p.a("muted", 0.8), paddingHorizontal: 4 }}>
                 {"IQ Academy is "}
                 <Text size={12} lh={19.5} onPress={() => Linking.openURL("https://promptiq.com.ng?utm_source=academy_app&utm_medium=menu")} style={{ textDecorationLine: "underline", color: p.a("muted", 0.8) }}>PromptIQ</Text>

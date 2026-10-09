@@ -10,10 +10,10 @@ Tags used below: **[verified]** checked against current docs/code today · **[in
 | Fact | Count / detail |
 |---|---|
 | Screens / components / lib files | 38 pages · 33 components · 18 lib files (~7k dense lines TS/TSX) |
-| Backend surface used by the client | **89 RPCs** · 30 tables/views · 5 Edge Functions · 3 storage buckets (`avatars`, `payment-receipts`, `class-messages`) |
+| Backend surface used by the client | **95 RPCs** · 30 tables/views · 5 Edge Functions · 3 storage buckets (`avatars`, `payment-receipts`, `class-messages`) |
 | Realtime | `postgres_changes` on 6 tables: `notifications`, `user_roles`, `class_sessions`, `attendance`, `class_messages`, `checkin_denials` |
 | Styling | Tailwind via CSS‑variable tokens, light/dark/system, **1,488 `className=`**, glass/blur, keyframe animations |
-| Roles | student · instructor · coordinator · centre_director · admin · super_admin → 3 tab sets (student 2, instructor 5, admin 4); coordinator/director have no tab bar |
+| Roles | student · instructor · coordinator · centre_director · admin · super_admin → 5 tab sets (student 3, instructor 5, coordinator 3, director 5, admin 4); the header has Bell + avatar (opens Profile) + a hamburger only for roles with leftover links (instructor: Custom class) |
 | Churn | 52 commits in 4 days at first look; **+5 commits and migrations 50–52 landed while this audit ran** |
 
 Facts that shape the port:
@@ -266,13 +266,13 @@ Account deletion in‑app (B4) · payment rules for in‑person tuition paid thr
 
 | ID | Module | Status | Notes |
 |---|---|---|---|
-| M0 | Scaffold & control plane | **done** | Expo SDK 57, EAS profiles, CI, port/ files, sync + drift + parity + route + contract scripts; native baseline + permission audit |
+| M0 | Scaffold & control plane | **done** (web 64bc5f7 reviewed) | Expo SDK 57, EAS profiles, CI, port/ files, sync + drift + parity + route + contract scripts; native baseline + permission audit |
 | M1 | Spikes | **partial** | S1, S3 (storage half), S4 code written (`/dev/spikes`); **needs a device build to run**. S2 decided provisionally (ADR-002). S5–S8 need their modules (port/SPIKES.md) |
-| M2 | Design system | **done** | tokens (generated), Geist, ui primitives, icons (generated), feedback, Sheet/SelectSheet, PinInput, gallery at `/dev/gallery`. Needs on-device visual review vs web |
+| M2 | Design system | **done** (Stat compact, StatStrip, Chip/ChipRow, offline notice added for web 64bc5f7) | tokens (generated), Geist, ui primitives, icons (generated), feedback, Sheet/SelectSheet, PinInput, gallery at `/dev/gallery`. Needs on-device visual review vs web |
 | M3 | Core services | **done** | Supabase client, session/auth, clock, time (Hermes fallback), errors, pure libs. Partial ports: checkin, classClock, messages, offline (hooks left to M7a/M8/M9a) |
-| M4a | Local DB + data hooks | **done** | SQLCipher per-user DB, cache, `useQuery/useRpc`, realtime bridge. Tested on real SQL (node:sqlite); **SQLCipher itself needs S4 on a device** |
+| M4a | Local DB + data hooks | **done** (connectivity now probes our own server, ADR-016) | SQLCipher per-user DB, cache, `useQuery/useRpc`, realtime bridge. Tested on real SQL (node:sqlite); **SQLCipher itself needs S4 on a device** |
 | M4b | Outbox / sync engine | **done** | outbox, policies, `mutate`, backoff, sign-out guard. Queued today: `mark_notifications_read`, `mark_channel_read`. Background task not wired (foreground/reconnect triggers only) |
-| M5 | Navigation shell | **done** | roles, tab bar, header, bell, drawer, guards, 34 route stubs, auth callback, route manifest |
+| M5 | Navigation shell | **done** | roles, tab bars for every role, header (bell, avatar → Profile, hamburger when needed), guards, 37 route stubs, auth callback, route manifest, interim Profile (sign-out + theme) until M13 |
 | M6–M13 | Features | todo | stubs render "Not ported yet" |
 | M14 | Release engineering | todo | pipeline config exists (eas.json); credentials, channels, OTA runbook, store work remain |
 | M15 | QA / parity | todo | 44 unit tests exist; no device tests yet |

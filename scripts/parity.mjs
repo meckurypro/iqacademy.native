@@ -20,13 +20,14 @@ const OWN = {
   M0: ["src/main.tsx", "src/components/ErrorBoundary.tsx"],
   M2: ["src/components/ui.tsx", "src/components/feedback.tsx", "src/components/Icon.tsx", "src/components/Place.tsx", "src/components/Stars.tsx", "src/components/PinInput.tsx", "src/index.css", "src/lib/theme.ts"],
   M3: ["src/lib/supabase.ts", "src/lib/auth.tsx", "src/lib/db.ts", "src/lib/time.ts", "src/lib/password.ts", "src/lib/centre.ts", "src/lib/roster.ts", "src/lib/channels.ts", "src/lib/verify.ts", "src/components/ClockWatch.tsx"],
+  M4a: ["src/lib/online.ts"],
   M5: ["src/App.tsx", "src/components/NavMenu.tsx", "src/lib/nav.ts", "src/components/MessagesRoute.tsx"],
   M6: ["src/pages/Landing.tsx", "src/pages/Login.tsx", "src/pages/VerifyEmail.tsx", "src/pages/ResetPassword.tsx", "src/components/PasswordFields.tsx"],
   M7a: ["src/pages/StudentHome.tsx", "src/components/QrScanner.tsx", "src/components/CheckInVerdict.tsx", "src/components/CourseOutline.tsx", "src/components/MakeupCard.tsx", "src/components/SoloCourses.tsx", "src/components/ClassCountdown.tsx", "src/components/PinGate.tsx", "src/components/ReviewSheet.tsx", "src/lib/checkin.ts", "src/lib/classClock.ts"],
   M7b: ["src/pages/Enrol.tsx", "src/pages/PayCallback.tsx", "src/pages/OfflinePay.tsx", "src/lib/payment.ts", "src/lib/offline.ts"],
   M8: ["src/pages/Messages.tsx", "src/pages/ClassChannel.tsx", "src/pages/InstructorMessages.tsx", "src/components/ClassComposer.tsx", "src/components/ChatBubble.tsx", "src/components/MessageBubble.tsx", "src/components/ChannelRow.tsx", "src/components/ShareToChats.tsx", "src/lib/messages.ts"],
-  M9a: ["src/pages/InstructorHome.tsx", "src/pages/MyClasses.tsx", "src/pages/InstructorHistory.tsx", "src/pages/ClassScreen.tsx"],
-  M9b: ["src/pages/CoordinatorHome.tsx", "src/pages/DirectorHome.tsx", "src/pages/StaffHome.tsx", "src/pages/Team.tsx", "src/pages/Schedule.tsx", "src/pages/CustomClasses.tsx", "src/components/CustomClassCard.tsx", "src/components/CustomClassSheet.tsx", "src/components/CustomClassStudents.tsx", "src/components/DoorToday.tsx", "src/components/RunReminder.tsx"],
+  M9a: ["src/pages/InstructorHome.tsx", "src/pages/MyClasses.tsx", "src/pages/InstructorHistory.tsx", "src/pages/ClassScreen.tsx", "src/components/DoorPinSheet.tsx", "src/lib/doorLock.ts"],
+  M9b: ["src/pages/CoordinatorHome.tsx", "src/pages/DirectorHome.tsx", "src/pages/StaffHome.tsx", "src/pages/Team.tsx", "src/pages/Schedule.tsx", "src/pages/CustomClasses.tsx", "src/components/CustomClassCard.tsx", "src/components/CustomClassSheet.tsx", "src/components/CustomClassStudents.tsx", "src/components/DoorToday.tsx", "src/components/RunReminder.tsx", "src/pages/Students.tsx", "src/pages/CentreClasses.tsx", "src/pages/Statement.tsx", "src/lib/useStaffCentres.ts"],
   M10a: ["src/pages/AdminHome.tsx", "src/pages/Users.tsx", "src/pages/Announce.tsx", "src/pages/Manage.tsx", "src/pages/Centres.tsx", "src/pages/Instructors.tsx", "src/pages/ClassReviews.tsx", "src/pages/HandCheckIns.tsx", "src/pages/ClassMessagesAdmin.tsx"],
   M10b: ["src/pages/Roster.tsx", "src/pages/CourseBuilder.tsx", "src/pages/Prices.tsx", "src/components/AssignSheet.tsx", "src/components/SoloPrices.tsx"],
   M10c: ["src/pages/Payments.tsx", "src/pages/OfflinePayments.tsx", "src/pages/Payouts.tsx"],
@@ -34,7 +35,7 @@ const OWN = {
   M13: ["src/pages/Profile.tsx", "src/components/MyCentres.tsx"],
   skip: ["src/components/Sidebar.tsx", "src/lib/useMedia.ts"],
 };
-const GENERATED = { "src/lib/time.ts": "src/shared/web/time.ts", "src/lib/centre.ts": "src/shared/web/centre.ts", "src/lib/roster.ts": "src/shared/web/roster.ts", "src/lib/channels.ts": "src/shared/web/channels.ts", "src/lib/db.ts": "src/shared/web/db.ts", "src/lib/password.ts": "src/shared/web/password.ts", "src/lib/supabase.ts": "src/shared/web/errors.ts (MESSAGES, friendly) + src/core/errors.ts", "src/components/Icon.tsx": "src/ui/icons.generated.tsx + src/ui/Icon.tsx", "src/index.css": "src/theme/tokens.generated.ts", "src/lib/nav.ts": "src/shell/nav.generated.ts" };
+const GENERATED = { "src/lib/online.ts": null, "src/lib/time.ts": "src/shared/web/time.ts", "src/lib/centre.ts": "src/shared/web/centre.ts", "src/lib/roster.ts": "src/shared/web/roster.ts", "src/lib/channels.ts": "src/shared/web/channels.ts", "src/lib/db.ts": "src/shared/web/db.ts", "src/lib/password.ts": "src/shared/web/password.ts", "src/lib/supabase.ts": "src/shared/web/errors.ts (MESSAGES, friendly) + src/core/errors.ts", "src/components/Icon.tsx": "src/ui/icons.generated.tsx + src/ui/Icon.tsx", "src/index.css": "src/theme/tokens.generated.ts", "src/lib/nav.ts": "src/shell/nav.generated.ts" };
 const owner = new Map(Object.entries(OWN).flatMap(([m, fs]) => fs.map((f) => [f, m])));
 
 const args = process.argv.slice(2);
@@ -53,6 +54,8 @@ if (args[0] === "set") {
     db.rows.push(row); byWeb.set(f, row);
   }
 }
+const syncSha = existsSync(join(root, "port/.web-sha")) ? readFileSync(join(root, "port/.web-sha"), "utf8").trim() : null;
+if (syncSha) for (const r of db.rows) if (r.mode === "generated") r.ported_from_sha = syncSha; // sync-web regenerates these every run
 db.rows.sort((a, b) => a.web.localeCompare(b.web));
 writeFileSync(file, JSON.stringify(db, null, 2) + "\n");
 const t = (r) => `| \`${r.web.replace("src/", "")}\` | ${r.module} | ${r.mode} | ${r.status} | ${r.native ? "`" + r.native + "`" : ""} | ${r.ported_from_sha ?? ""} | ${r.note ?? ""} |`;

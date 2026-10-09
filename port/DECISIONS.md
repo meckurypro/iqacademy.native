@@ -21,7 +21,7 @@ NativeWind's stable release is 4.2.7 and 5.0 is only a release candidate; neithe
 ## ADR-005 Offline policy: online-only unless listed
 `src/data/policies.ts`. Queued today: `mark_notifications_read`, `mark_channel_read`. `send_class_message` is **not** queued until the server accepts a client idempotency key (B3), otherwise a retry after a lost response posts twice. Check-in, PIN, attendance, enrolment, payments and every admin save stay online-only because the server decides them.
 
-## ADR-006 Connectivity = `isConnected` only
+## ADR-006 Connectivity = `isConnected` only (SUPERSEDED by ADR-016)
 NetInfo's `isInternetReachable` probe URL can be blocked on some networks and would wrongly lock people out of online-only actions. Only an explicit "not connected" is offline; a request that really fails is handled where it fails.
 
 ## ADR-007 Routing
@@ -56,3 +56,9 @@ Server: enable `pg_net`, trigger on `notifications` INSERT → `send-push` Edge 
 
 ## ADR-015 Dependency audit (2026-10-08, `npm audit --omit=dev`: 44 findings, 5 root advisories)
 All five are **transitive** in Expo/React Native tooling; none is a package we chose. Checked against the Android bundle's source map (88 packages shipped): `braces`, `node-forge`, `sprintf-js`, `uuid` are **not** in the app bundle. **`decode-uri-component` is** (expo-router 57.0.25 → query-string 7.1.3 → decode-uri-component 0.2.2, GHSA-vcc3-ghjq-m6fr). The only upstream fix is expo-router 58 (an SDK major), so `npm audit fix --force` is **not** used (it would break the SDK pins). Measured impact: quadratic CPU cost on crafted percent-escapes (256 chars 135 ms, 1024 chars 2.4 s, 2048 chars 10.9 s on a desktop), so one malicious link could freeze the app. **Mitigation shipped:** `src/app/+native-intent.tsx` drops incoming links with more than 40 `%` escapes or longer than 8192 characters before the router parses them (`src/shell/incomingLink.ts`, unit-tested; real links and JWT fragments pass). Revisit at the next SDK upgrade, then remove the guard if the dependency is fixed. iOS bundle not inspected separately (same JavaScript).
+
+## ADR-016 Connectivity: link AND our own server (replaces ADR-006), web 64bc5f7
+The web now decides "offline" by asking its own backend (`/auth/v1/health`; any reply counts, only a network failure does not; two failed asks in a row; 20 s calm cadence, 4 s while failing) because a Wi-Fi link with no internet is the common failure. `src/data/net.ts` does the same on top of NetInfo's link flag: link down is reported at once; otherwise the probe decides. The probe pauses in the background (battery, mobile data). ADR-006's worry (a blocked third-party reachability URL) does not apply because the target is our server. Unit-tested with fake timers (`tests/net.test.ts`). The persistent "You're offline" card and the "Back online → Refresh" card are in `FeedbackProvider`; on native, Refresh revalidates every query instead of reloading a page. Known limit: like toasts, they sit in the root view, so an open bottom sheet covers them.
+
+## ADR-017 Shell follows the web redesign (64bc5f7)
+Header = Bell, avatar button (opens `/profile`), hamburger **only** for roles with `MENU_EXTRA` (today: instructor, Custom class). The drawer no longer holds the profile card or sign-out; **Profile holds theme, password and sign-out**. Tab sets changed (student gets Enrol; coordinator and director get tab bars with new routes `/students`, `/centre-classes`, `/statement`). Until M13 ports Profile, `src/shell/ProfileInterim.tsx` provides sign-out and the theme switch so nobody is locked in; delete it when M13 lands. `MENU_EXTRA` and `TABS` are generated from `lib/nav.ts` (`scripts/sync-web.mjs` now fails loudly if either moves again).

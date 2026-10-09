@@ -30,5 +30,16 @@ export const GUARDS: Record<string, string[]> = {
     "centre_director",
     "admin",
     "super_admin"
+  ],
+  "/students": [
+    "coordinator",
+    "centre_director"
+  ],
+  "/centre-classes": [
+    "coordinator",
+    "centre_director"
+  ],
+  "/statement": [
+    "centre_director"
   ]
 };

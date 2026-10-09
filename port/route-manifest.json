@@ -118,7 +118,8 @@
       "web": "/profile",
       "file": "(app)/profile.tsx",
       "module": "M13",
-      "page": "src/pages/Profile.tsx"
+      "page": "src/pages/Profile.tsx",
+      "note": "interim screen in src/shell/ProfileInterim.tsx (sign-out + theme) until M13 replaces it"
     },
     {
       "web": "/manage",
@@ -246,6 +247,35 @@
       "file": "(app)/enrol.tsx",
       "module": "M7b",
       "page": "src/pages/Enrol.tsx"
+    },
+    {
+      "web": "/students",
+      "file": "(app)/students.tsx",
+      "module": "M9b",
+      "page": "src/pages/Students.tsx",
+      "guard": [
+        "coordinator",
+        "centre_director"
+      ]
+    },
+    {
+      "web": "/centre-classes",
+      "file": "(app)/centre-classes.tsx",
+      "module": "M9b",
+      "page": "src/pages/CentreClasses.tsx",
+      "guard": [
+        "coordinator",
+        "centre_director"
+      ]
+    },
+    {
+      "web": "/statement",
+      "file": "(app)/statement.tsx",
+      "module": "M9b",
+      "page": "src/pages/Statement.tsx",
+      "guard": [
+        "centre_director"
+      ]
     }
   ],
   "homes": [

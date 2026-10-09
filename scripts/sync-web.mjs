@@ -141,15 +141,15 @@ for (const f of ["centre", "roster", "channels", "db"]) out(`src/shared/web/${f}
   const fmt = (o) => "{ " + names.map((n) => `${JSON.stringify(n)}: [${o[n].join(", ")}]`).join(", ") + " }";
   out("src/theme/tokens.generated.ts", header("src/index.css") + `export type RGB = [number, number, number];\nexport const LIGHT: Record<string, RGB> = ${fmt(light)};\nexport const DARK: Record<string, RGB> = ${fmt(dark)};\n`);
 }
-// ---- navigation: tab bar per role (lib/nav.ts) + drawer shortcuts (components/NavMenu.tsx) ----
+// ---- navigation: tab bar per role + the hamburger drawer's leftovers (both in lib/nav.ts) ----
 {
-  const nav = read("src/lib/nav.ts"), menu = read("src/components/NavMenu.tsx");
+  const nav = read("src/lib/nav.ts");
   const tabs = statement(nav, /export const TABS\b/, "TABS");
   const alias = nav.match(/^TABS\.super_admin = TABS\.admin;$/m)?.[0];
   if (!alias) throw new Error("sync-web: TABS.super_admin alias not found");
-  const extra = statement(menu, /const EXTRA\b/, "EXTRA");
-  out("src/shell/nav.generated.ts", header("src/lib/nav.ts + components/NavMenu.tsx") +
-    `import type { IconName } from "@/ui/Icon";\nexport type NavItem = [to: string, label: string, icon: IconName];\n\n${tabs}\n${alias}\n\n// Drawer shortcuts the tab bar doesn't have.\nexport ${extra}\n`);
+  const extra = statement(nav, /export const MENU_EXTRA\b/, "MENU_EXTRA");
+  out("src/shell/nav.generated.ts", header("src/lib/nav.ts") +
+    `import type { IconName } from "@/ui/Icon";\nexport type NavItem = [to: string, label: string, icon: IconName];\n\n${tabs}\n${alias}\n\n// What the bottom bar and the role's own pages don't reach. A role with nothing here has no hamburger.\n${extra}\n`);
 }
 writeFileSync(join(root, "port/.web-sha"), sha + "\n");
 console.log("web sha", sha);

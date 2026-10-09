@@ -1,6 +1,6 @@
 // Port of web components/ui.tsx. Same names, same dimensions (px = dp), same tones. Class strings from the web are noted beside each piece.
 import { useEffect, useState, Children, type ReactNode } from "react";
-import { ActivityIndicator, Platform, Pressable, StyleSheet, TextInput, View, type StyleProp, type TextInputProps, type ViewStyle } from "react-native";
+import { ActivityIndicator, Platform, Pressable, ScrollView, StyleSheet, TextInput, View, type StyleProp, type TextInputProps, type ViewStyle } from "react-native";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
@@ -194,17 +194,50 @@ export const Empty = ({ icon = "inbox", title, hint }: { icon?: IconName; title:
     </View>
   );
 };
-export const Stat = ({ label, value, sub, tone }: { label: string; value: string | number; sub?: string; tone?: Tone }) => {
+// `compact` is for dense dashboards: tighter padding and a figure whose size steps down with its length, so a naira amount can't push out of a half-width tile.
+// (web: p-3, text-xs label, value text-xl → lg → base → sm as it passes 8, 10, 12 characters)
+export const Stat = ({ label, value, sub, tone, compact }: { label: string; value: string | number; sub?: string; tone?: Tone; compact?: boolean }) => {
+  const { p } = useTheme(); const len = String(value).length;
+  const size = compact ? (len > 12 ? 14 : len > 10 ? 16 : len > 8 ? 18 : 20) : 24;
+  return (
+    <View style={{ minWidth: 0, borderRadius: radius["2xl"], backgroundColor: p.c.surface, padding: compact ? 12 : 16, borderWidth: 1, borderColor: p.c.line, ...shadow.card }}>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+        {tone && <View style={{ width: 6, height: 6, borderRadius: 3, flexShrink: 0, backgroundColor: toneColors(p, tone).dot }} />}
+        <Text size={compact ? 12 : 13} tone="muted" lh={compact ? 16 : 19} numberOfLines={1} style={{ flexShrink: 1 }}>{label}</Text>
+      </View>
+      <Text size={size} weight="semibold" tracking={-0.025} num numberOfLines={1} style={{ marginTop: compact ? 4 : 6 }}>{value}</Text>
+      {sub && <Text size={compact ? 11 : 12} lh={16} tone="muted" numberOfLines={compact ? 1 : undefined} style={{ marginTop: 2 }}>{sub}</Text>}
+    </View>
+  );
+};
+/** Several small counts in one card, side by side (plain numbers, not money). */
+export const StatStrip = ({ items }: { items: { label: string; value: string | number; tone?: Tone }[] }) => {
   const { p } = useTheme();
   return (
-    <View style={{ borderRadius: radius["2xl"], backgroundColor: p.c.surface, padding: 16, borderWidth: 1, borderColor: p.c.line, ...shadow.card }}>
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-        {tone && <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: toneColors(p, tone).dot }} />}
-        <Text size={13} tone="muted" lh={19}>{label}</Text>
-      </View>
-      <Text size={24} weight="semibold" tracking={-0.025} num style={{ marginTop: 6 }}>{value}</Text>
-      {sub && <Text size={12} tone="muted" style={{ marginTop: 2 }}>{sub}</Text>}
+    <View style={{ flexDirection: "row", borderRadius: radius["2xl"], backgroundColor: p.c.surface, paddingVertical: 12, borderWidth: 1, borderColor: p.c.line, ...shadow.card }}>
+      {items.map((i, n) => (
+        <View key={i.label} style={{ flex: 1, minWidth: 0, paddingHorizontal: 8, alignItems: "center", borderLeftWidth: n > 0 ? 1 : 0, borderLeftColor: p.c.line }}>
+          <Text size={18} weight="semibold" lh={22} num numberOfLines={1}>{i.value}</Text>
+          <View style={{ marginTop: 2, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 4 }}>
+            {i.tone && <View style={{ width: 6, height: 6, borderRadius: 3, flexShrink: 0, backgroundColor: toneColors(p, i.tone).dot }} />}
+            <Text size={11} lh={16} tone="muted" numberOfLines={1} style={{ flexShrink: 1 }}>{i.label}</Text>
+          </View>
+        </View>
+      ))}
     </View>
+  );
+};
+/** Filter chips: one scrolling row, small and quiet. Chip is one pill; ChipRow holds them. (web: ChipRow is -mx-4 px-4; the screen's padding is 16.) */
+export const ChipRow = ({ children }: { children: ReactNode }) => (
+  <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled" style={{ marginHorizontal: -16 }} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 2, gap: 6 }}>{children}</ScrollView>
+);
+export const Chip = ({ on, onPress, children }: { on: boolean; onPress: () => void; children: ReactNode }) => {
+  const { p } = useTheme();
+  return (
+    <Pressable accessibilityRole="button" accessibilityState={{ selected: on }} onPress={() => { haptic.select(); onPress(); }}
+      style={({ pressed }) => ({ height: 32, flexShrink: 0, borderRadius: radius.full, paddingHorizontal: 14, alignItems: "center", justifyContent: "center", backgroundColor: on ? p.c.accent : p.c.sunken, transform: [{ scale: pressed ? 0.95 : 1 }] })}>
+      <Text size={13} weight="medium" lh={18} numberOfLines={1} style={{ color: on ? p.c.accentInk : p.a("ink", 0.8) }}>{children}</Text>
+    </Pressable>
   );
 };
 export const Err = ({ children }: { children?: ReactNode }) => {

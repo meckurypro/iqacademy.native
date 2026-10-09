@@ -10,6 +10,7 @@ import { useClockSkew } from "@/core/clock";
 import { useTheme } from "@/theme/ThemeProvider";
 import { Heading } from "@/ui";
 import Bell from "./Bell";
+import { ProfileButton } from "./ProfileButton";
 import ClockNotice from "./ClockNotice";
 import ErrorBoundary from "./ErrorBoundary";
 import NavMenu from "./NavMenu";
@@ -25,6 +26,7 @@ export function Header() {
       </Pressable>
       <View style={{ flex: 1 }} />
       <Bell />
+      <ProfileButton />
       <NavMenu />
     </View>
   );

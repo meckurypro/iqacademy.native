@@ -18,7 +18,9 @@ const book = { rpc: new Map(), table: new Map(), bucket: new Map(), fn: new Map(
 const add = (k, name, file, extra) => { const m = book[k]; if (!m.has(name)) m.set(name, { files: new Set(), extra: new Set() }); const e = m.get(name); e.files.add(file); if (extra) e.extra.add(extra); };
 for (const f of files) {
   const rel = f.replace(web + "/", ""), src = readFileSync(f, "utf8");
-  for (const m of src.matchAll(/\.rpc\("([a-z_0-9]+)"(?:,\s*(\{[^}]{0,140}\}))?/g)) add("rpc", m[1], rel, m[2]?.replace(/\s+/g, " "));
+  // The first argument can be a plain string or an expression such as `staff ? "set_staff_pin" : "set_pin"`: take every string literal in it.
+  for (const m of src.matchAll(/\.rpc\(\s*([^,)]*)(?:,\s*(\{[^}]{0,140}\}))?/g))
+    for (const n of m[1].matchAll(/"([a-z_0-9]+)"/g)) add("rpc", n[1], rel, m[2]?.replace(/\s+/g, " "));
   for (const m of src.matchAll(/\.from\("([a-z_0-9]+)"\)(?!\.(?:upload|download|remove|createSignedUrl|getPublicUrl))/g)) add("table", m[1], rel);
   for (const m of src.matchAll(/storage\.from\("([a-z-]+)"\)/g)) add("bucket", m[1], rel);
   for (const m of src.matchAll(/functions\.invoke\("([a-z-]+)"/g)) add("fn", m[1], rel);
