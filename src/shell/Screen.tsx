@@ -10,6 +10,7 @@ import { useClockSkew } from "@/core/clock";
 import { useTheme } from "@/theme/ThemeProvider";
 import { Heading } from "@/ui";
 import Bell from "./Bell";
+import { PendingChip } from "./PendingSheet";
 import { ProfileButton } from "./ProfileButton";
 import ClockNotice from "./ClockNotice";
 import ErrorBoundary from "./ErrorBoundary";
@@ -25,6 +26,7 @@ export function Header() {
         <Heading size={20} lh={20}>Academy</Heading>
       </Pressable>
       <View style={{ flex: 1 }} />
+      <PendingChip />
       <Bell />
       <ProfileButton />
       <NavMenu />

@@ -158,9 +158,10 @@ describe("outbox", () => {
 });
 
 describe("offline policy", () => {
-  it("only harmless, repeatable actions are queued; everything the server decides is online-only", () => {
+  it("only harmless, repeatable actions are queued (chat sends carry a client id); everything the server decides is online-only", () => {
     expect(policyFor("mark_notifications_read").mode).toBe("queue");
     expect(policyFor("mark_channel_read").mode).toBe("queue");
-    for (const r of ["check_in", "set_pin", "mark_attendance", "create_enrolment", "send_class_message", "anything_unlisted"]) expect(policyFor(r).mode).toBe("online");
+    expect(policyFor("send_class_message").mode).toBe("queue"); // safe since backend migration 57 (client id)
+    for (const r of ["check_in", "set_pin", "mark_attendance", "create_enrolment", "anything_unlisted"]) expect(policyFor(r).mode).toBe("online");
   });
 });

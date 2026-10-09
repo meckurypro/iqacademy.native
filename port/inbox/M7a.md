@@ -4,3 +4,5 @@
 
 Other sessions append here when a change in *their* area affects *your* files. Newest first. Remove an entry when handled. Format: `- [date] from <module>: <what and why> (web sha / PR)`
 
+
+- 2026-10-09 (web d14323f): `SoloCourses` now calls `can_buy_solo` (online-only, no args, returns boolean) when a course is chosen. If `false`, show the polite "Single courses come after a course pack" notice with a "See course packs" button to `/enrol` and do not go on to centre selection. The database enforces the same rule in `create_solo_enrolment` (error key `not_eligible_for_solo`, wording already synced).

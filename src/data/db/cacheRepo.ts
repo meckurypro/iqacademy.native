@@ -19,6 +19,17 @@ export function createCacheRepo(db: Db) {
     },
     markAllStale: () => db.run("UPDATE cache_entries SET stale = 1"),
     purgeOlderThan: (ms: number, now: number) => db.run("DELETE FROM cache_entries WHERE fetched_at < ?", [now - ms]),
+    /** Keep the cache bounded: drop anything older than maxAgeMs, then drop the oldest entries until the payloads fit in maxBytes. Returns how many rows went. */
+    prune: async (now: number, o: { maxAgeMs: number; maxBytes: number }) => {
+      const before = (await db.first<{ n: number }>("SELECT count(*) AS n FROM cache_entries"))?.n ?? 0;
+      await db.run("DELETE FROM cache_entries WHERE fetched_at < ?", [now - o.maxAgeMs]);
+      const rows = await db.all<{ key: string; n: number }>("SELECT key, length(payload) AS n FROM cache_entries ORDER BY fetched_at DESC");
+      let used = 0; const drop: string[] = [];
+      for (const r of rows) { used += r.n; if (used > o.maxBytes) drop.push(r.key); }
+      for (let i = 0; i < drop.length; i += 200) { const part = drop.slice(i, i + 200); await db.run(`DELETE FROM cache_entries WHERE key IN (${part.map(() => "?").join(",")})`, part); }
+      const after = (await db.first<{ n: number }>("SELECT count(*) AS n FROM cache_entries"))?.n ?? 0;
+      return before - after;
+    },
     clear: () => db.run("DELETE FROM cache_entries"),
   };
 }

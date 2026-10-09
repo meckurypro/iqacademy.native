@@ -30,10 +30,12 @@ async function buildRuntime(uid: string | null): Promise<Runtime> {
     handlers: { rpc: async (p: { name: string; args: Record<string, unknown> }) => { ok(await supabase.rpc(p.name, p.args)); } },
   }) : null;
   await outbox?.start();
+  // keep the on-disk cache bounded (30 days, 20 MB of payload); fire and forget, a failure only means a bigger cache
+  if (db) createCacheRepo(db).prune(Date.now(), { maxAgeMs: 30 * 86_400_000, maxBytes: 20 * 1024 * 1024 }).catch((e) => console.warn("[data] cache prune failed", e));
 
   let pending = new Set<string>(), timer: ReturnType<typeof setTimeout> | undefined;
   const invalidateSoon = (tags: string[]) => { tags.forEach((t) => pending.add(t)); clearTimeout(timer); timer = setTimeout(() => { const t = [...pending]; pending = new Set(); engine.invalidate(t); }, 400); };
-  const stopRealtime = uid ? startRealtime(supabase, uid, invalidateSoon) : () => {};
+  const stopRealtime = uid ? startRealtime(supabase, uid, invalidateSoon, () => { engine.revalidateActive(); outbox?.flush(); }) : () => {};
   let closed = false;
   return {
     uid, sb: supabase, engine, outbox, db, degraded, invalidateSoon,
