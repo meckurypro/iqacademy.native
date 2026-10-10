@@ -15,6 +15,7 @@
 | M11b | expo-calendar |
 | M12 | expo-local-authentication |
 | M4b | expo-background-task, expo-task-manager (iOS: best effort, never relied on) |
+| M9b | react-native-qrcode-svg 6.3.26 (**JS only**: draws the QR on react-native-svg, no native code, so it ships OTA. Used for the coordinator's invite QR) |
 
 ## Permission audit (from `expo prebuild`, production variant)
 **Android:** CAMERA · ACCESS_COARSE/FINE_LOCATION (foreground) · READ/WRITE_CALENDAR · USE_BIOMETRIC (+ legacy USE_FINGERPRINT) · VIBRATE · INTERNET · READ/WRITE_EXTERNAL_STORAGE capped at **maxSdkVersion 32** (old Android only). `RECORD_AUDIO` and `SYSTEM_ALERT_WINDOW` are **removed**. POST_NOTIFICATIONS / RECEIVE_BOOT_COMPLETED are added by expo-notifications at manifest merge (Gradle).

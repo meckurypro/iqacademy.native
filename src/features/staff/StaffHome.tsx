@@ -1,7 +1,13 @@
-// HOME STUB (M5). Owner: M9b. Web source: src/pages/StaffHome.tsx
-// Replace the body with the real home screen and keep the named export. It renders inside the shell's <Screen>.
-import { Placeholder } from "@/shell/Placeholder";
+// Port of web pages/StaffHome.tsx: the fallback home for a signed-in user whose role has no dashboard.
+import { primaryRole, roleLabel, useAuth } from "@/core/auth";
+import { Card, Heading, Text } from "@/ui";
 
 export function StaffHome() {
-  return <Placeholder module="M9b" title="Staff Home" web="src/pages/StaffHome.tsx" bare />;
+  const { name, roles } = useAuth(); const role = primaryRole(roles);
+  return (
+    <Card style={{ gap: 4, padding: 24 }}>
+      <Heading size={20}>Hi {name.split(" ")[0]}</Heading>
+      <Text tone="muted">{"You're signed in as "}<Text weight="semibold">{roleLabel[role]}</Text>{". Your dashboard is being built next."}</Text>
+    </Card>
+  );
 }

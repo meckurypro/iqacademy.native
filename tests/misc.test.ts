@@ -117,3 +117,23 @@ describe("deep link guard (decode-uri-component DoS, ADR-015)", () => {
     expect(guardIncomingUrl("iqacademy://x/" + "a".repeat(9000))).toBeNull();
   });
 });
+
+import { inRange, joinWall, monthGrid, shiftMonth, splitWall } from "@/shared/calendar";
+describe("calendar maths for the date pickers", () => {
+  it("lays a month out Monday first with blanks around it", () => {
+    const g = monthGrid("2026-10"); // 1 Oct 2026 is a Thursday
+    expect(g[0]).toEqual([null, null, null, "2026-10-01", "2026-10-02", "2026-10-03", "2026-10-04"]);
+    expect(g.every((w) => w.length === 7)).toBe(true);
+    expect(g.flat().filter(Boolean)).toHaveLength(31);
+    expect(monthGrid("2026-02").flat().filter(Boolean)).toHaveLength(28);
+    expect(monthGrid("2028-02").flat().filter(Boolean)).toHaveLength(29);
+  });
+  it("moves across year ends and checks ranges", () => {
+    expect(shiftMonth("2026-12", 1)).toBe("2027-01"); expect(shiftMonth("2026-01", -1)).toBe("2025-12");
+    expect(inRange("2026-10-10", "2026-10-10", "2026-10-12")).toBe(true); expect(inRange("2026-10-13", undefined, "2026-10-12")).toBe(false); expect(inRange("2026-10-09", "2026-10-10")).toBe(false);
+  });
+  it("splits and joins wall-clock text", () => {
+    expect(splitWall("2026-10-12T09:30")).toEqual({ date: "2026-10-12", time: "09:30" }); expect(splitWall("2026-10-12")).toEqual({ date: "2026-10-12", time: "" });
+    expect(joinWall("2026-10-12", "")).toBe("2026-10-12T00:00");
+  });
+});

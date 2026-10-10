@@ -1,7 +1,8 @@
-// ROUTE STUB (M5). Owner: M10b. Web source: src/pages/CourseBuilder.tsx
-// Replace the body with the real screen and keep the default export. Role guards live in port/route-manifest.json, not here.
-import { Placeholder } from "@/shell/Placeholder";
+import { useLocalSearchParams } from "expo-router";
+import CourseBuilder from "@/features/admin-classes/CourseBuilder";
+import { Screen } from "@/shell/Screen";
 
 export default function Route() {
-  return <Placeholder module="M10b" title="courses id" web="src/pages/CourseBuilder.tsx" />;
+  const { id } = useLocalSearchParams<{ id: string }>();
+  return <Screen><CourseBuilder id={id} /></Screen>;
 }

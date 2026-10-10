@@ -1,7 +1,6 @@
-// ROUTE STUB (M5). Owner: M10a. Web source: src/pages/Instructors.tsx
-// Replace the body with the real screen and keep the default export. Role guards live in port/route-manifest.json, not here.
-import { Placeholder } from "@/shell/Placeholder";
+import Instructors from "@/features/admin-people/Instructors";
+import { Screen } from "@/shell/Screen";
 
 export default function Route() {
-  return <Placeholder module="M10a" title="instructors" web="src/pages/Instructors.tsx" />;
+  return <Screen><Instructors /></Screen>;
 }

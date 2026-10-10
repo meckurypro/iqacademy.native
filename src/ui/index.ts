@@ -8,3 +8,4 @@ export { Stars, StarPicker, RATING_WORDS } from "./Stars";
 export { PinInput, PIN_LENGTH } from "./PinInput";
 export { default as Place } from "./Place";
 export { FeedbackProvider, useFeedback, BusyOverlay, type ConfirmOpts, type RunOpts, type RunResult } from "./feedback";
+export { Area, SwitchRow, Segmented, SearchField, DateField, TimeField, DateTimeField } from "./extras";
