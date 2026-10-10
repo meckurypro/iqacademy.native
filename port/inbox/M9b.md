@@ -4,4 +4,4 @@
 
 Other sessions append here when a change in *their* area affects *your* files. Newest first. Remove an entry when handled. Format: `- [date] from <module>: <what and why> (web sha / PR)`
 
-- [2026-10-10] from M7a: `StudentHome` (`src/features/student/Home.tsx`) has no `CustomClassCard` yet. The web renders it between the payment cards and `ClassCountdown` inside the left `Rail`; add it there when you port it. `ClassCountdown` already serves coordinators (`as_role: staff`). (web d14323f)
+- [2026-10-10] from M7a: `CustomClassCard` (the student side) is done: `src/features/student/CustomClassCard.tsx`, mounted on student Home. Your side is `CustomClassSheet` and `CustomClassStudents` (instructor). `ClassCountdown` already serves coordinators (`as_role: staff`). (web d14323f)

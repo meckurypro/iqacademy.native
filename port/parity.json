@@ -85,10 +85,10 @@
       "web": "src/components/CustomClassCard.tsx",
       "module": "M9b",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
-      "note": ""
+      "native": "src/features/student/CustomClassCard.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "student side only; instructor side (CustomClassSheet/Students) stays with M9b"
     },
     {
       "web": "src/components/CustomClassSheet.tsx",
@@ -851,9 +851,9 @@
       "module": "M7a",
       "mode": "port",
       "native": "src/features/student/Home.tsx",
-      "status": "wip",
+      "status": "ported",
       "ported_from_sha": "d14323f",
-      "note": "all cards except CustomClassCard (M9b); rating sheet is the M8 one"
+      "note": "rating sheet is the M8 one; pull-to-refresh not wired (shell RoleHome)"
     },
     {
       "web": "src/pages/Students.tsx",

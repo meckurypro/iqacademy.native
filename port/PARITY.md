@@ -2,7 +2,7 @@
 
 Generated from `port/parity.json` by `scripts/parity.mjs`. Edit with `node scripts/parity.mjs set <web-file> --status … --native … --sha …`, never by hand.
 
-wip: 5 · todo: 44 · ported: 46 · diverged: 2 · skip: 2
+wip: 4 · todo: 43 · ported: 48 · diverged: 2 · skip: 2
 
 | web file | module | mode | status | native | ported from | note |
 |---|---|---|---|---|---|---|
@@ -15,7 +15,7 @@ wip: 5 · todo: 44 · ported: 46 · diverged: 2 · skip: 2
 | `components/ClassCountdown.tsx` | M7a | port | ported | `src/features/student/ClassCountdown.tsx` | d14323f |  |
 | `components/ClockWatch.tsx` | M3 | port | ported | `src/core/clock.ts, src/shell/ClockNotice.tsx` | 0081e66 |  |
 | `components/CourseOutline.tsx` | M7a | port | ported | `src/features/student/CourseOutline.tsx` | d14323f |  |
-| `components/CustomClassCard.tsx` | M9b | port | todo |  |  |  |
+| `components/CustomClassCard.tsx` | M9b | port | ported | `src/features/student/CustomClassCard.tsx` | d14323f | student side only; instructor side (CustomClassSheet/Students) stays with M9b |
 | `components/CustomClassSheet.tsx` | M9b | port | todo |  |  |  |
 | `components/CustomClassStudents.tsx` | M9b | port | todo |  |  |  |
 | `components/DoorPinSheet.tsx` | M9a | port | todo |  |  |  |
@@ -100,7 +100,7 @@ wip: 5 · todo: 44 · ported: 46 · diverged: 2 · skip: 2
 | `pages/Schedule.tsx` | M9b | port | todo |  |  |  |
 | `pages/StaffHome.tsx` | M9b | port | todo |  |  |  |
 | `pages/Statement.tsx` | M9b | port | todo |  |  |  |
-| `pages/StudentHome.tsx` | M7a | port | wip | `src/features/student/Home.tsx` | d14323f | all cards except CustomClassCard (M9b); rating sheet is the M8 one |
+| `pages/StudentHome.tsx` | M7a | port | ported | `src/features/student/Home.tsx` | d14323f | rating sheet is the M8 one; pull-to-refresh not wired (shell RoleHome) |
 | `pages/Students.tsx` | M9b | port | todo |  |  |  |
 | `pages/Team.tsx` | M9b | port | todo |  |  |  |
 | `pages/Users.tsx` | M10a | port | todo |  |  |  |

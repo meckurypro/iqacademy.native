@@ -1,7 +1,7 @@
 <!-- docs/release.md -->
 # Releasing IQ Academy (native)
 
-Commands marked **(verified)** were checked against the current Expo docs on 2026-10-10. Anything marked **(unverified)** must be checked with `eas <command> --help` before first use.
+Commands marked **(verified)** were checked against the current Expo docs on 2026-10-10. Anything marked **(unverified)** must be checked with `eas <command> --help` before first use. (Nothing is currently marked unverified.)
 
 ## 0. What only the owner can provide
 These block the first store build. Nothing here can be invented.
@@ -20,11 +20,7 @@ These block the first store build. Nothing here can be invented.
 After the first Android build, give the backend session the release **SHA-256** and the Apple Team ID so the `.well-known` association files can be published (W1).
 
 ## 1. One-time setup
-**Install the workflows first.** The three GitHub Actions files are in `docs/ci-workflows/` (the token used for the first push could not write to `.github/workflows`). Copy them in with an account that can:
-```sh
-mkdir -p .github/workflows && cp docs/ci-workflows/*.yml .github/workflows/
-```
-`ci.yml` runs `npm run verify` and the fingerprint gate on every PR; `eas-preview-update.yml` publishes to `preview` on merge to `main`; `eas-production.yml` is the manual, approval-gated store build.
+The three GitHub Actions files are in `.github/workflows/`: `ci.yml` runs `npm run verify` and the fingerprint gate on every PR; `eas-preview-update.yml` publishes to `preview` on merge to `main` (it skips itself until the `EAS_PROJECT_ID` variable exists); `eas-production.yml` is the manual, approval-gated store build.
 
 ```sh
 npm i -g eas-cli && eas login
@@ -58,10 +54,11 @@ npm run fingerprint            # fails if the native fingerprint changed and "ve
 npm run fingerprint:accept     # after a deliberate native change: records the new baseline (.eas/fingerprint.json)
 ```
 Releasing a native change: bump `version` → `npm run fingerprint:accept` → commit both → build → submit → only then publish updates. If the check fails for something that is not native (for example an `eas.json` edit), `--accept` it and say why in the PR. It ignores npm scripts and all JS.
+**Blind spot:** native changes made through a config *mod* inside `app.config.ts` (such as the production plist cleanup in §6) do not change the fingerprint, so the gate cannot see them. Bump `version` by hand for those.
 
 ## 4. Publishing and promoting JS updates
 Preview happens automatically on merge. To publish by hand: `eas update --channel preview --message "…"` **(verified)**.
-Promote to production only after QA signs off on preview: `eas update:republish` (interactive; pick the preview group and the production branch) **(unverified: confirm flags with `--help`)**.
+Promote to production only after QA signs off on preview: `eas update:republish --channel preview --destination-channel production` (pick the preview update group when asked), or `--group <update-group-id> --destination-channel production` to name it directly **(verified in eas-cli 16.19.3 source; `--help` is authoritative for newer versions)**.
 
 **Staged rollout (verified):** `eas update --channel production --rollout-percentage=10`, watch the EAS dashboard, raise with `eas update:edit`, or undo with `eas update:revert-update-rollout`. While a *branch-based* rollout (`eas channel:rollout`) is running, `--channel` cannot be used; publish with `--branch`.
 
@@ -78,7 +75,7 @@ Promote to production only after QA signs off on preview: `eas update:republish`
 
 ## 6. Export compliance, privacy, store forms
 - **Export compliance (decision needed).** The local database is encrypted with SQLCipher, which is encryption beyond what iOS provides, so `ITSAppUsesNonExemptEncryption` is **not** set to false by default. Whether the app qualifies for an exemption (and whether a filing applies) is a legal answer; get it from the owner or an adviser, then set the key in `app.config.ts` (a native change → version bump). Until then Apple will ask at each submission.
-- **Dev-launcher keys.** `NSLocalNetworkUsageDescription` / `NSBonjourServices` come from the dev client. Inspect the production `.ipa`'s Info.plist and confirm they are absent before the first submission **(unverified)**.
+- **Dev-launcher keys (fixed, verified).** The dev client adds `NSLocalNetworkUsageDescription` (text names "Expo Dev Launcher") and `NSBonjourServices` to the iOS project. `app.config.ts` now removes both for the **production** variant only; checked by running `expo prebuild` for production (both absent) and preview (both kept) on 2026-10-10. Re-check the final `.ipa` once the first EAS build exists.
 - **Privacy label (Apple) and Data safety (Google):** worksheet in `docs/store-listing.md`.
 - **Account deletion** is in the app (Profile → Delete my account, Edge Function `delete-account`). Both stores require it.
 - **Notification permission** is asked from Profile, not at launch.

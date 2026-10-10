@@ -1,6 +1,5 @@
 // src/features/student/Home.tsx
 // Port of web src/pages/StudentHome.tsx @d14323f. Renders inside the shell's <Screen> (src/shell/RoleHome.tsx).
-// Not here yet: <CustomClassCard> (M9b owns it; the web shows it between the payment cards and the countdown).
 import { useCallback, useState } from "react";
 import { Pressable, TextInput, View } from "react-native";
 import { useRouter } from "expo-router";
@@ -21,6 +20,7 @@ import { Badge, Button, Card, Err, Icon, IconTile, Main, PageHeader, Place, Rail
 import CheckInVerdict from "./CheckInVerdict";
 import ClassCountdown from "./ClassCountdown";
 import CourseOutline from "./CourseOutline";
+import CustomClassCard from "./CustomClassCard";
 import MakeupCard from "./MakeupCard";
 import QrScanner from "./QrScanner";
 import SoloCourses from "./SoloCourses";
@@ -182,6 +182,7 @@ export function StudentHome() {
         })}
         <Err>{open ? "" : err}</Err>
 
+        <CustomClassCard onCheckIn={() => setOpen(true)} />
         <ClassCountdown student onCheckIn={() => setOpen(true)} />
       </Rail><Main>
         {prog.length > 0 && (
