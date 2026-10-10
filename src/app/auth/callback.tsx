@@ -1,3 +1,4 @@
+// src/app/auth/callback.tsx
 // Email confirmation / password recovery deep link:  iqacademy://auth/callback#access_token=…   (or ?code=… with PKCE)
 // M5 ships a working version so links never dead-end; M6 owns the final wording and design.
 import { useEffect, useState } from "react";
@@ -17,7 +18,8 @@ export default function AuthCallback() {
     handleAuthUrl(url).then((r) => {
       if (!alive) return;
       if (r.kind === "session") router.replace(r.type === "recovery" ? "/reset-password" : "/");
-      else if (r.kind === "error") setError(r.message);
+      // An expired confirmation link goes to the verify screen's "send a new link" state, like the web; anything else is shown here.
+      else if (r.kind === "error") { if (/expired/i.test(r.message)) router.replace({ pathname: "/verify-email", params: { expired: "1" } }); else setError(r.message); }
       else router.replace("/");
     });
     return () => { alive = false; };
