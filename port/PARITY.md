@@ -9,9 +9,9 @@ wip: 7 · todo: 68 · ported: 22 · skip: 2
 | `App.tsx` | M5 | port | wip | `src/app/_layout.tsx, src/app/(app)/_layout.tsx, src/shell/*` | 64bc5f7 | shell, gate, guards, tab bars (student/instructor/coordinator/director/admin), avatar button, drawer done; 3 new routes are stubs |
 | `components/AssignSheet.tsx` | M10b | port | todo |  |  |  |
 | `components/ChannelRow.tsx` | M8 | port | ported | `src/features/channels/ChannelRow.tsx` | d14323f |  |
-| `components/ChatBubble.tsx` | M8 | port | wip | `src/features/channels/ChatBubble.tsx` | d14323f | text + attachment download (signed link in the in-app browser) + 2 h text-selection window for students. Not yet: copy/share actions, select-and-send-to-other-chats |
+| `components/ChatBubble.tsx` | M8 | port | ported | `src/features/channels/ChatBubble.tsx, src/features/channels/MessageActions.tsx` | d14323f | tap opens actions (copy / share / save / send on / select more), long-press starts selecting (instructor), checkbox selection, 2 h copy/share window for students (server-corrected clock, re-checked at the tap). Share of text uses the system share sheet; a file is downloaded to cache and shared, then deleted |
 | `components/CheckInVerdict.tsx` | M7a | port | todo |  |  |  |
-| `components/ClassComposer.tsx` | M8 | port | wip | `src/features/channels/Composer.tsx` | d14323f | text only (4000 chars); no attachments yet |
+| `components/ClassComposer.tsx` | M8 | port | ported | `src/features/channels/Composer.tsx` | d14323f | text + one file (photo/video from library, or any file) up to 25 MB; sent through the outbox so it survives offline and a retry never doubles it |
 | `components/ClassCountdown.tsx` | M7a | port | todo |  |  |  |
 | `components/ClockWatch.tsx` | M3 | port | ported | `src/core/clock.ts, src/shell/ClockNotice.tsx` | 0081e66 |  |
 | `components/CourseOutline.tsx` | M7a | port | todo |  |  |  |
@@ -33,9 +33,9 @@ wip: 7 · todo: 68 · ported: 22 · skip: 2
 | `components/PinInput.tsx` | M2 | port | wip | `src/ui/PinInput.tsx` | 0081e66 | keypad input only; PinSetup/ChangePinForm now take a `staff` flag (set_staff_pin / change_staff_pin): M7a builds them, M9a/M13 reuse |
 | `components/Place.tsx` | M2 | port | ported | `src/ui/Place.tsx` | 0081e66 | takes an explicit size (no em units) |
 | `components/QrScanner.tsx` | M7a | port | todo |  |  |  |
-| `components/ReviewSheet.tsx` | M7a | port | todo |  |  |  |
+| `components/ReviewSheet.tsx` | M7a | port | ported | `src/features/channels/ReviewSheet.tsx, src/features/channels/review.ts` | d14323f | stars, comment (2000), optional report (min 10 chars); online only |
 | `components/RunReminder.tsx` | M9b | port | todo |  |  |  |
-| `components/ShareToChats.tsx` | M8 | port | todo |  |  |  |
+| `components/ShareToChats.tsx` | M8 | port | ported | `src/features/channels/ShareToChats.tsx, src/features/channels/sendToChats.ts` | d14323f | online only; per-chat order kept, stops a chat at its first failure; retries reuse client ids and file paths so nothing is posted twice (the web version could repeat messages on retry) |
 | `components/Sidebar.tsx` | skip | skip | skip |  |  | desktop-only / not used on phones |
 | `components/SoloCourses.tsx` | M7a | port | ported | `src/features/student/SoloCourses.tsx` | d14323f | (offers, paid-pack notice, centre choice, Paystack in the in-app browser). Mounted on the student home. Pay step is untested against live Paystack; no screenshot pair yet |
 | `components/SoloPrices.tsx` | M10b | port | todo |  |  |  |
@@ -68,7 +68,7 @@ wip: 7 · todo: 68 · ported: 22 · skip: 2
 | `pages/Announce.tsx` | M10a | port | todo |  |  |  |
 | `pages/CentreClasses.tsx` | M9b | port | todo |  |  |  |
 | `pages/Centres.tsx` | M10a | port | todo |  |  |  |
-| `pages/ClassChannel.tsx` | M8 | port | wip | `src/features/channels/ClassChannel.tsx, src/shell/ChatFrame.tsx` | d14323f | read (students + instructor), newest page merged + "Show earlier", locked state, mark read (queued), instructor text send via outbox with pending bubbles. Not yet: rating card, attachments in composer, send-to-other-chats, selection mode. Composer pinned above keyboard via ChatFrame; no screenshot pair yet |
+| `pages/ClassChannel.tsx` | M8 | port | ported | `src/features/channels/ClassChannel.tsx, src/shell/ChatFrame.tsx` | d14323f | read, newest page merged + "Show earlier", locked state, mark read (queued), instructor send via outbox with pending bubbles (text and files), selection mode + send to other chats, rating card for students after the class. Composer pinned above keyboard via ChatFrame. Untested on a device; no screenshot pair yet |
 | `pages/ClassMessagesAdmin.tsx` | M10a | port | todo |  |  |  |
 | `pages/ClassReviews.tsx` | M10a | port | todo |  |  |  |
 | `pages/ClassScreen.tsx` | M9a | port | todo |  |  |  |

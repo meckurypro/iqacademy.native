@@ -35,6 +35,6 @@ export const labelFor = (rpc: string) => { const p = RPC_POLICIES[rpc]; return (
 /** Wording for a row on the Pending screen (rpc rows by function name, uploads by bucket). */
 export function labelForRow(r: { kind: string; payload: unknown }) {
   const p = (r.payload ?? {}) as { name?: string; bucket?: string };
-  if (r.kind === "upload") return p.bucket === "payment-receipts" ? "Upload payment receipt" : p.bucket === "avatars" ? "Upload profile photo" : "Upload file";
+  if (r.kind === "upload") return p.bucket === "payment-receipts" ? "Upload payment receipt" : p.bucket === "avatars" ? "Upload profile photo" : p.bucket === "class-messages" ? "Send attachment" : "Upload file";
   return labelFor(p.name ?? "");
 }

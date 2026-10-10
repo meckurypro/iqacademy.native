@@ -10,7 +10,13 @@ export const MAX_AVATAR = 5 * 1024 * 1024;
 
 export type After = { kind: "rpc"; name: string; args: Record<string, unknown> } | { kind: "avatar"; userId: string };
 export type UploadPayload = { bucket: string; path: string; localUri: string; mime: string; size: number; upsert: boolean; after?: After };
-export type UploadJob = Omit<UploadPayload, "localUri">;
+export type UploadJob = Omit<UploadPayload, "localUri"> & { /** Order key in the outbox. Defaults to one line per bucket; chat uses one line per class so text and files keep their order. */ scope?: string };
+
+export const MAX_MEDIA_BYTES = 25 * 1024 * 1024; // class chat: any file up to 25 MB (the database refuses more)
+/** File names become part of a storage path: plain characters only, at most 80 from the end (keeps the extension). */
+export const safeName = (name: string) => name.normalize("NFKD").replace(/[^\w.-]+/g, "_").slice(-80) || "file";
+export const chatMediaPath = (sessionId: string, id: string, name: string) => `${sessionId}/${id}-${safeName(name)}`;
+const MIME_OK = /^[a-z0-9][a-z0-9.+-]*\/[a-z0-9][a-z0-9.+-]*$/;
 
 export const extFor = (mime: string) => ({ "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "application/pdf": "pdf" })[mime] ?? "bin";
 
@@ -49,5 +55,19 @@ export function createUploadHandler(d: { sb: UploadSb; readBytes: (uri: string) 
     if (p.after?.kind === "rpc") ok(await d.sb.rpc(p.after.name, p.after.args));
     else if (p.after?.kind === "avatar") ok({ data: null, ...(await d.sb.from("profiles").update({ avatar_url: d.sb.storage.from(p.bucket).getPublicUrl(p.path).data.publicUrl }).eq("id", p.after.userId)) });
     await d.removeLocal(p.localUri).catch(() => {});
+  };
+}
+
+/**
+ * An attachment for a class chat: upload to the class's folder, then post the message. `id` is the message's client id, chosen once, so every retry posts the same
+ * message (the server returns the existing one) and the stored file has a fixed path.
+ */
+export function chatMediaJob(o: { sessionId: string; body: string | null; name: string; mime: string; size: number; id: string }): UploadJob {
+  const mime = o.mime && MIME_OK.test(o.mime) && o.mime.length <= 127 ? o.mime : "application/octet-stream";
+  if (o.size <= 0 || o.size > MAX_MEDIA_BYTES) throw new UserMessage("That file can't be sent. Choose a file under 25 MB.");
+  const path = chatMediaPath(o.sessionId, o.id, o.name);
+  return {
+    bucket: "class-messages", path, mime, size: o.size, upsert: false, scope: `chat:${o.sessionId}`,
+    after: { kind: "rpc", name: "send_class_message", args: { p_session_id: o.sessionId, p_body: o.body?.trim() || null, p_media_path: path, p_media_name: o.name.slice(0, 200), p_media_mime: mime, p_media_size: o.size, p_client_id: o.id } },
   };
 }

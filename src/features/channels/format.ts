@@ -6,6 +6,8 @@ export const PAGE = 40;
 export type ClassMessage = {
   id: string; session_id: string; sender_label: string; body: string | null;
   media_path: string | null; media_name: string | null; media_mime: string | null; media_size: number | null; created_at: string;
+  /** Returned by the channel RPC; used as the title when sharing. */
+  course_title?: string | null;
 };
 
 /** Students can select the text of a message only for this long after it arrives. */
@@ -39,13 +41,31 @@ export function layoutFlags(msgs: ClassMessage[], i: number, day: (iso: string) 
 }
 
 export type PendingRow = { id: string; body: string | null; status: string; mediaName?: string | null };
+
+export const MAX_SELECT = 20;
+/** Tap on a message while selecting. Returns the new selection, or `refused` when the person is at the limit. */
+export function toggleSelection(cur: ReadonlySet<string> | null, id: string, max = MAX_SELECT): { set: Set<string>; refused: boolean } {
+  const n = new Set(cur ?? []);
+  if (n.has(id)) { n.delete(id); return { set: n, refused: false }; }
+  if (n.size >= max) return { set: n, refused: true };
+  n.add(id); return { set: n, refused: false };
+}
+/** Students (restricted) may copy or share only inside the two-hour window; staff always may. */
+export const canCopyShare = (m: Pick<ClassMessage, "created_at">, at: number, restricted: boolean) => !restricted || !copyShareClosed(m, at);
+
+const MIME_BY_EXT: Record<string, string> = { jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", webp: "image/webp", gif: "image/gif", heic: "image/heic", pdf: "application/pdf", mp4: "video/mp4", mov: "video/quicktime", mp3: "audio/mpeg", m4a: "audio/mp4", txt: "text/plain", csv: "text/csv", doc: "application/msword", docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", xls: "application/vnd.ms-excel", xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ppt: "application/vnd.ms-powerpoint", pptx: "application/vnd.openxmlformats-officedocument.presentationml.presentation", zip: "application/zip" };
+/** A picker may not say what the file is; fall back to its extension, then to "some file". */
+export const mimeFor = (name: string, given?: string | null) => (given && given.includes("/") ? given : MIME_BY_EXT[name.split(".").pop()?.toLowerCase() ?? ""] ?? "application/octet-stream");
 /** The unsent messages of this chat, from the outbox, oldest first. */
 export function pendingForSession(rows: { id: string; kind: string; status: string; created_at: number; payload: unknown }[], sessionId: string): PendingRow[] {
   return rows
-    .filter((r) => {
-      if (r.kind === "rpc") { const p = r.payload as { name?: string; args?: { p_session_id?: string } }; return p.name === "send_class_message" && p.args?.p_session_id === sessionId; }
-      return false;
+    .map((r) => {
+      // a text message is an rpc row; an attachment is an upload row whose follow-up step posts the message
+      const p = r.payload as { name?: string; args?: Record<string, unknown>; after?: { kind?: string; name?: string; args?: Record<string, unknown> } };
+      const args = r.kind === "rpc" && p.name === "send_class_message" ? p.args : r.kind === "upload" && p.after?.kind === "rpc" && p.after.name === "send_class_message" ? p.after.args : undefined;
+      return args && args.p_session_id === sessionId ? { id: r.id, at: r.created_at, body: (args.p_body as string | null) ?? null, status: r.status, mediaName: (args.p_media_name as string | null) ?? null } : null;
     })
-    .sort((a, b) => a.created_at - b.created_at)
-    .map((r) => ({ id: r.id, body: ((r.payload as { args?: { p_body?: string | null } }).args?.p_body) ?? null, status: r.status }));
+    .filter((x): x is NonNullable<typeof x> => x !== null)
+    .sort((a, b) => a.at - b.at)
+    .map(({ at: _at, ...rest }) => rest);
 }

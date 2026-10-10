@@ -15,8 +15,9 @@ export async function queueUpload(job: UploadJob, srcUri: string, opts: { tags?:
   const rt = getRuntime(); if (!rt?.outbox) throw new UserMessage("This can't be saved on this device right now.");
   const copy = new File(dir(), `${randomUUID()}.${extFor(job.mime)}`);
   new File(srcUri).copy(copy);
-  const payload: UploadPayload = { ...job, localUri: copy.uri };
-  const id = await rt.outbox.enqueue("upload", payload, { scope: `upload:${job.bucket}`, tags: opts.tags ?? [] });
+  const { scope, ...rest } = job;
+  const payload: UploadPayload = { ...rest, localUri: copy.uri };
+  const id = await rt.outbox.enqueue("upload", payload, { scope: scope ?? `upload:${job.bucket}`, tags: opts.tags ?? [] });
   await rt.outbox.flush();
   const row = (await rt.outbox.list()).find((r) => r.id === id);
   if (!row) return { status: "done" };

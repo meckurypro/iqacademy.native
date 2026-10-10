@@ -16,4 +16,4 @@ export { roleSignature, classifyRoleChange } from "./roleWipe";
 export { invokeFunction } from "./fn";
 export { functionErrorKey } from "./fnError";
 export { queueUpload } from "./stage";
-export { receiptJob, avatarJob, MAX_RECEIPT, type UploadJob } from "./uploads";
+export { receiptJob, avatarJob, chatMediaJob, chatMediaPath, safeName, MAX_RECEIPT, MAX_MEDIA_BYTES, type UploadJob } from "./uploads";
