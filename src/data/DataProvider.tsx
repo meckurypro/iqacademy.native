@@ -1,6 +1,8 @@
 // Builds the per-user data runtime: encrypted DB (or memory-only fallback), query engine, outbox, realtime.
 // Rebuilt whenever the signed-in user changes, so one person's cache can never leak into another's.
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createUploadHandler, type UploadSb } from "./uploads";
+import { readBytes, removeLocal } from "./stage";
 import { AppState } from "react-native";
 import { getRandomBytes } from "expo-crypto";
 import { ok } from "@/core/errors";
@@ -27,7 +29,10 @@ async function buildRuntime(uid: string | null): Promise<Runtime> {
   const engine = new QueryEngine({ cache: db ? createCacheRepo(db) : null, now: Date.now, isOnline });
   const outbox = db ? createOutbox({
     repo: createOutboxRepo(db), isOnline, now: Date.now, newId: () => toHex(getRandomBytes(16)), onDone: (tags) => engine.invalidate(tags),
-    handlers: { rpc: async (p: { name: string; args: Record<string, unknown> }) => { ok(await supabase.rpc(p.name, p.args)); } },
+    handlers: {
+      rpc: async (p: { name: string; args: Record<string, unknown> }) => { ok(await supabase.rpc(p.name, p.args)); },
+      upload: createUploadHandler({ sb: supabase as unknown as UploadSb, readBytes, removeLocal }),
+    },
   }) : null;
   await outbox?.start();
   // keep the on-disk cache bounded (30 days, 20 MB of payload); fire and forget, a failure only means a bigger cache

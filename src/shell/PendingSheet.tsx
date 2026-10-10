@@ -3,7 +3,9 @@ import { useCallback, useEffect, useState } from "react";
 import { Pressable, View } from "react-native";
 import { friendly } from "@/core/errors";
 import { getRuntime, useOnline, useOutbox } from "@/data";
-import { labelFor } from "@/data/policies";
+import { labelForRow } from "@/data/policies";
+import { removeLocal } from "@/data/stage";
+import type { UploadPayload } from "@/data/uploads";
 import type { OutboxRow } from "@/data/db/outboxRepo";
 import { useTheme } from "@/theme/ThemeProvider";
 import { Badge, Button, Card, Icon, Sheet, Text, useFeedback } from "@/ui";
@@ -20,7 +22,7 @@ export function PendingSheet({ open, onClose }: { open: boolean; onClose: () => 
     return () => { alive = false; };
   }, [open, rt, tick, c.pending, c.failed, c.dead]);
   const retry = async (id: string) => { await rt?.outbox?.revive(id); await rt?.outbox?.flush(); await load(); };
-  const drop = async (r: OutboxRow) => { if (await confirm({ title: "Discard this change?", message: `"${labelFor((r.payload as { name?: string })?.name ?? "")}" will not be sent.`, confirmLabel: "Discard", danger: true })) { await rt?.outbox?.discard(r.id); await load(); } };
+  const drop = async (r: OutboxRow) => { if (await confirm({ title: "Discard this change?", message: `"${labelForRow(r)}" will not be sent.`, confirmLabel: "Discard", danger: true })) { await rt?.outbox?.discard(r.id); if (r.kind === "upload") await removeLocal((r.payload as UploadPayload).localUri).catch(() => {}); await load(); } };
   return (
     <Sheet open={open} onClose={onClose} title="Waiting to send">
       <View style={{ gap: 10 }}>
@@ -30,7 +32,7 @@ export function PendingSheet({ open, onClose }: { open: boolean; onClose: () => 
           <Card key={r.id} variant="sunken">
             <View style={{ gap: 8 }}>
               <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-                <Text weight="medium" style={{ flex: 1 }}>{labelFor((r.payload as { name?: string })?.name ?? "")}</Text>
+                <Text weight="medium" style={{ flex: 1 }}>{labelForRow(r)}</Text>
                 <Badge tone={r.status === "dead" ? "bad" : r.status === "failed" ? "warn" : "info"}>{r.status === "dead" ? "Not sent" : r.status === "failed" ? "Will retry" : "Waiting"}</Badge>
               </View>
               <Text size={13} tone="muted">Saved {when(r.created_at)}{r.last_error ? ` · ${friendly(new Error(r.last_error))}` : ""}</Text>

@@ -37,7 +37,7 @@ wip: 7 · todo: 68 · ported: 22 · skip: 2
 | `components/RunReminder.tsx` | M9b | port | todo |  |  |  |
 | `components/ShareToChats.tsx` | M8 | port | todo |  |  |  |
 | `components/Sidebar.tsx` | skip | skip | skip |  |  | desktop-only / not used on phones |
-| `components/SoloCourses.tsx` | M7a | port | todo |  |  |  |
+| `components/SoloCourses.tsx` | M7a | port | ported | `src/features/student/SoloCourses.tsx` | d14323f | (offers, paid-pack notice, centre choice, Paystack in the in-app browser). Mounted on the student home. Pay step is untested against live Paystack; no screenshot pair yet |
 | `components/SoloPrices.tsx` | M10b | port | todo |  |  |  |
 | `components/Stars.tsx` | M2 | port | ported | `src/ui/Stars.tsx` | 0081e66 |  |
 | `components/ui.tsx` | M2 | port | ported | `src/ui/ui.tsx, src/ui/Sheet.tsx, src/ui/SelectSheet.tsx` | 64bc5f7 | Stat compact, StatStrip, Chip, ChipRow added (64bc5f7); Split/Main/Rail single-column on phones |

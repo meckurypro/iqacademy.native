@@ -4,12 +4,13 @@ import type { SupabaseClient } from "@/core/supabase";
 import { useRuntime } from "../DataProvider";
 import { isOnline, useOnline } from "../net";
 import { stableKey } from "./engine";
+import { refreshDelta, type DeltaBox, type DeltaSpec } from "./delta";
 
 export type UseQueryOpts<T> = {
   /** Anything JSON-able that identifies this query (name + args). */
   key: unknown;
   /** Do the fetch. Receives the client; return the data (use ok() for { data, error } results). Screens never import the client themselves. */
-  fn: (sb: SupabaseClient) => Promise<T>;
+  fn: (sb: SupabaseClient, prev?: T) => Promise<T>;
   /** What this data depends on (e.g. "notifications", "class:<id>"). A server change with a matching tag refreshes it. */
   tags?: string[];
   /** Younger than this and not invalidated → no network call. Default 60 s. */
@@ -29,7 +30,7 @@ export function useQuery<T>(o: UseQueryOpts<T>) {
   const state = useSyncExternalStore(useCallback((cb) => engine.subscribe(key, cb), [engine, key]), () => engine.getState(key));
   useEffect(() => {
     if (!enabled) return;
-    engine.ensure(key, { fn: () => fnRef.current(rt.sb), tags: tagKey ? tagKey.split("|") : [], ttlMs: ttl });
+    engine.ensure(key, { fn: (prev) => fnRef.current(rt.sb, prev as T | undefined), tags: tagKey ? tagKey.split("|") : [], ttlMs: ttl });
   }, [engine, rt.sb, key, enabled, tagKey, ttl]);
 
   const refetch = useCallback(() => engine.fetch(key), [engine, key]);
@@ -51,5 +52,23 @@ export function useQuery<T>(o: UseQueryOpts<T>) {
 /** A cached database function call. Result is typed by the caller. */
 export function useRpc<T = unknown>(name: string, args?: Record<string, unknown>, opts: Omit<UseQueryOpts<T>, "key" | "fn"> = {}) {
   return useQuery<T>({ ...opts, key: ["rpc", name, args ?? {}], fn: async (sb) => ok(await sb.rpc(name, args ?? {})) as T });
+}
+
+const SIX_HOURS = 6 * 3600_000;
+/** A list that refreshes by asking only for what is newer than the newest row held (chat, notifications). `refetch(true)` forces a full reload. */
+export function useDeltaQuery<T>(o: {
+  key: unknown; spec: DeltaSpec<T>; fetchAll: (sb: SupabaseClient) => Promise<T[]>; fetchSince: (sb: SupabaseClient, cursor: string) => Promise<T[]>;
+  tags?: string[]; ttlMs?: number; enabled?: boolean; fullEveryMs?: number; now?: () => number;
+}) {
+  const forceRef = useRef(false); const now = o.now ?? Date.now;
+  const q = useQuery<DeltaBox<T>>({
+    key: ["delta", o.key], tags: o.tags, ttlMs: o.ttlMs, enabled: o.enabled,
+    fn: async (sb, prev) => {
+      const force = forceRef.current; forceRef.current = false;
+      return refreshDelta({ prev, spec: o.spec, now: now(), fullEveryMs: o.fullEveryMs ?? SIX_HOURS, force, fetchAll: () => o.fetchAll(sb), fetchSince: (c) => o.fetchSince(sb, c) });
+    },
+  });
+  const { refetch } = q;
+  return { ...q, data: q.data?.rows, refetch: useCallback((full = false) => { forceRef.current = full; return refetch(); }, [refetch]) };
 }
 export { isOnline };

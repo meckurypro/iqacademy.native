@@ -3,7 +3,7 @@
 // `rolesReady` lets the shell wait for them instead of flashing the student home for a second.
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 import type { Session } from "@supabase/supabase-js";
-import { useQuery } from "@/data";
+import { useDataWarmup, useQuery } from "@/data";
 import { ok } from "./errors";
 import { useSession } from "./session";
 
@@ -23,6 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
   const { data: roleRows, loading: rolesLoading, error: rolesError, refetch: refetchRoles } = r;
   const { data: profile, refetch: refetchProfile } = p;
+  useDataWarmup(uid, roleRows ?? [], !!uid && roleRows !== undefined);
   const value = useMemo<Ctx>(() => ({
     session, loading,
     roles: roleRows ?? [],

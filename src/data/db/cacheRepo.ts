@@ -30,6 +30,11 @@ export function createCacheRepo(db: Db) {
       const after = (await db.first<{ n: number }>("SELECT count(*) AS n FROM cache_entries"))?.n ?? 0;
       return before - after;
     },
+    /** Drop every entry except these keys (keeps who-am-I data across a role change). */
+    clearExcept: async (keep: string[]) => {
+      if (!keep.length) { await db.run("DELETE FROM cache_entries"); return; }
+      await db.run(`DELETE FROM cache_entries WHERE key NOT IN (${keep.map(() => "?").join(",")})`, keep);
+    },
     clear: () => db.run("DELETE FROM cache_entries"),
   };
 }

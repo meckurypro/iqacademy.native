@@ -8,7 +8,8 @@ import type { CacheRepo } from "../db/cacheRepo";
 export type QueryStatus = "idle" | "loading" | "success" | "error";
 export type QueryState<T = unknown> = { data: T | undefined; error: unknown; status: QueryStatus; updatedAt: number | null; stale: boolean; fetching: boolean; fromCache: boolean };
 export const IDLE: QueryState = { data: undefined, error: null, status: "idle", updatedAt: null, stale: false, fetching: false, fromCache: false };
-export type Meta = { fn: () => Promise<unknown>; tags: string[]; ttlMs: number };
+/** `fn` receives what is already held for this key (undefined the first time), so a list can ask the server only for what changed since. */
+export type Meta = { fn: (prev?: unknown) => Promise<unknown>; tags: string[]; ttlMs: number };
 export type Deps = { cache: CacheRepo | null; now: () => number; isOnline: () => boolean };
 
 export const stableKey = (parts: unknown): string => {
@@ -72,7 +73,7 @@ export class QueryEngine {
     this.set(key, { fetching: true });
     const p = (async () => {
       try {
-        const data = await meta.fn();
+        const data = await meta.fn(this.getState(key).data);
         const at = this.deps.now();
         this.set(key, { data, error: null, status: "success", updatedAt: at, stale: false, fetching: false, fromCache: false });
         this.deps.cache?.put(key, JSON.stringify(data ?? null), meta.tags, meta.ttlMs, at).catch(() => {});
@@ -104,6 +105,16 @@ export class QueryEngine {
   revalidateActive() {
     if (!this.deps.isOnline()) return;
     for (const key of this.metas.keys()) if (this.watching(key) && !this.fresh(key)) this.fetch(key);
+  }
+  /** Forget everything except the given keys (a role change: the old role's lists must not linger). Watched keys are fetched again straight away. */
+  reset(keep: string[] = []) {
+    const kept = new Set(keep);
+    for (const key of [...this.states.keys()]) {
+      if (kept.has(key)) continue;
+      this.states.delete(key); this.hydrating.delete(key);
+      this.subs.get(key)?.forEach((f) => f());
+      if (this.watching(key) && this.deps.isOnline() && this.metas.has(key)) this.fetch(key);
+    }
   }
   /** Local write-through (e.g. after an optimistic update). */
   setData<T>(key: string, data: T) { this.set(key, { data, status: "success", error: null, updatedAt: this.deps.now(), stale: false }); }
