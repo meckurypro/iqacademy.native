@@ -1,0 +1,42 @@
+# Install as .github/workflows/eas-preview-update.yml (see docs/release.md §1).
+# Every merge to main publishes the JavaScript to the `preview` channel, for QA on preview builds. Production is promoted by hand (docs/release.md).
+# One-time setup in GitHub: secret EXPO_TOKEN; variables EAS_PROJECT_ID, EXPO_PUBLIC_SUPABASE_URL, EXPO_PUBLIC_WEB_BASE_URL; secret EXPO_PUBLIC_SUPABASE_ANON_KEY
+# (the anon key is public by design, but kept as a secret so it is not printed in logs). Until EAS_PROJECT_ID is set this workflow skips itself.
+# `EXPO_PUBLIC_*` values are baked into the bundle when it is published, so they must be given here (verify against current EAS docs whether `--environment` can replace this).
+name: EAS preview update
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["docs/**", "port/**", "**.md"]
+concurrency:
+  group: eas-preview-update
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  publish:
+    if: ${{ vars.EAS_PROJECT_ID != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      EAS_PROJECT_ID: ${{ vars.EAS_PROJECT_ID }}
+      EXPO_PUBLIC_SUPABASE_URL: ${{ vars.EXPO_PUBLIC_SUPABASE_URL }}
+      EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
+      EXPO_PUBLIC_WEB_BASE_URL: ${{ vars.EXPO_PUBLIC_WEB_BASE_URL }}
+      EXPO_PUBLIC_AUTH_FLOW: implicit
+      APP_VARIANT: preview
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - run: npm ci
+      - run: npm run verify
+      # An update must never go out for a native change that has not been through a build (see docs/release.md).
+      - run: node scripts/native-fingerprint.mjs --check
+      - run: eas update --channel preview --message "${{ github.sha }}" --non-interactive

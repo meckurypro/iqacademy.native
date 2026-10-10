@@ -1,0 +1,39 @@
+# Install as .github/workflows/eas-production.yml (see docs/release.md §1).
+# Manual: build the store binaries (and optionally submit them). Runs in the `production` GitHub environment, so set "Required reviewers" on that
+# environment (Settings → Environments) and nothing ships without an approval. Needs secret EXPO_TOKEN and the EAS credentials set up once (docs/release.md).
+# Production environment variables (EXPO_PUBLIC_*, EAS_PROJECT_ID, WEB_HOST) live in EAS as environment variables for the `production` profile, not here.
+name: EAS production build
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: Platform to build
+        type: choice
+        options: [all, ios, android]
+        default: all
+      submit:
+        description: Submit to the stores after the build (TestFlight / Play) once it finishes
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - run: npm ci
+      - run: npm run verify
+      - run: node scripts/native-fingerprint.mjs --check
+      - name: Build
+        run: eas build --profile production --platform ${{ inputs.platform }} --non-interactive --no-wait ${{ inputs.submit && '--auto-submit' || '' }}

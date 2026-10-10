@@ -70,7 +70,9 @@
     "test": "jest",
     "drift": "node scripts/web-drift.mjs",
     "sync-web": "node scripts/sync-web.mjs",
-    "verify": "npm run typecheck && npm run lint && npm run test"
+    "verify": "npm run typecheck && npm run lint && npm run test",
+    "fingerprint": "node scripts/native-fingerprint.mjs --check",
+    "fingerprint:accept": "node scripts/native-fingerprint.mjs --accept"
   },
   "private": true
 }

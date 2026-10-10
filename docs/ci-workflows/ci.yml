@@ -1,0 +1,26 @@
+# Install as .github/workflows/ci.yml (see docs/release.md §1).
+# Checks on every pull request and every push to main: typecheck, lint, tests, and the native-fingerprint gate (scripts/native-fingerprint.mjs).
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run verify
+      # Fails when the native side changed but `version` did not (see docs/release.md, "Native changes vs over-the-air updates").
+      - run: node scripts/native-fingerprint.mjs --check
