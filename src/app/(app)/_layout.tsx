@@ -3,10 +3,11 @@
 // Which buttons the bar shows is decided by role (shell/TabBar), not by which files exist.
 import { useEffect } from "react";
 import { Redirect, Tabs, usePathname, useRouter } from "expo-router";
-import { useAuth } from "@/core/auth";
+import { primaryRole, useAuth } from "@/core/auth";
 import { usePushRefresh } from "@/native/notify";
 import { allowedHere } from "@/shell/guards";
 import { useTheme } from "@/theme/ThemeProvider";
+import { PinGate } from "@/features/student/Pin";
 import TabBar from "@/shell/TabBar";
 import { clearPending, getPending } from "@/shared/verify";
 
@@ -26,5 +27,6 @@ export default function AppLayout() {
   useVerifyRedirect();
   usePushRefresh(session?.user.id); // refreshes the push token if notifications are already allowed; forgets this phone on sign-out
   if (!allowedHere(path, roles.map((r) => r.role))) return <Redirect href="/" />;
-  return <Tabs tabBar={() => <TabBar />} backBehavior="history" screenOptions={{ headerShown: false, lazy: true, sceneStyle: { backgroundColor: p.c.bg } }} />;
+  // A student who has paid but has no check-in PIN yet is held on the PIN screen until they set one (web: <PinGate/> for role === "student").
+  return <><Tabs tabBar={() => <TabBar />} backBehavior="history" screenOptions={{ headerShown: false, lazy: true, sceneStyle: { backgroundColor: p.c.bg } }} />{primaryRole(roles) === "student" && <PinGate />}</>;
 }
