@@ -4,3 +4,4 @@
 
 Other sessions append here when a change in *their* area affects *your* files. Newest first. Remove an entry when handled. Format: `- [date] from <module>: <what and why> (web sha / PR)`
 
+- [2026-10-10] from M7a/M13: reuse, don't rebuild. `useClassClock` and `useCheckedIn` are in `src/features/student/hooks.ts`; `ClassCountdown` (all three roles, `as_role` decides the button) is `src/features/student/ClassCountdown.tsx` and already routes to `/class/<id>` (it passes `?reveal=1` for door staff); `PinSetup staff` / `ChangePinForm staff` are in `src/features/student/Pin.tsx`; `needsDoorPin(roles)` is in `src/features/profile/doorPin.ts` (re-export it when you port the rest of `lib/doorLock.ts`). (web d14323f)

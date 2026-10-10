@@ -2,7 +2,7 @@
 
 Generated from `port/parity.json` by `scripts/parity.mjs`. Edit with `node scripts/parity.mjs set <web-file> --status … --native … --sha …`, never by hand.
 
-wip: 7 · todo: 68 · ported: 22 · skip: 2
+wip: 5 · todo: 44 · ported: 46 · diverged: 2 · skip: 2
 
 | web file | module | mode | status | native | ported from | note |
 |---|---|---|---|---|---|---|
@@ -10,11 +10,11 @@ wip: 7 · todo: 68 · ported: 22 · skip: 2
 | `components/AssignSheet.tsx` | M10b | port | todo |  |  |  |
 | `components/ChannelRow.tsx` | M8 | port | ported | `src/features/channels/ChannelRow.tsx` | d14323f |  |
 | `components/ChatBubble.tsx` | M8 | port | ported | `src/features/channels/ChatBubble.tsx, src/features/channels/MessageActions.tsx` | d14323f | tap opens actions (copy / share / save / send on / select more), long-press starts selecting (instructor), checkbox selection, 2 h copy/share window for students (server-corrected clock, re-checked at the tap). Share of text uses the system share sheet; a file is downloaded to cache and shared, then deleted |
-| `components/CheckInVerdict.tsx` | M7a | port | todo |  |  |  |
+| `components/CheckInVerdict.tsx` | M7a | port | ported | `src/features/student/CheckInVerdict.tsx` | d14323f |  |
 | `components/ClassComposer.tsx` | M8 | port | ported | `src/features/channels/Composer.tsx` | d14323f | text + one file (photo/video from library, or any file) up to 25 MB; sent through the outbox so it survives offline and a retry never doubles it |
-| `components/ClassCountdown.tsx` | M7a | port | todo |  |  |  |
+| `components/ClassCountdown.tsx` | M7a | port | ported | `src/features/student/ClassCountdown.tsx` | d14323f |  |
 | `components/ClockWatch.tsx` | M3 | port | ported | `src/core/clock.ts, src/shell/ClockNotice.tsx` | 0081e66 |  |
-| `components/CourseOutline.tsx` | M7a | port | todo |  |  |  |
+| `components/CourseOutline.tsx` | M7a | port | ported | `src/features/student/CourseOutline.tsx` | d14323f |  |
 | `components/CustomClassCard.tsx` | M9b | port | todo |  |  |  |
 | `components/CustomClassSheet.tsx` | M9b | port | todo |  |  |  |
 | `components/CustomClassStudents.tsx` | M9b | port | todo |  |  |  |
@@ -23,17 +23,17 @@ wip: 7 · todo: 68 · ported: 22 · skip: 2
 | `components/ErrorBoundary.tsx` | M0 | port | ported | `src/shell/ErrorBoundary.tsx` | 0081e66 |  |
 | `components/feedback.tsx` | M2 | port | ported | `src/ui/feedback.tsx` | 64bc5f7 | offline notice + Back online/Refresh added (64bc5f7); toasts in root view, covered by an open sheet; Refresh revalidates instead of reloading |
 | `components/Icon.tsx` | M2 | generated | ported | `src/ui/icons.generated.tsx + src/ui/Icon.tsx` | 64bc5f7 |  |
-| `components/MakeupCard.tsx` | M7a | port | todo |  |  |  |
+| `components/MakeupCard.tsx` | M7a | port | ported | `src/features/student/MakeupCard.tsx` | d14323f |  |
 | `components/MessageBubble.tsx` | M8 | port | todo |  |  |  |
 | `components/MessagesRoute.tsx` | M5 | port | wip | `src/app/(app)/messages/*` | 0081e66 | route stubs only; M8 implements |
-| `components/MyCentres.tsx` | M13 | port | todo |  |  |  |
+| `components/MyCentres.tsx` | M13 | port | ported | `src/features/profile/MyCentres.tsx` | d14323f |  |
 | `components/NavMenu.tsx` | M5 | port | ported | `src/shell/NavMenu.tsx` | 64bc5f7 | slimmed to MENU_EXTRA leftovers; no hamburger when empty (64bc5f7) |
-| `components/PasswordFields.tsx` | M6 | port | todo |  |  |  |
-| `components/PinGate.tsx` | M7a | port | todo |  |  |  |
-| `components/PinInput.tsx` | M2 | port | wip | `src/ui/PinInput.tsx` | 0081e66 | keypad input only; PinSetup/ChangePinForm now take a `staff` flag (set_staff_pin / change_staff_pin): M7a builds them, M9a/M13 reuse |
+| `components/PasswordFields.tsx` | M6 | port | ported | `src/features/auth/PasswordFields.tsx` | d14323f | clipboard via expo-clipboard |
+| `components/PinGate.tsx` | M7a | port | ported | `src/features/student/Pin.tsx` | d14323f | Modal over the whole app; mounted for students in (app)/_layout |
+| `components/PinInput.tsx` | M2 | port | ported | `src/ui/PinInput.tsx, src/features/student/Pin.tsx` | d14323f | PinSetup/ChangePinForm take staff (door PIN) |
 | `components/Place.tsx` | M2 | port | ported | `src/ui/Place.tsx` | 0081e66 | takes an explicit size (no em units) |
-| `components/QrScanner.tsx` | M7a | port | todo |  |  |  |
-| `components/ReviewSheet.tsx` | M7a | port | ported | `src/features/channels/ReviewSheet.tsx, src/features/channels/review.ts` | d14323f | stars, comment (2000), optional report (min 10 chars); online only |
+| `components/QrScanner.tsx` | M7a | port | ported | `src/features/student/QrScanner.tsx` | d14323f | expo-camera CameraView instead of BarcodeDetector |
+| `components/ReviewSheet.tsx` | M7a | port | ported | `src/features/channels/ReviewSheet.tsx` | d14323f | built by the M8 session; student Home uses it |
 | `components/RunReminder.tsx` | M9b | port | todo |  |  |  |
 | `components/ShareToChats.tsx` | M8 | port | ported | `src/features/channels/ShareToChats.tsx, src/features/channels/sendToChats.ts` | d14323f | online only; per-chat order kept, stops a chat at its first failure; retries reuse client ids and file paths so nothing is posted twice (the web version could repeat messages on retry) |
 | `components/Sidebar.tsx` | skip | skip | skip |  |  | desktop-only / not used on phones |
@@ -45,8 +45,8 @@ wip: 7 · todo: 68 · ported: 22 · skip: 2
 | `lib/auth.tsx` | M3 | port | ported | `src/core/auth.tsx, src/core/session.tsx` | 0081e66 | roles via data layer (cached/offline) + rolesReady |
 | `lib/centre.ts` | M3 | generated | ported | `src/shared/web/centre.ts` | 64bc5f7 |  |
 | `lib/channels.ts` | M3 | generated | ported | `src/shared/web/channels.ts` | 64bc5f7 |  |
-| `lib/checkin.ts` | M7a | port | wip | `src/shared/checkin.ts` | 0081e66 | types/doorState only; useCheckedIn hook is M7a |
-| `lib/classClock.ts` | M7a | port | wip | `src/shared/classClock.ts` | 0081e66 | pure part only; useTicker/useClassClock are M7a/M9a |
+| `lib/checkin.ts` | M7a | port | ported | `src/shared/checkin.ts, src/features/student/hooks.ts` | d14323f | useCheckedIn is in hooks.ts |
+| `lib/classClock.ts` | M7a | port | ported | `src/shared/classClock.ts, src/features/student/hooks.ts` | d14323f | useClassClock is in hooks.ts; M9a/M9b reuse it |
 | `lib/db.ts` | M3 | generated | ported | `src/shared/web/db.ts` | 64bc5f7 |  |
 | `lib/doorLock.ts` | M9a | port | todo |  |  |  |
 | `lib/messages.ts` | M8 | port | wip | `src/shared/messages.ts` | 0081e66 | pure part only; download/share/copy/forward + unread hook are M8 |
@@ -82,8 +82,8 @@ wip: 7 · todo: 68 · ported: 22 · skip: 2
 | `pages/InstructorHome.tsx` | M9a | port | todo |  |  |  |
 | `pages/InstructorMessages.tsx` | M8 | port | ported | `src/features/channels/Messages.tsx` | d14323f | instructor list, chosen by role like web MessagesRoute |
 | `pages/Instructors.tsx` | M10a | port | todo |  |  |  |
-| `pages/Landing.tsx` | M6 | port | todo |  |  |  |
-| `pages/Login.tsx` | M6 | port | todo |  |  |  |
+| `pages/Landing.tsx` | M6 | port | diverged | `src/features/auth/Landing.tsx` | d14323f | web's 'Get the app' / 'Continue on PC' buttons become 'Create an account' / 'Sign in' (already in the app) |
+| `pages/Login.tsx` | M6 | port | ported | `src/features/auth/Login.tsx` | d14323f |  |
 | `pages/Manage.tsx` | M10a | port | todo |  |  |  |
 | `pages/Messages.tsx` | M8 | port | ported | `src/features/channels/Messages.tsx` | d14323f | student list (receive-only), cached, live via global realtime + DELETE |
 | `pages/MyClasses.tsx` | M9a | port | todo |  |  |  |
@@ -94,14 +94,14 @@ wip: 7 · todo: 68 · ported: 22 · skip: 2
 | `pages/Payments.tsx` | M10c | port | todo |  |  |  |
 | `pages/Payouts.tsx` | M10c | port | todo |  |  |  |
 | `pages/Prices.tsx` | M10b | port | todo |  |  |  |
-| `pages/Profile.tsx` | M13 | port | todo | `src/shell/ProfileInterim.tsx (interim)` | 64bc5f7 | web moved sign-out + theme here, adds Door PIN card for instructors/coordinators and hides reg no/PIN for non-students; M13 replaces the interim screen |
-| `pages/ResetPassword.tsx` | M6 | port | todo |  |  |  |
+| `pages/Profile.tsx` | M13 | port | diverged | `src/features/profile/Profile.tsx` | d14323f | native-only additions: Notifications, Security (M12), Delete my account; photo from the phone library. Interim screen deleted |
+| `pages/ResetPassword.tsx` | M6 | port | ported | `src/features/auth/ResetPassword.tsx` | d14323f |  |
 | `pages/Roster.tsx` | M10b | port | todo |  |  |  |
 | `pages/Schedule.tsx` | M9b | port | todo |  |  |  |
 | `pages/StaffHome.tsx` | M9b | port | todo |  |  |  |
 | `pages/Statement.tsx` | M9b | port | todo |  |  |  |
-| `pages/StudentHome.tsx` | M7a | port | todo |  |  |  |
+| `pages/StudentHome.tsx` | M7a | port | wip | `src/features/student/Home.tsx` | d14323f | all cards except CustomClassCard (M9b); rating sheet is the M8 one |
 | `pages/Students.tsx` | M9b | port | todo |  |  |  |
 | `pages/Team.tsx` | M9b | port | todo |  |  |  |
 | `pages/Users.tsx` | M10a | port | todo |  |  |  |
-| `pages/VerifyEmail.tsx` | M6 | port | todo |  |  |  |
+| `pages/VerifyEmail.tsx` | M6 | port | ported | `src/features/auth/VerifyEmail.tsx` | d14323f |  |

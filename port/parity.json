@@ -40,9 +40,9 @@
       "web": "src/components/CheckInVerdict.tsx",
       "module": "M7a",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
+      "native": "src/features/student/CheckInVerdict.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
       "note": ""
     },
     {
@@ -58,9 +58,9 @@
       "web": "src/components/ClassCountdown.tsx",
       "module": "M7a",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
+      "native": "src/features/student/ClassCountdown.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
       "note": ""
     },
     {
@@ -76,9 +76,9 @@
       "web": "src/components/CourseOutline.tsx",
       "module": "M7a",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
+      "native": "src/features/student/CourseOutline.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
       "note": ""
     },
     {
@@ -157,9 +157,9 @@
       "web": "src/components/MakeupCard.tsx",
       "module": "M7a",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
+      "native": "src/features/student/MakeupCard.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
       "note": ""
     },
     {
@@ -184,9 +184,9 @@
       "web": "src/components/MyCentres.tsx",
       "module": "M13",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
+      "native": "src/features/profile/MyCentres.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
       "note": ""
     },
     {
@@ -202,28 +202,28 @@
       "web": "src/components/PasswordFields.tsx",
       "module": "M6",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
-      "note": ""
+      "native": "src/features/auth/PasswordFields.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "clipboard via expo-clipboard"
     },
     {
       "web": "src/components/PinGate.tsx",
       "module": "M7a",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
-      "note": ""
+      "native": "src/features/student/Pin.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "Modal over the whole app; mounted for students in (app)/_layout"
     },
     {
       "web": "src/components/PinInput.tsx",
       "module": "M2",
       "mode": "port",
-      "native": "src/ui/PinInput.tsx",
-      "status": "wip",
-      "ported_from_sha": "0081e66",
-      "note": "keypad input only; PinSetup/ChangePinForm now take a `staff` flag (set_staff_pin / change_staff_pin): M7a builds them, M9a/M13 reuse"
+      "native": "src/ui/PinInput.tsx, src/features/student/Pin.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "PinSetup/ChangePinForm take staff (door PIN)"
     },
     {
       "web": "src/components/Place.tsx",
@@ -238,19 +238,19 @@
       "web": "src/components/QrScanner.tsx",
       "module": "M7a",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
-      "note": ""
+      "native": "src/features/student/QrScanner.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "expo-camera CameraView instead of BarcodeDetector"
     },
     {
       "web": "src/components/ReviewSheet.tsx",
       "module": "M7a",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
-      "note": ""
+      "native": "src/features/channels/ReviewSheet.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "built by the M8 session; student Home uses it"
     },
     {
       "web": "src/components/RunReminder.tsx",
@@ -355,19 +355,19 @@
       "web": "src/lib/checkin.ts",
       "module": "M7a",
       "mode": "port",
-      "native": "src/shared/checkin.ts",
-      "status": "wip",
-      "ported_from_sha": "0081e66",
-      "note": "types/doorState only; useCheckedIn hook is M7a"
+      "native": "src/shared/checkin.ts, src/features/student/hooks.ts",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "useCheckedIn is in hooks.ts"
     },
     {
       "web": "src/lib/classClock.ts",
       "module": "M7a",
       "mode": "port",
-      "native": "src/shared/classClock.ts",
-      "status": "wip",
-      "ported_from_sha": "0081e66",
-      "note": "pure part only; useTicker/useClassClock are M7a/M9a"
+      "native": "src/shared/classClock.ts, src/features/student/hooks.ts",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "useClassClock is in hooks.ts; M9a/M9b reuse it"
     },
     {
       "web": "src/lib/db.ts",
@@ -688,18 +688,18 @@
       "web": "src/pages/Landing.tsx",
       "module": "M6",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
-      "note": ""
+      "native": "src/features/auth/Landing.tsx",
+      "status": "diverged",
+      "ported_from_sha": "d14323f",
+      "note": "web's 'Get the app' / 'Continue on PC' buttons become 'Create an account' / 'Sign in' (already in the app)"
     },
     {
       "web": "src/pages/Login.tsx",
       "module": "M6",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
+      "native": "src/features/auth/Login.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
       "note": ""
     },
     {
@@ -796,18 +796,18 @@
       "web": "src/pages/Profile.tsx",
       "module": "M13",
       "mode": "port",
-      "native": "src/shell/ProfileInterim.tsx (interim)",
-      "status": "todo",
-      "ported_from_sha": "64bc5f7",
-      "note": "web moved sign-out + theme here, adds Door PIN card for instructors/coordinators and hides reg no/PIN for non-students; M13 replaces the interim screen"
+      "native": "src/features/profile/Profile.tsx",
+      "status": "diverged",
+      "ported_from_sha": "d14323f",
+      "note": "native-only additions: Notifications, Security (M12), Delete my account; photo from the phone library. Interim screen deleted"
     },
     {
       "web": "src/pages/ResetPassword.tsx",
       "module": "M6",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
+      "native": "src/features/auth/ResetPassword.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
       "note": ""
     },
     {
@@ -850,10 +850,10 @@
       "web": "src/pages/StudentHome.tsx",
       "module": "M7a",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
-      "note": ""
+      "native": "src/features/student/Home.tsx",
+      "status": "wip",
+      "ported_from_sha": "d14323f",
+      "note": "all cards except CustomClassCard (M9b); rating sheet is the M8 one"
     },
     {
       "web": "src/pages/Students.tsx",
@@ -886,9 +886,9 @@
       "web": "src/pages/VerifyEmail.tsx",
       "module": "M6",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
+      "native": "src/features/auth/VerifyEmail.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
       "note": ""
     }
   ]
