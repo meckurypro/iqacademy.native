@@ -8,10 +8,10 @@ wip: 7 · todo: 68 · ported: 22 · skip: 2
 |---|---|---|---|---|---|---|
 | `App.tsx` | M5 | port | wip | `src/app/_layout.tsx, src/app/(app)/_layout.tsx, src/shell/*` | 64bc5f7 | shell, gate, guards, tab bars (student/instructor/coordinator/director/admin), avatar button, drawer done; 3 new routes are stubs |
 | `components/AssignSheet.tsx` | M10b | port | todo |  |  |  |
-| `components/ChannelRow.tsx` | M8 | port | todo |  |  |  |
-| `components/ChatBubble.tsx` | M8 | port | todo |  |  |  |
+| `components/ChannelRow.tsx` | M8 | port | ported | `src/features/channels/ChannelRow.tsx` | d14323f |  |
+| `components/ChatBubble.tsx` | M8 | port | wip | `src/features/channels/ChatBubble.tsx` | d14323f | text + attachment download (signed link in the in-app browser) + 2 h text-selection window for students. Not yet: copy/share actions, select-and-send-to-other-chats |
 | `components/CheckInVerdict.tsx` | M7a | port | todo |  |  |  |
-| `components/ClassComposer.tsx` | M8 | port | todo |  |  |  |
+| `components/ClassComposer.tsx` | M8 | port | wip | `src/features/channels/Composer.tsx` | d14323f | text only (4000 chars); no attachments yet |
 | `components/ClassCountdown.tsx` | M7a | port | todo |  |  |  |
 | `components/ClockWatch.tsx` | M3 | port | ported | `src/core/clock.ts, src/shell/ClockNotice.tsx` | 0081e66 |  |
 | `components/CourseOutline.tsx` | M7a | port | todo |  |  |  |
@@ -68,7 +68,7 @@ wip: 7 · todo: 68 · ported: 22 · skip: 2
 | `pages/Announce.tsx` | M10a | port | todo |  |  |  |
 | `pages/CentreClasses.tsx` | M9b | port | todo |  |  |  |
 | `pages/Centres.tsx` | M10a | port | todo |  |  |  |
-| `pages/ClassChannel.tsx` | M8 | port | todo |  |  |  |
+| `pages/ClassChannel.tsx` | M8 | port | wip | `src/features/channels/ClassChannel.tsx, src/shell/ChatFrame.tsx` | d14323f | read (students + instructor), newest page merged + "Show earlier", locked state, mark read (queued), instructor text send via outbox with pending bubbles. Not yet: rating card, attachments in composer, send-to-other-chats, selection mode. Composer pinned above keyboard via ChatFrame; no screenshot pair yet |
 | `pages/ClassMessagesAdmin.tsx` | M10a | port | todo |  |  |  |
 | `pages/ClassReviews.tsx` | M10a | port | todo |  |  |  |
 | `pages/ClassScreen.tsx` | M9a | port | todo |  |  |  |
@@ -80,12 +80,12 @@ wip: 7 · todo: 68 · ported: 22 · skip: 2
 | `pages/HandCheckIns.tsx` | M10a | port | todo |  |  |  |
 | `pages/InstructorHistory.tsx` | M9a | port | todo |  |  |  |
 | `pages/InstructorHome.tsx` | M9a | port | todo |  |  |  |
-| `pages/InstructorMessages.tsx` | M8 | port | todo |  |  |  |
+| `pages/InstructorMessages.tsx` | M8 | port | ported | `src/features/channels/Messages.tsx` | d14323f | instructor list, chosen by role like web MessagesRoute |
 | `pages/Instructors.tsx` | M10a | port | todo |  |  |  |
 | `pages/Landing.tsx` | M6 | port | todo |  |  |  |
 | `pages/Login.tsx` | M6 | port | todo |  |  |  |
 | `pages/Manage.tsx` | M10a | port | todo |  |  |  |
-| `pages/Messages.tsx` | M8 | port | todo |  |  |  |
+| `pages/Messages.tsx` | M8 | port | ported | `src/features/channels/Messages.tsx` | d14323f | student list (receive-only), cached, live via global realtime + DELETE |
 | `pages/MyClasses.tsx` | M9a | port | todo |  |  |  |
 | `pages/Notifications.tsx` | M11a | port | ported | `src/features/notifications/Notifications.tsx` | d14323f | list kept on the phone and refreshed with changes-since (full reload every 2 min); opening marks read (queued offline); "Show older" pages online only. Not yet: tapping a push to open this screen, app badge. No screenshot pair yet |
 | `pages/OfflinePay.tsx` | M7b | port | todo |  |  |  |
