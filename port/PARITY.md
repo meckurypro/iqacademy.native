@@ -87,7 +87,7 @@ wip: 7 · todo: 68 · ported: 22 · skip: 2
 | `pages/Manage.tsx` | M10a | port | todo |  |  |  |
 | `pages/Messages.tsx` | M8 | port | todo |  |  |  |
 | `pages/MyClasses.tsx` | M9a | port | todo |  |  |  |
-| `pages/Notifications.tsx` | M11a | port | todo |  |  |  |
+| `pages/Notifications.tsx` | M11a | port | ported | `src/features/notifications/Notifications.tsx` | d14323f | list kept on the phone and refreshed with changes-since (full reload every 2 min); opening marks read (queued offline); "Show older" pages online only. Not yet: tapping a push to open this screen, app badge. No screenshot pair yet |
 | `pages/OfflinePay.tsx` | M7b | port | todo |  |  |  |
 | `pages/OfflinePayments.tsx` | M10c | port | todo |  |  |  |
 | `pages/PayCallback.tsx` | M7b | port | todo |  |  |  |
