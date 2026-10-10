@@ -34,7 +34,7 @@ export function Header() {
   );
 }
 
-export function Screen({ children, onRefresh, refreshing = false }: { children?: ReactNode; onRefresh?: () => void; refreshing?: boolean }) {
+export function Screen({ children, onRefresh, refreshing = false, footer }: { children?: ReactNode; onRefresh?: () => void; refreshing?: boolean; /** pinned under the scrolling content, above the tab bar (web: a fixed action bar, e.g. Enrol's Back / Continue) */ footer?: ReactNode }) {
   const { p } = useTheme(); const insets = useSafeAreaInsets(); const path = usePathname(); const skew = useClockSkew();
   const { roles } = useAuth(); const tabs = hasTabBar(primaryRole(roles));
   return (
@@ -46,6 +46,7 @@ export function Screen({ children, onRefresh, refreshing = false }: { children?:
         <ClockNotice skew={skew} />
         <ErrorBoundary resetKey={path}>{children}</ErrorBoundary>
       </ScrollView>
+      {footer ? <View style={{ borderTopWidth: 1, borderTopColor: p.c.line, backgroundColor: p.a("bg", 0.95), paddingHorizontal: 16, paddingTop: 12, paddingBottom: 12 + (tabs ? 0 : insets.bottom) }}><View style={{ maxWidth: 672, width: "100%", alignSelf: "center" }}>{footer}</View></View> : null}
     </View>
   );
 }
