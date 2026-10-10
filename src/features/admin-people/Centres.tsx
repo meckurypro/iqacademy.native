@@ -9,6 +9,7 @@ import { invokeFunction, mutate, online, useQuery } from "@/data";
 import { place, placeSub } from "@/shared/web/centre";
 import { useTheme } from "@/theme/ThemeProvider";
 import { Badge, Button, Card, Empty, Err, Field, Heading, Icon, SelectSheet, Sheet, Skeleton, SwitchRow, Text, useFeedback } from "@/ui";
+import { requireStepUp } from "@/features/security/stepUp";
 import { useBanks } from "./useBanks";
 
  
@@ -76,6 +77,7 @@ export default function Centres() {
   };
   const saveBank = async () => {
     setErr("");
+    if (!(await requireStepUp("Confirm saving this payout account"))) return setErr("Not confirmed. Nothing was saved.");
     const r = await run("Saving payout account…", async () => {
       const out = await invokeFunction<{ ok?: boolean }>("paystack-create-recipient", { action: "save", centre_id: bank.id, bank_code: acct.code, account_number: acct.number }, { invalidates: ["centres"] });
       if (!out.ok) throw new Error("not_saved");

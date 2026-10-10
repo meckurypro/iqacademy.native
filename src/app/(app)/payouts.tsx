@@ -1,7 +1,6 @@
-// ROUTE STUB (M5). Owner: M10c. Web source: src/pages/Payouts.tsx
-// Replace the body with the real screen and keep the default export. Role guards live in port/route-manifest.json, not here.
-import { Placeholder } from "@/shell/Placeholder";
+import Payouts from "@/features/admin-money/Payouts";
+import { Screen } from "@/shell/Screen";
 
 export default function Route() {
-  return <Placeholder module="M10c" title="payouts" web="src/pages/Payouts.tsx" />;
+  return <Screen><Payouts /></Screen>;
 }
