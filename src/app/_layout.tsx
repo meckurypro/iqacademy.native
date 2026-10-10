@@ -1,3 +1,4 @@
+// src/app/_layout.tsx
 // Root: providers, then the signed-out / signed-in split. Order matters:
 //   Theme → Feedback (toasts, busy overlay, confirm) → Session → Data (encrypted per-user cache + outbox) → Auth (roles, name) → gate
 import { useEffect } from "react";
@@ -12,7 +13,7 @@ import { SessionProvider } from "@/core/session";
 import { DataProvider } from "@/data";
 import { setupNotifications } from "@/native/notify";
 import { BootSkeleton } from "@/shell/BootSkeleton";
-import { ThemeProvider } from "@/theme/ThemeProvider";
+import { ThemeProvider, useTheme } from "@/theme/ThemeProvider";
 import { useAppFonts } from "@/theme/fonts";
 import { FeedbackProvider, Text } from "@/ui";
 import { View } from "react-native";
@@ -21,7 +22,7 @@ export { ErrorBoundary } from "expo-router";
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 function Gate() {
-  const fontsReady = useAppFonts();
+  const fontsReady = useAppFonts(); const { p } = useTheme();
   const { session, loading, rolesReady } = useAuth();
   const { ready: clockReady, skew } = useClockSync(!!session);
   // web waits for the first clock reading (max 2.5 s) before showing signed-in screens; we also wait for roles so the wrong home never flashes
@@ -31,7 +32,7 @@ function Gate() {
   if (booting) return <BootSkeleton />;
   return (
     <ClockSkewContext.Provider value={skew}>
-      <Stack screenOptions={{ headerShown: false, animation: "fade" }}>
+      <Stack screenOptions={{ headerShown: false, animation: "fade", contentStyle: { backgroundColor: p.c.bg } }}>
         <Stack.Protected guard={!session}><Stack.Screen name="(public)" /></Stack.Protected>
         <Stack.Protected guard={!!session}><Stack.Screen name="(app)" /></Stack.Protected>
         {/* reachable signed in or out: a confirmation or recovery link signs the person in first */}

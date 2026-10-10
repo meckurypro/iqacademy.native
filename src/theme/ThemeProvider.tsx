@@ -1,6 +1,7 @@
+// src/theme/ThemeProvider.tsx
 // Light / Dark / System, persisted, applied app-wide (Appearance override also themes native alerts and keyboards).
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { Appearance, useColorScheme } from "react-native";
+import { Appearance, View, useColorScheme } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import * as SystemUI from "expo-system-ui";
 import { kv } from "@/core/kv";
@@ -28,7 +29,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   return (
     <ThemeCtx.Provider value={value}>
       <StatusBar style={scheme === "dark" ? "light" : "dark"} />
-      {children}
+      {/* Edge to edge: this view is what shows behind the status bar and the navigation bar (and between screen transitions), so it must follow the theme, not the OS default. */}
+      <View style={{ flex: 1, backgroundColor: value.p.c.bg }}>{children}</View>
     </ThemeCtx.Provider>
   );
 }
