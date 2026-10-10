@@ -1,6 +1,7 @@
 // app.config.ts — single source for native config. Everything environment-specific comes from env vars (EAS env / .env.local).
 // Changing anything under `plugins`, `ios`, `android`, `scheme` or `runtimeVersion` needs a NEW BINARY, not an OTA update.
 import type { ConfigContext, ExpoConfig } from "expo/config";
+import { withInfoPlist, type ConfigPlugin } from "expo/config-plugins";
 
 const env = process.env;
 type Variant = "development" | "preview" | "production";
@@ -11,7 +12,15 @@ const baseId = env.APP_BUNDLE_ID ?? "ng.com.promptiq.iqacademy";
 const webHost = env.WEB_HOST; // e.g. the Vercel/custom domain; enables universal links + app links when set
 const easProjectId = env.EAS_PROJECT_ID;
 
-export default ({ config }: ConfigContext): ExpoConfig => ({
+// The dev client adds a local-network permission whose text says "Expo Dev Launcher ..." plus a Bonjour service. A store build has no development server to find,
+// and App Review questions a local-network prompt with no purpose, so production drops both. Dev and preview builds keep them. (M14, docs/release.md §6)
+const withoutDevLauncherNetworkKeys: ConfigPlugin = (c) => withInfoPlist(c, (m) => {
+  delete m.modResults.NSLocalNetworkUsageDescription;
+  delete m.modResults.NSBonjourServices;
+  return m;
+});
+
+const build = ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: variant === "production" ? "IQ Academy" : `IQ Academy (${variant})`,
   slug: "iqacademy",
@@ -62,3 +71,5 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ],
   extra: { eas: easProjectId ? { projectId: easProjectId } : undefined, variant },
 });
+
+export default (ctx: ConfigContext): ExpoConfig => (variant === "production" ? withoutDevLauncherNetworkKeys(build(ctx)) : build(ctx));
