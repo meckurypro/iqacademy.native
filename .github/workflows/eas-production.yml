@@ -1,4 +1,4 @@
-# Install as .github/workflows/eas-production.yml (see docs/release.md §1).
+# .github/workflows/eas-production.yml
 # Manual: build the store binaries (and optionally submit them). Runs in the `production` GitHub environment, so set "Required reviewers" on that
 # environment (Settings → Environments) and nothing ships without an approval. Needs secret EXPO_TOKEN and the EAS credentials set up once (docs/release.md).
 # Production environment variables (EXPO_PUBLIC_*, EAS_PROJECT_ID, WEB_HOST) live in EAS as environment variables for the `production` profile, not here.

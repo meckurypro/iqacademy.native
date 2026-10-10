@@ -1,4 +1,4 @@
-# Install as .github/workflows/eas-preview-update.yml (see docs/release.md §1).
+# .github/workflows/eas-preview-update.yml
 # Every merge to main publishes the JavaScript to the `preview` channel, for QA on preview builds. Production is promoted by hand (docs/release.md).
 # One-time setup in GitHub: secret EXPO_TOKEN; variables EAS_PROJECT_ID, EXPO_PUBLIC_SUPABASE_URL, EXPO_PUBLIC_WEB_BASE_URL; secret EXPO_PUBLIC_SUPABASE_ANON_KEY
 # (the anon key is public by design, but kept as a secret so it is not printed in logs). Until EAS_PROJECT_ID is set this workflow skips itself.

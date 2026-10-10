@@ -1,4 +1,4 @@
-# Install as .github/workflows/ci.yml (see docs/release.md §1).
+# .github/workflows/ci.yml
 # Checks on every pull request and every push to main: typecheck, lint, tests, and the native-fingerprint gate (scripts/native-fingerprint.mjs).
 name: CI
 on:
