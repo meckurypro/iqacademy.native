@@ -11,6 +11,8 @@ import { ClockSkewContext, useClockSync } from "@/core/clock";
 import { env } from "@/core/env";
 import { SessionProvider } from "@/core/session";
 import { DataProvider } from "@/data";
+import { UpdateGate } from "@/features/release/UpdateGate";
+import { AppLock } from "@/features/security/AppLock";
 import { setupNotifications } from "@/native/notify";
 import { BootSkeleton } from "@/shell/BootSkeleton";
 import { ThemeProvider, useTheme } from "@/theme/ThemeProvider";
@@ -40,6 +42,8 @@ function Gate() {
         <Stack.Screen name="verify-email" />
         <Stack.Screen name="auth/callback" />
       </Stack>
+      <AppLock />
+      <UpdateGate />
     </ClockSkewContext.Provider>
   );
 }
