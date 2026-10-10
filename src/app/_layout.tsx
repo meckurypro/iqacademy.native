@@ -10,6 +10,7 @@ import { ClockSkewContext, useClockSync } from "@/core/clock";
 import { env } from "@/core/env";
 import { SessionProvider } from "@/core/session";
 import { DataProvider } from "@/data";
+import { setupNotifications } from "@/native/notify";
 import { BootSkeleton } from "@/shell/BootSkeleton";
 import { ThemeProvider } from "@/theme/ThemeProvider";
 import { useAppFonts } from "@/theme/fonts";
@@ -26,6 +27,7 @@ function Gate() {
   // web waits for the first clock reading (max 2.5 s) before showing signed-in screens; we also wait for roles so the wrong home never flashes
   const booting = loading || !fontsReady || (!!session && (!clockReady || !rolesReady));
   useEffect(() => { if (!booting) SplashScreen.hideAsync().catch(() => {}); }, [booting]);
+  useEffect(() => { setupNotifications().catch((e) => console.warn("[push] setup failed", e)); }, []);
   if (booting) return <BootSkeleton />;
   return (
     <ClockSkewContext.Provider value={skew}>

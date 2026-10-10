@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { Redirect, Tabs, usePathname, useRouter } from "expo-router";
 import { useAuth } from "@/core/auth";
+import { usePushRefresh } from "@/native/notify";
 import { allowedHere } from "@/shell/guards";
 import TabBar from "@/shell/TabBar";
 import { clearPending, getPending } from "@/shared/verify";
@@ -19,8 +20,9 @@ function useVerifyRedirect() {
 }
 
 export default function AppLayout() {
-  const { roles } = useAuth(); const path = usePathname();
+  const { roles, session } = useAuth(); const path = usePathname();
   useVerifyRedirect();
+  usePushRefresh(session?.user.id); // refreshes the push token if notifications are already allowed; forgets this phone on sign-out
   if (!allowedHere(path, roles.map((r) => r.role))) return <Redirect href="/" />;
   return <Tabs tabBar={() => <TabBar />} backBehavior="history" screenOptions={{ headerShown: false, lazy: true }} />;
 }

@@ -13,3 +13,7 @@ export type { SupabaseClient as Sb } from "@/core/supabase";
 export { useDataWarmup } from "./useWarmup";
 export { prefetchPlan, runPrefetch } from "./prefetch";
 export { roleSignature, classifyRoleChange } from "./roleWipe";
+export { invokeFunction } from "./fn";
+export { functionErrorKey } from "./fnError";
+export { queueUpload } from "./stage";
+export { receiptJob, avatarJob, MAX_RECEIPT, type UploadJob } from "./uploads";
