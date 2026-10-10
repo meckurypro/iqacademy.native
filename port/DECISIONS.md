@@ -62,3 +62,6 @@ The web now decides "offline" by asking its own backend (`/auth/v1/health`; any 
 
 ## ADR-017 Shell follows the web redesign (64bc5f7)
 Header = Bell, avatar button (opens `/profile`), hamburger **only** for roles with `MENU_EXTRA` (today: instructor, Custom class). The drawer no longer holds the profile card or sign-out; **Profile holds theme, password and sign-out**. Tab sets changed (student gets Enrol; coordinator and director get tab bars with new routes `/students`, `/centre-classes`, `/statement`). Until M13 ports Profile, `src/shell/ProfileInterim.tsx` provides sign-out and the theme switch so nobody is locked in; delete it when M13 lands. `MENU_EXTRA` and `TABS` are generated from `lib/nav.ts` (`scripts/sync-web.mjs` now fails loudly if either moves again).
+
+## ADR-018 Security: nullable comparisons in permission gates (2026-10-10)
+A NULL inside `if not (a or b = c)` skips the check. It affected nine live functions and `send_class_message` (instructor-less classes); fixed by SEC1/SEC2 and verified with rolled-back tests (details in `port/BACKEND.md`). Standing rules: SQL gates use `coalesce(... , false)`; every permission change is tested with a **non-privileged** account for the refusal and a privileged one for the allowed path; and tests run inside a block that ends by raising an exception so nothing persists.

@@ -37,3 +37,5 @@ You are the **only** session allowed to change the Supabase project (`IQ Academy
 
 ## Never
 Run destructive SQL without approval · touch rows in `payments`, `enrolments`, `payouts`, `refunds`, `centre_ledger_entries` · log user data or tokens · weaken an existing RLS policy · enable a function with JWT verification off unless it authenticates another way (only `send-push` and the existing `paystack-webhook` qualify).
+
+Also never: write a permission gate with a nullable comparison inside `if not (...)` (it silently skips the check: ADR-018); ship a permission change you only tested as an allowed user (always prove the refusal with a non-privileged account inside a rolled-back block).
