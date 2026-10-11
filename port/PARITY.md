@@ -2,7 +2,7 @@
 
 Generated from `port/parity.json` by `scripts/parity.mjs`. Edit with `node scripts/parity.mjs set <web-file> --status … --native … --sha …`, never by hand.
 
-wip: 4 · ported: 85 · todo: 6 · skip: 2 · diverged: 2
+wip: 3 · ported: 92 · skip: 2 · diverged: 2
 
 | web file | module | mode | status | native | ported from | note |
 |---|---|---|---|---|---|---|
@@ -24,7 +24,7 @@ wip: 4 · ported: 85 · todo: 6 · skip: 2 · diverged: 2
 | `components/feedback.tsx` | M2 | port | ported | `src/ui/feedback.tsx` | 64bc5f7 | offline notice + Back online/Refresh added (64bc5f7); toasts in root view, covered by an open sheet; Refresh revalidates instead of reloading |
 | `components/Icon.tsx` | M2 | generated | ported | `src/ui/icons.generated.tsx + src/ui/Icon.tsx` | d14323f |  |
 | `components/MakeupCard.tsx` | M7a | port | ported | `src/features/student/MakeupCard.tsx` | d14323f |  |
-| `components/MessageBubble.tsx` | M8 | port | todo |  |  |  |
+| `components/MessageBubble.tsx` | M8 | port | ported | `src/features/channels/MessageBubble.tsx` | d14323f | card style for lists; used by ClassMessagesAdmin (Delete passed as footer). ClassScreen's admin view keeps ChatBubble + Composer, as M9a asked |
 | `components/MessagesRoute.tsx` | M5 | port | wip | `src/app/(app)/messages/*` | 0081e66 | route stubs only; M8 implements |
 | `components/MyCentres.tsx` | M13 | port | ported | `src/features/profile/MyCentres.tsx` | d14323f |  |
 | `components/NavMenu.tsx` | M5 | port | ported | `src/shell/NavMenu.tsx` | 64bc5f7 | slimmed to MENU_EXTRA leftovers; no hamburger when empty (64bc5f7) |
@@ -52,10 +52,10 @@ wip: 4 · ported: 85 · todo: 6 · skip: 2 · diverged: 2
 | `lib/messages.ts` | M8 | port | wip | `src/shared/messages.ts` | 0081e66 | pure part only; download/share/copy/forward + unread hook are M8 |
 | `lib/nav.ts` | M5 | generated | ported | `src/shell/nav.generated.ts` | d14323f |  |
 | `lib/notifications.ts` | M11a | port | ported | `src/shell/Bell.tsx` | d14323f | unread count (useNotificationCount) is in the shell Bell; live refresh comes from the shared realtime channel's "notifications" tag, no per-screen channel |
-| `lib/offline.ts` | M7b | port | wip | `src/shared/offline.ts` | 0081e66 | types/limits only; prepareReceipt → expo-image-manipulator in M7b |
+| `lib/offline.ts` | M7b | port | ported | `src/shared/offline.ts, src/features/enrol/receipt.ts, src/features/enrol/receiptDevice.ts` | d14323f | prepareReceipt split into pure rules (unit-tested) and the device part |
 | `lib/online.ts` | M4a | port | ported | `src/data/net.ts` | 64bc5f7 | NetInfo link + same server probe, 2-strike rule, 20s/4s cadence; pauses in background (ADR-016) |
 | `lib/password.ts` | M3 | generated | ported | `src/shared/web/password.ts` | d14323f |  |
-| `lib/payment.ts` | M7b | port | todo |  |  |  |
+| `lib/payment.ts` | M7b | port | ported | `src/features/enrol/pay.ts, src/features/enrol/payFlow.ts` | d14323f | pay.ts/payFlow.ts existed from M3; M7b adds verifyPayment, shared by Enrol, OfflinePay and PayCallback |
 | `lib/roster.ts` | M3 | generated | ported | `src/shared/web/roster.ts` | d14323f |  |
 | `lib/supabase.ts` | M3 | generated | ported | `src/shared/web/errors.ts (MESSAGES, friendly) + src/core/errors.ts` | d14323f |  |
 | `lib/theme.ts` | M2 | port | ported | `src/theme/ThemeProvider.tsx` | 0081e66 |  |
@@ -69,14 +69,14 @@ wip: 4 · ported: 85 · todo: 6 · skip: 2 · diverged: 2
 | `pages/CentreClasses.tsx` | M9b | port | ported | `src/features/staff/CentreClasses.tsx` | d14323f |  |
 | `pages/Centres.tsx` | M10a | port | ported | `src/features/admin-people/Centres.tsx` | d14323f | "use my location" asks foreground location only when tapped; saving the payout bank account needs the M12 step-up (web has none) |
 | `pages/ClassChannel.tsx` | M8 | port | ported | `src/features/channels/ClassChannel.tsx, src/shell/ChatFrame.tsx` | d14323f | read, newest page merged + "Show earlier", locked state, mark read (queued), instructor send via outbox with pending bubbles (text and files), selection mode + send to other chats, rating card for students after the class. Composer pinned above keyboard via ChatFrame. Untested on a device; no screenshot pair yet |
-| `pages/ClassMessagesAdmin.tsx` | M10a | port | todo |  |  |  |
+| `pages/ClassMessagesAdmin.tsx` | M10a | port | ported | `src/features/channels/ClassMessagesAdmin.tsx, src/features/channels/adminLogic.ts` | d14323f | online only; first page cached, Show older and Delete need a connection; delete also removes the file and still drops the row if only the file removal fails. Owner corrected to M8 (route manifest and plan say M8; M10a left it) |
 | `pages/ClassReviews.tsx` | M10a | port | ported | `src/features/admin-people/ClassReviews.tsx` | d14323f |  |
 | `pages/ClassScreen.tsx` | M9a | port | ported | `src/features/class/ClassScreen.tsx` | d14323f | online-only writes; attendance from cache on shared realtime tags; class code held in memory only; full-screen door view is a Modal that keeps the screen awake (expo-keep-awake); admin inline chat uses ChatBubble + Composer |
 | `pages/CoordinatorHome.tsx` | M9b | port | ported | `src/features/staff/CoordinatorHome.tsx` | d14323f | invite QR drawn by react-native-qrcode-svg (JS only); mounts the student ClassCountdown |
 | `pages/CourseBuilder.tsx` | M10b | port | ported | `src/features/admin-classes/CourseBuilder.tsx` | d14323f | DIFFERS: the sticky save bar becomes a Save button at the top (when there are changes) and one at the end; read-back-after-save kept |
 | `pages/CustomClasses.tsx` | M9b | port | ported | `src/features/staff/CustomClasses.tsx` | d14323f |  |
 | `pages/DirectorHome.tsx` | M9b | port | ported | `src/features/staff/DirectorHome.tsx` | d14323f | withdraw/cancel are online-only and confirmed; no step-up (web has none; director requests, admin pays) |
-| `pages/Enrol.tsx` | M7b | port | todo |  |  |  |
+| `pages/Enrol.tsx` | M7b | port | ported | `src/features/enrol/Enrol.tsx, src/features/enrol/logic.ts` | d14323f | 4 steps with a pinned Back/Continue bar (Screen footer). A retry after a failed or still-confirming payment reuses the registration already made (the web would create another). Paystack not yet run live (keys not configured); no screenshot pair |
 | `pages/HandCheckIns.tsx` | M10a | port | ported | `src/features/admin-people/HandCheckIns.tsx` | d14323f |  |
 | `pages/InstructorHistory.tsx` | M9a | port | ported | `src/features/class/InstructorHistory.tsx` | d14323f | first page cached; Load more is online-only |
 | `pages/InstructorHome.tsx` | M9a | port | ported | `src/features/class/InstructorHome.tsx` | d14323f | cached dashboard; mounts the student ClassCountdown and RunReminder |
@@ -88,9 +88,9 @@ wip: 4 · ported: 85 · todo: 6 · skip: 2 · diverged: 2
 | `pages/Messages.tsx` | M8 | port | ported | `src/features/channels/Messages.tsx` | d14323f | student list (receive-only), cached, live via global realtime + DELETE |
 | `pages/MyClasses.tsx` | M9a | port | ported | `src/features/class/MyClasses.tsx` | d14323f | refreshes on the shared sessions and notifications tags instead of a per-screen channel |
 | `pages/Notifications.tsx` | M11a | port | ported | `src/features/notifications/Notifications.tsx` | d14323f | list kept on the phone and refreshed with changes-since (full reload every 2 min); opening marks read (queued offline); "Show older" pages online only. Not yet: tapping a push to open this screen, app badge. No screenshot pair yet |
-| `pages/OfflinePay.tsx` | M7b | port | todo |  |  |  |
+| `pages/OfflinePay.tsx` | M7b | port | ported | `src/features/enrol/OfflinePay.tsx, src/features/enrol/receiptDevice.ts` | d14323f | receipt from library, camera or PDF; photos shrunk to 1600 px JPEG .82 with ImageManipulator.manipulate (manipulateAsync is deprecated); sent through the upload queue so it works offline and shows on Pending. Not run on a device; no screenshot pair |
 | `pages/OfflinePayments.tsx` | M10c | port | ported | `src/features/admin-money/OfflinePayments.tsx` | d14323f | approve, decline and "where students pay" need the M12 step-up; receipts via 5-minute signed link |
-| `pages/PayCallback.tsx` | M7b | port | todo |  |  |  |
+| `pages/PayCallback.tsx` | M7b | port | ported | `src/features/enrol/PayCallback.tsx` | d14323f | only reached if the OS opens the return page in the app; native does not depend on it (payFlow asks the server). Never claims success without asking |
 | `pages/Payments.tsx` | M10c | port | ported | `src/features/admin-money/Payments.tsx` | d14323f | refund send and manual record need the M12 step-up; error detail kept via adminFn.ts |
 | `pages/Payouts.tsx` | M10c | port | ported | `src/features/admin-money/Payouts.tsx` | d14323f | "send" needs the M12 step-up; cancelling a draft does not |
 | `pages/Prices.tsx` | M10b | port | ported | `src/features/admin-classes/Prices.tsx` | d14323f | rules in pricing.ts (unit-tested) |

@@ -8,6 +8,8 @@ export type ClassMessage = {
   media_path: string | null; media_name: string | null; media_mime: string | null; media_size: number | null; created_at: string;
   /** Returned by the channel RPC; used as the title when sharing. */
   course_title?: string | null;
+  /** Only the admin list (admin_class_messages) fills these. */
+  centre_name?: string | null; session_date?: string | null;
 };
 
 /** Students can select the text of a message only for this long after it arrives. */

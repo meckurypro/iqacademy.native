@@ -166,10 +166,10 @@
       "web": "src/components/MessageBubble.tsx",
       "module": "M8",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
-      "note": ""
+      "native": "src/features/channels/MessageBubble.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "card style for lists; used by ClassMessagesAdmin (Delete passed as footer). ClassScreen's admin view keeps ChatBubble + Composer, as M9a asked"
     },
     {
       "web": "src/components/MessagesRoute.tsx",
@@ -418,10 +418,10 @@
       "web": "src/lib/offline.ts",
       "module": "M7b",
       "mode": "port",
-      "native": "src/shared/offline.ts",
-      "status": "wip",
-      "ported_from_sha": "0081e66",
-      "note": "types/limits only; prepareReceipt → expo-image-manipulator in M7b"
+      "native": "src/shared/offline.ts, src/features/enrol/receipt.ts, src/features/enrol/receiptDevice.ts",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "prepareReceipt split into pure rules (unit-tested) and the device part"
     },
     {
       "web": "src/lib/online.ts",
@@ -445,10 +445,10 @@
       "web": "src/lib/payment.ts",
       "module": "M7b",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
-      "note": ""
+      "native": "src/features/enrol/pay.ts, src/features/enrol/payFlow.ts",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "pay.ts/payFlow.ts existed from M3; M7b adds verifyPayment, shared by Enrol, OfflinePay and PayCallback"
     },
     {
       "web": "src/lib/roster.ts",
@@ -571,10 +571,10 @@
       "web": "src/pages/ClassMessagesAdmin.tsx",
       "module": "M10a",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
-      "note": ""
+      "native": "src/features/channels/ClassMessagesAdmin.tsx, src/features/channels/adminLogic.ts",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "online only; first page cached, Show older and Delete need a connection; delete also removes the file and still drops the row if only the file removal fails. Owner corrected to M8 (route manifest and plan say M8; M10a left it)"
     },
     {
       "web": "src/pages/ClassReviews.tsx",
@@ -634,10 +634,10 @@
       "web": "src/pages/Enrol.tsx",
       "module": "M7b",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
-      "note": ""
+      "native": "src/features/enrol/Enrol.tsx, src/features/enrol/logic.ts",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "4 steps with a pinned Back/Continue bar (Screen footer). A retry after a failed or still-confirming payment reuses the registration already made (the web would create another). Paystack not yet run live (keys not configured); no screenshot pair"
     },
     {
       "web": "src/pages/HandCheckIns.tsx",
@@ -742,10 +742,10 @@
       "web": "src/pages/OfflinePay.tsx",
       "module": "M7b",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
-      "note": ""
+      "native": "src/features/enrol/OfflinePay.tsx, src/features/enrol/receiptDevice.ts",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "receipt from library, camera or PDF; photos shrunk to 1600 px JPEG .82 with ImageManipulator.manipulate (manipulateAsync is deprecated); sent through the upload queue so it works offline and shows on Pending. Not run on a device; no screenshot pair"
     },
     {
       "web": "src/pages/OfflinePayments.tsx",
@@ -760,10 +760,10 @@
       "web": "src/pages/PayCallback.tsx",
       "module": "M7b",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
-      "note": ""
+      "native": "src/features/enrol/PayCallback.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "only reached if the OS opens the return page in the app; native does not depend on it (payFlow asks the server). Never claims success without asking"
     },
     {
       "web": "src/pages/Payments.tsx",
