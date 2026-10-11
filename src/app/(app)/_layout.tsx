@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { Redirect, Tabs, usePathname, useRouter } from "expo-router";
 import { primaryRole, useAuth } from "@/core/auth";
 import { usePushRefresh } from "@/native/notify";
+import { useCalendarAutoSync } from "@/features/calendar/useCalendarSync";
 import { allowedHere } from "@/shell/guards";
 import { useTheme } from "@/theme/ThemeProvider";
 import { PinGate } from "@/features/student/Pin";
@@ -25,6 +26,7 @@ function useVerifyRedirect() {
 export default function AppLayout() {
   const { roles, session } = useAuth(); const path = usePathname(); const { p } = useTheme();
   useVerifyRedirect();
+  useCalendarAutoSync(); // keeps the optional "classes in my calendar" copy current; does nothing until the person turns it on in Profile
   usePushRefresh(session?.user.id); // refreshes the push token if notifications are already allowed; forgets this phone on sign-out
   if (!allowedHere(path, roles.map((r) => r.role))) return <Redirect href="/" />;
   // A student who has paid but has no check-in PIN yet is held on the PIN screen until they set one (web: <PinGate/> for role === "student").

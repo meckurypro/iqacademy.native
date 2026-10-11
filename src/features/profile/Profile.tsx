@@ -19,6 +19,7 @@ import { useTheme, type ThemePref } from "@/theme/ThemeProvider";
 import { Avatar, Button, Card, Err, Field, Icon, type IconName, PageHeader, Sheet, Text, useFeedback } from "@/ui";
 import { DELETE_WARNING, deleteMyAccount } from "./deleteAccount";
 import { needsDoorPin } from "./doorPin";
+import { CalendarSettings } from "@/features/calendar/CalendarSettings";
 import SecurityCard from "@/features/security/SecurityCard";
 import MyCentres from "./MyCentres";
 
@@ -143,6 +144,8 @@ export default function Profile() {
       </Card>
 
       <SecurityCard />
+
+      <CalendarSettings />
 
       <Card style={{ gap: 12 }}>
         <Text size={16} weight="semibold">Notifications</Text>
