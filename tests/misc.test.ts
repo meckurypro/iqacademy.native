@@ -11,6 +11,8 @@ import { setClockSkew } from "@/shared/web/time";
 import { kv } from "@/core/kv";
 import { guardIncomingUrl, MAX_ESCAPES } from "@/shell/incomingLink";
 
+import { inRange, joinWall, monthGrid, shiftMonth, splitWall } from "@/shared/calendar";
+
 describe("naira", () => {
   it("matches the web's toLocaleString('en-NG') output", () => {
     for (const kobo of [0, 99, 100, 150000, 12345600, 99999999, 100000000, 123456789012]) {
@@ -117,8 +119,6 @@ describe("deep link guard (decode-uri-component DoS, ADR-015)", () => {
     expect(guardIncomingUrl("iqacademy://x/" + "a".repeat(9000))).toBeNull();
   });
 });
-
-import { inRange, joinWall, monthGrid, shiftMonth, splitWall } from "@/shared/calendar";
 describe("calendar maths for the date pickers", () => {
   it("lays a month out Monday first with blanks around it", () => {
     const g = monthGrid("2026-10"); // 1 Oct 2026 is a Thursday
