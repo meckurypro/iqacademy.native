@@ -225,6 +225,13 @@
       "page": "src/pages/PayCallback.tsx"
     },
     {
+      "web": "/pay/return",
+      "file": "(app)/pay/return.tsx",
+      "module": "M7b",
+      "page": "src/pages/PayReturn.tsx",
+      "note": "public web page that hands a payment made in the app back to iqacademy://pay/return; native route confirms the payment with the server (ADR-012)"
+    },
+    {
       "web": "/team",
       "file": "(app)/team/index.tsx",
       "module": "M9b",

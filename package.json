@@ -73,7 +73,8 @@
     "sync-web": "node scripts/sync-web.mjs",
     "verify": "npm run typecheck && npm run lint && npm run test",
     "fingerprint": "node scripts/native-fingerprint.mjs --check",
-    "fingerprint:accept": "node scripts/native-fingerprint.mjs --accept"
+    "fingerprint:accept": "node scripts/native-fingerprint.mjs --accept",
+    "contracts:native": "node scripts/native-contracts.mjs"
   },
   "private": true
 }
