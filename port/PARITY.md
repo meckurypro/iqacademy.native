@@ -2,12 +2,12 @@
 
 Generated from `port/parity.json` by `scripts/parity.mjs`. Edit with `node scripts/parity.mjs set <web-file> --status … --native … --sha …`, never by hand.
 
-wip: 4 · todo: 43 · ported: 48 · diverged: 2 · skip: 2
+wip: 4 · ported: 79 · todo: 12 · skip: 2 · diverged: 2
 
 | web file | module | mode | status | native | ported from | note |
 |---|---|---|---|---|---|---|
 | `App.tsx` | M5 | port | wip | `src/app/_layout.tsx, src/app/(app)/_layout.tsx, src/shell/*` | 64bc5f7 | shell, gate, guards, tab bars (student/instructor/coordinator/director/admin), avatar button, drawer done; 3 new routes are stubs |
-| `components/AssignSheet.tsx` | M10b | port | todo |  |  |  |
+| `components/AssignSheet.tsx` | M10b | port | ported | `src/features/admin-classes/AssignSheet.tsx` | d14323f |  |
 | `components/ChannelRow.tsx` | M8 | port | ported | `src/features/channels/ChannelRow.tsx` | d14323f |  |
 | `components/ChatBubble.tsx` | M8 | port | ported | `src/features/channels/ChatBubble.tsx, src/features/channels/MessageActions.tsx` | d14323f | tap opens actions (copy / share / save / send on / select more), long-press starts selecting (instructor), checkbox selection, 2 h copy/share window for students (server-corrected clock, re-checked at the tap). Share of text uses the system share sheet; a file is downloaded to cache and shared, then deleted |
 | `components/CheckInVerdict.tsx` | M7a | port | ported | `src/features/student/CheckInVerdict.tsx` | d14323f |  |
@@ -16,13 +16,13 @@ wip: 4 · todo: 43 · ported: 48 · diverged: 2 · skip: 2
 | `components/ClockWatch.tsx` | M3 | port | ported | `src/core/clock.ts, src/shell/ClockNotice.tsx` | 0081e66 |  |
 | `components/CourseOutline.tsx` | M7a | port | ported | `src/features/student/CourseOutline.tsx` | d14323f |  |
 | `components/CustomClassCard.tsx` | M9b | port | ported | `src/features/student/CustomClassCard.tsx` | d14323f | student side only; instructor side (CustomClassSheet/Students) stays with M9b |
-| `components/CustomClassSheet.tsx` | M9b | port | todo |  |  |  |
-| `components/CustomClassStudents.tsx` | M9b | port | todo |  |  |  |
+| `components/CustomClassSheet.tsx` | M9b | port | ported | `src/features/staff/CustomClassSheet.tsx` | d14323f | pickers are JS-only (src/ui/extras.tsx); invited list is derived (base + added - removed) so a save sends only the difference; online-only |
+| `components/CustomClassStudents.tsx` | M9b | port | ported | `src/features/staff/CustomClassStudents.tsx` | d14323f | same search and group rules as web; results scroll inside the sheet |
 | `components/DoorPinSheet.tsx` | M9a | port | todo |  |  |  |
-| `components/DoorToday.tsx` | M9b | port | todo |  |  |  |
+| `components/DoorToday.tsx` | M9b | port | ported | `src/features/staff/DoorToday.tsx` | d14323f | reads today's classes from the cache, refreshed by the "sessions" tag |
 | `components/ErrorBoundary.tsx` | M0 | port | ported | `src/shell/ErrorBoundary.tsx` | 0081e66 |  |
 | `components/feedback.tsx` | M2 | port | ported | `src/ui/feedback.tsx` | 64bc5f7 | offline notice + Back online/Refresh added (64bc5f7); toasts in root view, covered by an open sheet; Refresh revalidates instead of reloading |
-| `components/Icon.tsx` | M2 | generated | ported | `src/ui/icons.generated.tsx + src/ui/Icon.tsx` | 64bc5f7 |  |
+| `components/Icon.tsx` | M2 | generated | ported | `src/ui/icons.generated.tsx + src/ui/Icon.tsx` | d14323f |  |
 | `components/MakeupCard.tsx` | M7a | port | ported | `src/features/student/MakeupCard.tsx` | d14323f |  |
 | `components/MessageBubble.tsx` | M8 | port | todo |  |  |  |
 | `components/MessagesRoute.tsx` | M5 | port | wip | `src/app/(app)/messages/*` | 0081e66 | route stubs only; M8 implements |
@@ -34,74 +34,74 @@ wip: 4 · todo: 43 · ported: 48 · diverged: 2 · skip: 2
 | `components/Place.tsx` | M2 | port | ported | `src/ui/Place.tsx` | 0081e66 | takes an explicit size (no em units) |
 | `components/QrScanner.tsx` | M7a | port | ported | `src/features/student/QrScanner.tsx` | d14323f | expo-camera CameraView instead of BarcodeDetector |
 | `components/ReviewSheet.tsx` | M7a | port | ported | `src/features/channels/ReviewSheet.tsx` | d14323f | built by the M8 session; student Home uses it |
-| `components/RunReminder.tsx` | M9b | port | todo |  |  |  |
+| `components/RunReminder.tsx` | M9b | port | ported | `src/features/staff/RunReminder.tsx` | d14323f |  |
 | `components/ShareToChats.tsx` | M8 | port | ported | `src/features/channels/ShareToChats.tsx, src/features/channels/sendToChats.ts` | d14323f | online only; per-chat order kept, stops a chat at its first failure; retries reuse client ids and file paths so nothing is posted twice (the web version could repeat messages on retry) |
 | `components/Sidebar.tsx` | skip | skip | skip |  |  | desktop-only / not used on phones |
 | `components/SoloCourses.tsx` | M7a | port | ported | `src/features/student/SoloCourses.tsx` | d14323f | (offers, paid-pack notice, centre choice, Paystack in the in-app browser). Mounted on the student home. Pay step is untested against live Paystack; no screenshot pair yet |
-| `components/SoloPrices.tsx` | M10b | port | todo |  |  |  |
+| `components/SoloPrices.tsx` | M10b | port | ported | `src/features/admin-classes/SoloPrices.tsx` | d14323f |  |
 | `components/Stars.tsx` | M2 | port | ported | `src/ui/Stars.tsx` | 0081e66 |  |
 | `components/ui.tsx` | M2 | port | ported | `src/ui/ui.tsx, src/ui/Sheet.tsx, src/ui/SelectSheet.tsx` | 64bc5f7 | Stat compact, StatStrip, Chip, ChipRow added (64bc5f7); Split/Main/Rail single-column on phones |
-| `index.css` | M2 | generated | ported | `src/theme/tokens.generated.ts` | 64bc5f7 |  |
+| `index.css` | M2 | generated | ported | `src/theme/tokens.generated.ts` | d14323f |  |
 | `lib/auth.tsx` | M3 | port | ported | `src/core/auth.tsx, src/core/session.tsx` | 0081e66 | roles via data layer (cached/offline) + rolesReady |
-| `lib/centre.ts` | M3 | generated | ported | `src/shared/web/centre.ts` | 64bc5f7 |  |
-| `lib/channels.ts` | M3 | generated | ported | `src/shared/web/channels.ts` | 64bc5f7 |  |
+| `lib/centre.ts` | M3 | generated | ported | `src/shared/web/centre.ts` | d14323f |  |
+| `lib/channels.ts` | M3 | generated | ported | `src/shared/web/channels.ts` | d14323f |  |
 | `lib/checkin.ts` | M7a | port | ported | `src/shared/checkin.ts, src/features/student/hooks.ts` | d14323f | useCheckedIn is in hooks.ts |
 | `lib/classClock.ts` | M7a | port | ported | `src/shared/classClock.ts, src/features/student/hooks.ts` | d14323f | useClassClock is in hooks.ts; M9a/M9b reuse it |
-| `lib/db.ts` | M3 | generated | ported | `src/shared/web/db.ts` | 64bc5f7 |  |
+| `lib/db.ts` | M3 | generated | ported | `src/shared/web/db.ts` | d14323f |  |
 | `lib/doorLock.ts` | M9a | port | todo |  |  |  |
 | `lib/messages.ts` | M8 | port | wip | `src/shared/messages.ts` | 0081e66 | pure part only; download/share/copy/forward + unread hook are M8 |
-| `lib/nav.ts` | M5 | generated | ported | `src/shell/nav.generated.ts` | 64bc5f7 |  |
-| `lib/notifications.ts` | M11a | port | todo |  |  |  |
+| `lib/nav.ts` | M5 | generated | ported | `src/shell/nav.generated.ts` | d14323f |  |
+| `lib/notifications.ts` | M11a | port | ported | `src/shell/Bell.tsx` | d14323f | unread count (useNotificationCount) is in the shell Bell; live refresh comes from the shared realtime channel's "notifications" tag, no per-screen channel |
 | `lib/offline.ts` | M7b | port | wip | `src/shared/offline.ts` | 0081e66 | types/limits only; prepareReceipt → expo-image-manipulator in M7b |
 | `lib/online.ts` | M4a | port | ported | `src/data/net.ts` | 64bc5f7 | NetInfo link + same server probe, 2-strike rule, 20s/4s cadence; pauses in background (ADR-016) |
-| `lib/password.ts` | M3 | generated | ported | `src/shared/web/password.ts` | 64bc5f7 |  |
+| `lib/password.ts` | M3 | generated | ported | `src/shared/web/password.ts` | d14323f |  |
 | `lib/payment.ts` | M7b | port | todo |  |  |  |
-| `lib/roster.ts` | M3 | generated | ported | `src/shared/web/roster.ts` | 64bc5f7 |  |
-| `lib/supabase.ts` | M3 | generated | ported | `src/shared/web/errors.ts (MESSAGES, friendly) + src/core/errors.ts` | 64bc5f7 |  |
+| `lib/roster.ts` | M3 | generated | ported | `src/shared/web/roster.ts` | d14323f |  |
+| `lib/supabase.ts` | M3 | generated | ported | `src/shared/web/errors.ts (MESSAGES, friendly) + src/core/errors.ts` | d14323f |  |
 | `lib/theme.ts` | M2 | port | ported | `src/theme/ThemeProvider.tsx` | 0081e66 |  |
-| `lib/time.ts` | M3 | generated | ported | `src/shared/web/time.ts` | 64bc5f7 |  |
+| `lib/time.ts` | M3 | generated | ported | `src/shared/web/time.ts` | d14323f |  |
 | `lib/useMedia.ts` | skip | skip | skip |  |  | desktop-only / not used on phones |
-| `lib/useStaffCentres.ts` | M9b | port | todo |  |  |  |
+| `lib/useStaffCentres.ts` | M9b | port | ported | `src/features/staff/useStaffCentres.ts` | d14323f | branches cached for 10 min so staff screens open offline |
 | `lib/verify.ts` | M3 | port | ported | `src/shared/verify.ts` | 0081e66 | localStorage → kv |
 | `main.tsx` | M0 | port | ported | `src/app/_layout.tsx` | 0081e66 |  |
-| `pages/AdminHome.tsx` | M10a | port | todo |  |  |  |
-| `pages/Announce.tsx` | M10a | port | todo |  |  |  |
-| `pages/CentreClasses.tsx` | M9b | port | todo |  |  |  |
-| `pages/Centres.tsx` | M10a | port | todo |  |  |  |
+| `pages/AdminHome.tsx` | M10a | port | ported | `src/features/admin-people/AdminHome.tsx` | d14323f |  |
+| `pages/Announce.tsx` | M10a | port | ported | `src/features/admin-people/Announce.tsx` | d14323f | DIFFERS: the pinned "N people will get this / Send" bar is the last card on the page instead of fixed to the bottom |
+| `pages/CentreClasses.tsx` | M9b | port | ported | `src/features/staff/CentreClasses.tsx` | d14323f |  |
+| `pages/Centres.tsx` | M10a | port | ported | `src/features/admin-people/Centres.tsx` | d14323f | "use my location" asks foreground location only when tapped; saving the payout bank account needs the M12 step-up (web has none) |
 | `pages/ClassChannel.tsx` | M8 | port | ported | `src/features/channels/ClassChannel.tsx, src/shell/ChatFrame.tsx` | d14323f | read, newest page merged + "Show earlier", locked state, mark read (queued), instructor send via outbox with pending bubbles (text and files), selection mode + send to other chats, rating card for students after the class. Composer pinned above keyboard via ChatFrame. Untested on a device; no screenshot pair yet |
 | `pages/ClassMessagesAdmin.tsx` | M10a | port | todo |  |  |  |
-| `pages/ClassReviews.tsx` | M10a | port | todo |  |  |  |
+| `pages/ClassReviews.tsx` | M10a | port | ported | `src/features/admin-people/ClassReviews.tsx` | d14323f |  |
 | `pages/ClassScreen.tsx` | M9a | port | todo |  |  |  |
-| `pages/CoordinatorHome.tsx` | M9b | port | todo |  |  |  |
-| `pages/CourseBuilder.tsx` | M10b | port | todo |  |  |  |
-| `pages/CustomClasses.tsx` | M9b | port | todo |  |  |  |
-| `pages/DirectorHome.tsx` | M9b | port | todo |  |  |  |
+| `pages/CoordinatorHome.tsx` | M9b | port | ported | `src/features/staff/CoordinatorHome.tsx` | d14323f | invite QR drawn by react-native-qrcode-svg (JS only); mounts the student ClassCountdown |
+| `pages/CourseBuilder.tsx` | M10b | port | ported | `src/features/admin-classes/CourseBuilder.tsx` | d14323f | DIFFERS: the sticky save bar becomes a Save button at the top (when there are changes) and one at the end; read-back-after-save kept |
+| `pages/CustomClasses.tsx` | M9b | port | ported | `src/features/staff/CustomClasses.tsx` | d14323f |  |
+| `pages/DirectorHome.tsx` | M9b | port | ported | `src/features/staff/DirectorHome.tsx` | d14323f | withdraw/cancel are online-only and confirmed; no step-up (web has none; director requests, admin pays) |
 | `pages/Enrol.tsx` | M7b | port | todo |  |  |  |
-| `pages/HandCheckIns.tsx` | M10a | port | todo |  |  |  |
+| `pages/HandCheckIns.tsx` | M10a | port | ported | `src/features/admin-people/HandCheckIns.tsx` | d14323f |  |
 | `pages/InstructorHistory.tsx` | M9a | port | todo |  |  |  |
 | `pages/InstructorHome.tsx` | M9a | port | todo |  |  |  |
 | `pages/InstructorMessages.tsx` | M8 | port | ported | `src/features/channels/Messages.tsx` | d14323f | instructor list, chosen by role like web MessagesRoute |
-| `pages/Instructors.tsx` | M10a | port | todo |  |  |  |
+| `pages/Instructors.tsx` | M10a | port | ported | `src/features/admin-people/Instructors.tsx` | d14323f |  |
 | `pages/Landing.tsx` | M6 | port | diverged | `src/features/auth/Landing.tsx` | d14323f | web's 'Get the app' / 'Continue on PC' buttons become 'Create an account' / 'Sign in' (already in the app) |
 | `pages/Login.tsx` | M6 | port | ported | `src/features/auth/Login.tsx` | d14323f |  |
-| `pages/Manage.tsx` | M10a | port | todo |  |  |  |
+| `pages/Manage.tsx` | M10a | port | ported | `src/features/admin-people/Manage.tsx` | d14323f | counts come from cached queries |
 | `pages/Messages.tsx` | M8 | port | ported | `src/features/channels/Messages.tsx` | d14323f | student list (receive-only), cached, live via global realtime + DELETE |
 | `pages/MyClasses.tsx` | M9a | port | todo |  |  |  |
 | `pages/Notifications.tsx` | M11a | port | ported | `src/features/notifications/Notifications.tsx` | d14323f | list kept on the phone and refreshed with changes-since (full reload every 2 min); opening marks read (queued offline); "Show older" pages online only. Not yet: tapping a push to open this screen, app badge. No screenshot pair yet |
 | `pages/OfflinePay.tsx` | M7b | port | todo |  |  |  |
-| `pages/OfflinePayments.tsx` | M10c | port | todo |  |  |  |
+| `pages/OfflinePayments.tsx` | M10c | port | ported | `src/features/admin-money/OfflinePayments.tsx` | d14323f | approve, decline and "where students pay" need the M12 step-up; receipts via 5-minute signed link |
 | `pages/PayCallback.tsx` | M7b | port | todo |  |  |  |
-| `pages/Payments.tsx` | M10c | port | todo |  |  |  |
-| `pages/Payouts.tsx` | M10c | port | todo |  |  |  |
-| `pages/Prices.tsx` | M10b | port | todo |  |  |  |
+| `pages/Payments.tsx` | M10c | port | ported | `src/features/admin-money/Payments.tsx` | d14323f | refund send and manual record need the M12 step-up; error detail kept via adminFn.ts |
+| `pages/Payouts.tsx` | M10c | port | ported | `src/features/admin-money/Payouts.tsx` | d14323f | "send" needs the M12 step-up; cancelling a draft does not |
+| `pages/Prices.tsx` | M10b | port | ported | `src/features/admin-classes/Prices.tsx` | d14323f | rules in pricing.ts (unit-tested) |
 | `pages/Profile.tsx` | M13 | port | diverged | `src/features/profile/Profile.tsx` | d14323f | native-only additions: Notifications, Security (M12), Delete my account; photo from the phone library. Interim screen deleted |
 | `pages/ResetPassword.tsx` | M6 | port | ported | `src/features/auth/ResetPassword.tsx` | d14323f |  |
-| `pages/Roster.tsx` | M10b | port | todo |  |  |  |
-| `pages/Schedule.tsx` | M9b | port | todo |  |  |  |
-| `pages/StaffHome.tsx` | M9b | port | todo |  |  |  |
-| `pages/Statement.tsx` | M9b | port | todo |  |  |  |
+| `pages/Roster.tsx` | M10b | port | ported | `src/features/admin-classes/Roster.tsx` | d14323f | reads ?centre= and ?course= from Schedule's deep link |
+| `pages/Schedule.tsx` | M9b | port | ported | `src/features/staff/Schedule.tsx` | d14323f | date and time inputs replaced by JS pickers; every change online-only |
+| `pages/StaffHome.tsx` | M9b | port | ported | `src/features/staff/StaffHome.tsx` | d14323f |  |
+| `pages/Statement.tsx` | M9b | port | ported | `src/features/staff/Statement.tsx` | d14323f | fixes a web quirk: a centre with no months shows an empty state instead of a skeleton forever |
 | `pages/StudentHome.tsx` | M7a | port | ported | `src/features/student/Home.tsx` | d14323f | rating sheet is the M8 one; pull-to-refresh not wired (shell RoleHome) |
-| `pages/Students.tsx` | M9b | port | todo |  |  |  |
-| `pages/Team.tsx` | M9b | port | todo |  |  |  |
-| `pages/Users.tsx` | M10a | port | todo |  |  |  |
+| `pages/Students.tsx` | M9b | port | ported | `src/features/staff/Students.tsx` | d14323f | list is not virtualised (fine to a few hundred rows; revisit if a centre grows past that) |
+| `pages/Team.tsx` | M9b | port | ported | `src/features/staff/Team.tsx` | d14323f | online-only role changes; admin lands via a centre card, directors on their own centre |
+| `pages/Users.tsx` | M10a | port | ported | `src/features/admin-people/Users.tsx` | d14323f |  |
 | `pages/VerifyEmail.tsx` | M6 | port | ported | `src/features/auth/VerifyEmail.tsx` | d14323f |  |

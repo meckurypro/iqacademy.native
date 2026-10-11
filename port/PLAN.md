@@ -273,6 +273,11 @@ Account deletion in‑app (B4) · payment rules for in‑person tuition paid thr
 | M4a | Local DB + data hooks | **done** (connectivity now probes our own server, ADR-016) | SQLCipher per-user DB, cache, `useQuery/useRpc`, realtime bridge. Tested on real SQL (node:sqlite); **SQLCipher itself needs S4 on a device** |
 | M4b | Outbox / sync engine | **done** | outbox, policies, `mutate`, backoff, sign-out guard. Queued today: `mark_notifications_read`, `mark_channel_read`. Background task not wired (foreground/reconnect triggers only) |
 | M5 | Navigation shell | **done** | roles, tab bars for every role, header (bell, avatar → Profile, hamburger when needed), guards, 37 route stubs, auth callback, route manifest, interim Profile (sign-out + theme) until M13 |
-| M6–M13 | Features | todo | stubs render "Not ported yet" |
+| M9b | Coordinator, director, staff | **done** (web d14323f) | team, schedule, custom classes (sheet, invitations), students, classes and staff, statements, director income and withdrawals, coordinator home (invite QR, door today), run reminder. Online-only writes. Student `CustomClassCard` is M7a's (already upstream). Not run on a device |
+| M10a | Admin people and places | **done** (web d14323f) | overview, users, announce (+sent: edit/retract), manage hub, centres (bank verify, foreground location), instructors, reviews, hand check-ins. `ClassMessagesAdmin` is NOT here: PLAN gives it to M8 (ledger says M10a, see M10a/M8 inbox) |
+| M10b | Admin classes and catalogue | **done** (web d14323f) | roster board + assign sheet, course builder (read-back after save), package prices, single-course prices. Pure rules unit-tested |
+| M10c | Admin money | **done** (web d14323f) | payments and refunds, offline payments (receipts via signed link), payouts. All online-only; send/approve/decline/bank-detail changes call M12 `requireStepUp`. Edge Function errors keep `detail` (`adminFn.ts`) |
+| M11b | Calendar sync | **done, not mounted** | opt-in one-way sync (planner unit-tested, legacy expo-calendar API, own calendar). Needs two mounts by other modules: see M13 and M5 inboxes. Not run on a device |
+| M6–M8, M9a, M13 | Features | see PARITY.md | other sessions; ledger rows are the source of truth |
 | M14 | Release engineering | todo | pipeline config exists (eas.json); credentials, channels, OTA runbook, store work remain |
 | M15 | QA / parity | todo | 44 unit tests exist; no device tests yet |
