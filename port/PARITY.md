@@ -2,7 +2,7 @@
 
 Generated from `port/parity.json` by `scripts/parity.mjs`. Edit with `node scripts/parity.mjs set <web-file> --status … --native … --sha …`, never by hand.
 
-wip: 4 · ported: 79 · todo: 12 · skip: 2 · diverged: 2
+wip: 4 · ported: 85 · todo: 6 · skip: 2 · diverged: 2
 
 | web file | module | mode | status | native | ported from | note |
 |---|---|---|---|---|---|---|
@@ -18,7 +18,7 @@ wip: 4 · ported: 79 · todo: 12 · skip: 2 · diverged: 2
 | `components/CustomClassCard.tsx` | M9b | port | ported | `src/features/student/CustomClassCard.tsx` | d14323f | student side only; instructor side (CustomClassSheet/Students) stays with M9b |
 | `components/CustomClassSheet.tsx` | M9b | port | ported | `src/features/staff/CustomClassSheet.tsx` | d14323f | pickers are JS-only (src/ui/extras.tsx); invited list is derived (base + added - removed) so a save sends only the difference; online-only |
 | `components/CustomClassStudents.tsx` | M9b | port | ported | `src/features/staff/CustomClassStudents.tsx` | d14323f | same search and group rules as web; results scroll inside the sheet |
-| `components/DoorPinSheet.tsx` | M9a | port | todo |  |  |  |
+| `components/DoorPinSheet.tsx` | M9a | port | ported | `src/features/class/DoorPinSheet.tsx` | d14323f | online-only; reuses PinSetup staff from student/Pin |
 | `components/DoorToday.tsx` | M9b | port | ported | `src/features/staff/DoorToday.tsx` | d14323f | reads today's classes from the cache, refreshed by the "sessions" tag |
 | `components/ErrorBoundary.tsx` | M0 | port | ported | `src/shell/ErrorBoundary.tsx` | 0081e66 |  |
 | `components/feedback.tsx` | M2 | port | ported | `src/ui/feedback.tsx` | 64bc5f7 | offline notice + Back online/Refresh added (64bc5f7); toasts in root view, covered by an open sheet; Refresh revalidates instead of reloading |
@@ -48,7 +48,7 @@ wip: 4 · ported: 79 · todo: 12 · skip: 2 · diverged: 2
 | `lib/checkin.ts` | M7a | port | ported | `src/shared/checkin.ts, src/features/student/hooks.ts` | d14323f | useCheckedIn is in hooks.ts |
 | `lib/classClock.ts` | M7a | port | ported | `src/shared/classClock.ts, src/features/student/hooks.ts` | d14323f | useClassClock is in hooks.ts; M9a/M9b reuse it |
 | `lib/db.ts` | M3 | generated | ported | `src/shared/web/db.ts` | d14323f |  |
-| `lib/doorLock.ts` | M9a | port | todo |  |  |  |
+| `lib/doorLock.ts` | M9a | port | ported | `src/features/class/doorLock.ts` | d14323f | pure rules in doorLockCore.ts (unit-tested); AppState background replaces visibilitychange; needsDoorPin re-exported from profile/doorPin |
 | `lib/messages.ts` | M8 | port | wip | `src/shared/messages.ts` | 0081e66 | pure part only; download/share/copy/forward + unread hook are M8 |
 | `lib/nav.ts` | M5 | generated | ported | `src/shell/nav.generated.ts` | d14323f |  |
 | `lib/notifications.ts` | M11a | port | ported | `src/shell/Bell.tsx` | d14323f | unread count (useNotificationCount) is in the shell Bell; live refresh comes from the shared realtime channel's "notifications" tag, no per-screen channel |
@@ -71,22 +71,22 @@ wip: 4 · ported: 79 · todo: 12 · skip: 2 · diverged: 2
 | `pages/ClassChannel.tsx` | M8 | port | ported | `src/features/channels/ClassChannel.tsx, src/shell/ChatFrame.tsx` | d14323f | read, newest page merged + "Show earlier", locked state, mark read (queued), instructor send via outbox with pending bubbles (text and files), selection mode + send to other chats, rating card for students after the class. Composer pinned above keyboard via ChatFrame. Untested on a device; no screenshot pair yet |
 | `pages/ClassMessagesAdmin.tsx` | M10a | port | todo |  |  |  |
 | `pages/ClassReviews.tsx` | M10a | port | ported | `src/features/admin-people/ClassReviews.tsx` | d14323f |  |
-| `pages/ClassScreen.tsx` | M9a | port | todo |  |  |  |
+| `pages/ClassScreen.tsx` | M9a | port | ported | `src/features/class/ClassScreen.tsx` | d14323f | online-only writes; attendance from cache on shared realtime tags; class code held in memory only; full-screen door view is a Modal that keeps the screen awake (expo-keep-awake); admin inline chat uses ChatBubble + Composer |
 | `pages/CoordinatorHome.tsx` | M9b | port | ported | `src/features/staff/CoordinatorHome.tsx` | d14323f | invite QR drawn by react-native-qrcode-svg (JS only); mounts the student ClassCountdown |
 | `pages/CourseBuilder.tsx` | M10b | port | ported | `src/features/admin-classes/CourseBuilder.tsx` | d14323f | DIFFERS: the sticky save bar becomes a Save button at the top (when there are changes) and one at the end; read-back-after-save kept |
 | `pages/CustomClasses.tsx` | M9b | port | ported | `src/features/staff/CustomClasses.tsx` | d14323f |  |
 | `pages/DirectorHome.tsx` | M9b | port | ported | `src/features/staff/DirectorHome.tsx` | d14323f | withdraw/cancel are online-only and confirmed; no step-up (web has none; director requests, admin pays) |
 | `pages/Enrol.tsx` | M7b | port | todo |  |  |  |
 | `pages/HandCheckIns.tsx` | M10a | port | ported | `src/features/admin-people/HandCheckIns.tsx` | d14323f |  |
-| `pages/InstructorHistory.tsx` | M9a | port | todo |  |  |  |
-| `pages/InstructorHome.tsx` | M9a | port | todo |  |  |  |
+| `pages/InstructorHistory.tsx` | M9a | port | ported | `src/features/class/InstructorHistory.tsx` | d14323f | first page cached; Load more is online-only |
+| `pages/InstructorHome.tsx` | M9a | port | ported | `src/features/class/InstructorHome.tsx` | d14323f | cached dashboard; mounts the student ClassCountdown and RunReminder |
 | `pages/InstructorMessages.tsx` | M8 | port | ported | `src/features/channels/Messages.tsx` | d14323f | instructor list, chosen by role like web MessagesRoute |
 | `pages/Instructors.tsx` | M10a | port | ported | `src/features/admin-people/Instructors.tsx` | d14323f |  |
 | `pages/Landing.tsx` | M6 | port | diverged | `src/features/auth/Landing.tsx` | d14323f | web's 'Get the app' / 'Continue on PC' buttons become 'Create an account' / 'Sign in' (already in the app) |
 | `pages/Login.tsx` | M6 | port | ported | `src/features/auth/Login.tsx` | d14323f |  |
 | `pages/Manage.tsx` | M10a | port | ported | `src/features/admin-people/Manage.tsx` | d14323f | counts come from cached queries |
 | `pages/Messages.tsx` | M8 | port | ported | `src/features/channels/Messages.tsx` | d14323f | student list (receive-only), cached, live via global realtime + DELETE |
-| `pages/MyClasses.tsx` | M9a | port | todo |  |  |  |
+| `pages/MyClasses.tsx` | M9a | port | ported | `src/features/class/MyClasses.tsx` | d14323f | refreshes on the shared sessions and notifications tags instead of a per-screen channel |
 | `pages/Notifications.tsx` | M11a | port | ported | `src/features/notifications/Notifications.tsx` | d14323f | list kept on the phone and refreshed with changes-since (full reload every 2 min); opening marks read (queued offline); "Show older" pages online only. Not yet: tapping a push to open this screen, app badge. No screenshot pair yet |
 | `pages/OfflinePay.tsx` | M7b | port | todo |  |  |  |
 | `pages/OfflinePayments.tsx` | M10c | port | ported | `src/features/admin-money/OfflinePayments.tsx` | d14323f | approve, decline and "where students pay" need the M12 step-up; receipts via 5-minute signed link |

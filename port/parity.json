@@ -112,10 +112,10 @@
       "web": "src/components/DoorPinSheet.tsx",
       "module": "M9a",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
-      "note": ""
+      "native": "src/features/class/DoorPinSheet.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "online-only; reuses PinSetup staff from student/Pin"
     },
     {
       "web": "src/components/DoorToday.tsx",
@@ -382,10 +382,10 @@
       "web": "src/lib/doorLock.ts",
       "module": "M9a",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
-      "note": ""
+      "native": "src/features/class/doorLock.ts",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "pure rules in doorLockCore.ts (unit-tested); AppState background replaces visibilitychange; needsDoorPin re-exported from profile/doorPin"
     },
     {
       "web": "src/lib/messages.ts",
@@ -589,10 +589,10 @@
       "web": "src/pages/ClassScreen.tsx",
       "module": "M9a",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
-      "note": ""
+      "native": "src/features/class/ClassScreen.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "online-only writes; attendance from cache on shared realtime tags; class code held in memory only; full-screen door view is a Modal that keeps the screen awake (expo-keep-awake); admin inline chat uses ChatBubble + Composer"
     },
     {
       "web": "src/pages/CoordinatorHome.tsx",
@@ -652,19 +652,19 @@
       "web": "src/pages/InstructorHistory.tsx",
       "module": "M9a",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
-      "note": ""
+      "native": "src/features/class/InstructorHistory.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "first page cached; Load more is online-only"
     },
     {
       "web": "src/pages/InstructorHome.tsx",
       "module": "M9a",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
-      "note": ""
+      "native": "src/features/class/InstructorHome.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "cached dashboard; mounts the student ClassCountdown and RunReminder"
     },
     {
       "web": "src/pages/InstructorMessages.tsx",
@@ -724,10 +724,10 @@
       "web": "src/pages/MyClasses.tsx",
       "module": "M9a",
       "mode": "port",
-      "native": null,
-      "status": "todo",
-      "ported_from_sha": null,
-      "note": ""
+      "native": "src/features/class/MyClasses.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "refreshes on the shared sessions and notifications tags instead of a per-screen channel"
     },
     {
       "web": "src/pages/Notifications.tsx",
