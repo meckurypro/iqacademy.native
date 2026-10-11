@@ -175,10 +175,10 @@
       "web": "src/components/MessagesRoute.tsx",
       "module": "M5",
       "mode": "port",
-      "native": "src/app/(app)/messages/*",
-      "status": "wip",
-      "ported_from_sha": "0081e66",
-      "note": "route stubs only; M8 implements"
+      "native": "src/features/channels/Messages.tsx, src/app/(app)/messages/index.tsx, src/app/(app)/messages/[id].tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "role choice (instructor list vs student list) lives in Messages.tsx; routes are real screens, no longer stubs"
     },
     {
       "web": "src/components/MyCentres.tsx",
@@ -391,10 +391,10 @@
       "web": "src/lib/messages.ts",
       "module": "M8",
       "mode": "port",
-      "native": "src/shared/messages.ts",
-      "status": "wip",
-      "ported_from_sha": "0081e66",
-      "note": "pure part only; download/share/copy/forward + unread hook are M8"
+      "native": "src/features/channels/format.ts, src/features/channels/media.ts, src/features/channels/sendToChats.ts, src/shell/TabBar.tsx",
+      "status": "ported",
+      "ported_from_sha": "d14323f",
+      "note": "copy window, merge, download/share/copy, send to other chats (retry-safe) and the unread count (TabBar) are all native"
     },
     {
       "web": "src/lib/nav.ts",

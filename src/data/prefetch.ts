@@ -6,6 +6,7 @@ import type { RoleRow } from "@/core/auth";
 import type { SupabaseClient } from "@/core/supabase";
 import type { QueryEngine } from "./query/engine";
 import { stableKey } from "./query/engine";
+import { rpcKey } from "./query/keys";
 
 export type PrefetchItem = { name: string; args: Record<string, unknown>; tags: string[]; ttlMs: number };
 const MIN = 60_000;
@@ -20,7 +21,7 @@ export function prefetchPlan(roles: Pick<RoleRow, "role" | "centre_id">[]): Pref
   if (has("admin") || has("super_admin")) out.push(item("admin_overview", ["sessions", "payments"], 5 * MIN));
   const centres = [...new Set(roles.filter((r) => (r.role === "centre_director" || r.role === "coordinator") && r.centre_id).map((r) => r.centre_id as string))];
   for (const c of centres) out.push(item("centre_students", ["students", `centre-${c}`], 10 * MIN, { p_centre_id: c }));
-  for (const c of new Set(roles.filter((r) => r.role === "centre_director" && r.centre_id).map((r) => r.centre_id as string))) out.push(item("centre_dashboard", ["sessions", "payments", `centre-${c}`], 5 * MIN, { p_centre_id: c }));
+  // Not warmed: the director home's `centre_dashboard` (read through the staff `useEachRpc`, which caches under its own key, so warming it here helped nobody).
   return out;
 }
 
@@ -30,7 +31,7 @@ export async function runPrefetch(engine: Pick<QueryEngine, "ensure">, sb: Pick<
   const worker = async () => {
     while (i < plan.length && isLive()) {
       const p = plan[i++];
-      try { await engine.ensure(stableKey(["rpc", p.name, p.args]), { fn: async () => ok(await sb.rpc(p.name, p.args)), tags: p.tags, ttlMs: p.ttlMs }); } catch { /* a courtesy fetch: ignore */ }
+      try { await engine.ensure(stableKey(rpcKey(p.name, p.args)), { fn: async () => ok(await sb.rpc(p.name, p.args)), tags: p.tags, ttlMs: p.ttlMs }); } catch { /* a courtesy fetch: ignore */ }
     }
   };
   await Promise.all(Array.from({ length: Math.min(concurrency, plan.length) }, worker));

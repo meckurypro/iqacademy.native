@@ -2,7 +2,7 @@
 
 Generated from `port/parity.json` by `scripts/parity.mjs`. Edit with `node scripts/parity.mjs set <web-file> --status … --native … --sha …`, never by hand.
 
-wip: 3 · ported: 92 · skip: 2 · diverged: 2
+wip: 1 · ported: 94 · skip: 2 · diverged: 2
 
 | web file | module | mode | status | native | ported from | note |
 |---|---|---|---|---|---|---|
@@ -25,7 +25,7 @@ wip: 3 · ported: 92 · skip: 2 · diverged: 2
 | `components/Icon.tsx` | M2 | generated | ported | `src/ui/icons.generated.tsx + src/ui/Icon.tsx` | d14323f |  |
 | `components/MakeupCard.tsx` | M7a | port | ported | `src/features/student/MakeupCard.tsx` | d14323f |  |
 | `components/MessageBubble.tsx` | M8 | port | ported | `src/features/channels/MessageBubble.tsx` | d14323f | card style for lists; used by ClassMessagesAdmin (Delete passed as footer). ClassScreen's admin view keeps ChatBubble + Composer, as M9a asked |
-| `components/MessagesRoute.tsx` | M5 | port | wip | `src/app/(app)/messages/*` | 0081e66 | route stubs only; M8 implements |
+| `components/MessagesRoute.tsx` | M5 | port | ported | `src/features/channels/Messages.tsx, src/app/(app)/messages/index.tsx, src/app/(app)/messages/[id].tsx` | d14323f | role choice (instructor list vs student list) lives in Messages.tsx; routes are real screens, no longer stubs |
 | `components/MyCentres.tsx` | M13 | port | ported | `src/features/profile/MyCentres.tsx` | d14323f |  |
 | `components/NavMenu.tsx` | M5 | port | ported | `src/shell/NavMenu.tsx` | 64bc5f7 | slimmed to MENU_EXTRA leftovers; no hamburger when empty (64bc5f7) |
 | `components/PasswordFields.tsx` | M6 | port | ported | `src/features/auth/PasswordFields.tsx` | d14323f | clipboard via expo-clipboard |
@@ -49,7 +49,7 @@ wip: 3 · ported: 92 · skip: 2 · diverged: 2
 | `lib/classClock.ts` | M7a | port | ported | `src/shared/classClock.ts, src/features/student/hooks.ts` | d14323f | useClassClock is in hooks.ts; M9a/M9b reuse it |
 | `lib/db.ts` | M3 | generated | ported | `src/shared/web/db.ts` | d14323f |  |
 | `lib/doorLock.ts` | M9a | port | ported | `src/features/class/doorLock.ts` | d14323f | pure rules in doorLockCore.ts (unit-tested); AppState background replaces visibilitychange; needsDoorPin re-exported from profile/doorPin |
-| `lib/messages.ts` | M8 | port | wip | `src/shared/messages.ts` | 0081e66 | pure part only; download/share/copy/forward + unread hook are M8 |
+| `lib/messages.ts` | M8 | port | ported | `src/features/channels/format.ts, src/features/channels/media.ts, src/features/channels/sendToChats.ts, src/shell/TabBar.tsx` | d14323f | copy window, merge, download/share/copy, send to other chats (retry-safe) and the unread count (TabBar) are all native |
 | `lib/nav.ts` | M5 | generated | ported | `src/shell/nav.generated.ts` | d14323f |  |
 | `lib/notifications.ts` | M11a | port | ported | `src/shell/Bell.tsx` | d14323f | unread count (useNotificationCount) is in the shell Bell; live refresh comes from the shared realtime channel's "notifications" tag, no per-screen channel |
 | `lib/offline.ts` | M7b | port | ported | `src/shared/offline.ts, src/features/enrol/receipt.ts, src/features/enrol/receiptDevice.ts` | d14323f | prepareReceipt split into pure rules (unit-tested) and the device part |

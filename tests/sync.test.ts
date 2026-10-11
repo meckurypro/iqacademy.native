@@ -2,6 +2,7 @@ import { migrate } from "@/data/db/migrations";
 import { createCacheRepo } from "@/data/db/cacheRepo";
 import { mergeRows, needsFull, refreshDelta, emptyBox, type DeltaSpec } from "@/data/query/delta";
 import { QueryEngine, stableKey } from "@/data/query/engine";
+import { rpcKey } from "@/data/query/keys";
 import { prefetchPlan, runPrefetch } from "@/data/prefetch";
 import { applyRoleChange, classifyRoleChange, identityKeys, roleSignature } from "@/data/roleWipe";
 import { nodeDb } from "./helpers/nodeDb";
@@ -84,10 +85,17 @@ describe("first-launch prefetch", () => {
   const names = (p: ReturnType<typeof prefetchPlan>) => p.map((x) => x.name);
   it("students warm their own lists", () => expect(names(prefetchPlan([R("student")]))).toEqual(expect.arrayContaining(["my_class_channels", "my_offline_payments", "my_pending_review"])));
   it("staff do not fetch the student bundle", () => expect(names(prefetchPlan([R("instructor")]))).not.toContain("my_offline_payments"));
-  it("directors warm each of their centres, once", () => {
+  it("directors and coordinators warm each of their centres' student lists, once", () => {
     const p = prefetchPlan([R("centre_director", "c1"), R("centre_director", "c1"), R("coordinator", "c2")]);
-    expect(p.filter((x) => x.name === "centre_dashboard").map((x) => x.args)).toEqual([{ p_centre_id: "c1" }]);
     expect(p.filter((x) => x.name === "centre_students").map((x) => x.args)).toEqual([{ p_centre_id: "c1" }, { p_centre_id: "c2" }]);
+  });
+  it("does not warm what no screen reads under that key (the director dashboard uses its own cache key)", () => {
+    expect(prefetchPlan([R("centre_director", "c1")]).map((x) => x.name)).not.toContain("centre_dashboard");
+  });
+  it("warms exactly the key useRpc reads", () => {
+    const p = prefetchPlan([R("student")])[0]; // unread_notification_count, called with no arguments
+    expect(stableKey(rpcKey(p.name, p.args))).toBe(stableKey(rpcKey("unread_notification_count")));
+    expect(stableKey(rpcKey("x", undefined))).toBe(stableKey(rpcKey("x", {}))); // useRpc(name) and useRpc(name, {}) are the same read
   });
   it("uses the same keys as useRpc, ignores failures, and stops when told to", async () => {
     const keys: string[] = []; let live = true;

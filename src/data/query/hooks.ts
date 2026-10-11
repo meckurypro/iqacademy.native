@@ -4,6 +4,7 @@ import type { SupabaseClient } from "@/core/supabase";
 import { useRuntime } from "../DataProvider";
 import { isOnline, useOnline } from "../net";
 import { stableKey } from "./engine";
+import { rpcKey } from "./keys";
 import { refreshDelta, type DeltaBox, type DeltaSpec } from "./delta";
 
 export type UseQueryOpts<T> = {
@@ -51,7 +52,7 @@ export function useQuery<T>(o: UseQueryOpts<T>) {
 
 /** A cached database function call. Result is typed by the caller. */
 export function useRpc<T = unknown>(name: string, args?: Record<string, unknown>, opts: Omit<UseQueryOpts<T>, "key" | "fn"> = {}) {
-  return useQuery<T>({ ...opts, key: ["rpc", name, args ?? {}], fn: async (sb) => ok(await sb.rpc(name, args ?? {})) as T });
+  return useQuery<T>({ ...opts, key: rpcKey(name, args), fn: async (sb) => ok(await sb.rpc(name, args ?? {})) as T });
 }
 
 const SIX_HOURS = 6 * 3600_000;
