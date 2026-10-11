@@ -1,4 +1,4 @@
-import { functionErrorKey, pollPayment, waitForForeground, type AppStateLike } from "@/features/enrol/pay";
+import { functionErrorKey, payReturn, pollPayment, waitForForeground, type AppStateLike } from "@/features/enrol/pay";
 
 const noSleep = async () => {};
 describe("pollPayment", () => {
@@ -44,5 +44,19 @@ describe("functionErrorKey", () => {
     expect(await functionErrorKey({ message: "boom" }, null)).toBe("boom");
     expect(await functionErrorKey({ context: { json: async () => { throw new Error("x"); } }, message: "m" }, null)).toBe("m");
     expect(await functionErrorKey(null, null)).toBe("payment_failed");
+  });
+});
+
+describe("payReturn", () => {
+  it("asks for the website's /pay/return page and watches for the app's own address", () => {
+    expect(payReturn("https://classes.promptiq.com.ng", "iqacademy://pay/return")).toEqual({ callbackUrl: "https://classes.promptiq.com.ng/pay/return", redirectUrl: "iqacademy://pay/return" });
+  });
+  it("tolerates a trailing slash or spaces in the configured address", () => {
+    expect(payReturn("https://classes.promptiq.com.ng/", "x").callbackUrl).toBe("https://classes.promptiq.com.ng/pay/return");
+    expect(payReturn("  https://classes.promptiq.com.ng//  ", "x").callbackUrl).toBe("https://classes.promptiq.com.ng/pay/return");
+  });
+  it("sends no return address when the website's address is not configured (the server then uses its own default)", () => {
+    expect(payReturn(undefined, "x").callbackUrl).toBeUndefined();
+    expect(payReturn("   ", "x").callbackUrl).toBeUndefined();
   });
 });

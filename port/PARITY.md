@@ -55,7 +55,7 @@ wip: 1 · ported: 94 · skip: 2 · diverged: 2
 | `lib/offline.ts` | M7b | port | ported | `src/shared/offline.ts, src/features/enrol/receipt.ts, src/features/enrol/receiptDevice.ts` | d14323f | prepareReceipt split into pure rules (unit-tested) and the device part |
 | `lib/online.ts` | M4a | port | ported | `src/data/net.ts` | 64bc5f7 | NetInfo link + same server probe, 2-strike rule, 20s/4s cadence; pauses in background (ADR-016) |
 | `lib/password.ts` | M3 | generated | ported | `src/shared/web/password.ts` | d14323f |  |
-| `lib/payment.ts` | M7b | port | ported | `src/features/enrol/pay.ts, src/features/enrol/payFlow.ts` | d14323f | pay.ts/payFlow.ts existed from M3; M7b adds verifyPayment, shared by Enrol, OfflinePay and PayCallback |
+| `lib/payment.ts` | M7b | port | ported | `src/features/enrol/pay.ts, src/features/enrol/payFlow.ts` | d14323f | pay.ts/payFlow.ts existed from M3; M7b adds verifyPayment (shared by Enrol, OfflinePay, PayCallback) and the return handling: callback_url = WEB_BASE/pay/return + openAuthSessionAsync back to iqacademy://pay/return (ADR-012 amendment). Needs the web /pay/return page deployed first, and a device check on iOS and Android |
 | `lib/roster.ts` | M3 | generated | ported | `src/shared/web/roster.ts` | d14323f |  |
 | `lib/supabase.ts` | M3 | generated | ported | `src/shared/web/errors.ts (MESSAGES, friendly) + src/core/errors.ts` | d14323f |  |
 | `lib/theme.ts` | M2 | port | ported | `src/theme/ThemeProvider.tsx` | 0081e66 |  |

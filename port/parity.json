@@ -448,7 +448,7 @@
       "native": "src/features/enrol/pay.ts, src/features/enrol/payFlow.ts",
       "status": "ported",
       "ported_from_sha": "d14323f",
-      "note": "pay.ts/payFlow.ts existed from M3; M7b adds verifyPayment, shared by Enrol, OfflinePay and PayCallback"
+      "note": "pay.ts/payFlow.ts existed from M3; M7b adds verifyPayment (shared by Enrol, OfflinePay, PayCallback) and the return handling: callback_url = WEB_BASE/pay/return + openAuthSessionAsync back to iqacademy://pay/return (ADR-012 amendment). Needs the web /pay/return page deployed first, and a device check on iOS and Android"
     },
     {
       "web": "src/lib/roster.ts",

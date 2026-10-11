@@ -1,8 +1,9 @@
 // Paying in the app, device part. Used by single courses now and by Enrol / instalments later (M7b).
-import { AppState } from "react-native";
+import * as Linking from "expo-linking";
 import * as WebBrowser from "expo-web-browser";
+import { env } from "@/core/env";
 import { invokeFunction, online } from "@/data";
-import { pollPayment, waitForForeground, type PayStatus } from "./pay";
+import { payReturn, pollPayment, type PayStatus } from "./pay";
 
 const PAID_TAGS = ["enrolments", "payments", "sessions", "notifications"];
 
@@ -13,11 +14,14 @@ export async function verifyPayment(reference: string): Promise<PayStatus> {
   return status;
 }
 
-/** Start a Paystack payment for one instalment, show it, and report whether the money arrived. Throws a readable error if the payment could not even be started. */
+/** Start a Paystack payment for one instalment, show it, and report whether the money arrived. Throws a readable error if the payment could not even be started.
+ *  Paystack opens in the system's secure browser window (not the website, no second sign-in). When Paystack is done, the website's /pay/return page sends the window back to
+ *  iqacademy://pay/return, which closes it; if the person closes it first, or the page cannot hand back, we get here the same way. Either way the answer comes from the server. */
 export async function payInstalment(instalmentId: string): Promise<PayStatus> {
-  const init = await invokeFunction<{ authorization_url?: string; reference: string }>("paystack-init-payment", { instalment_id: instalmentId });
+  const { callbackUrl, redirectUrl } = payReturn(env.webBaseUrl, Linking.createURL("pay/return"));
+  const init = await invokeFunction<{ authorization_url?: string; reference: string }>("paystack-init-payment", { instalment_id: instalmentId, ...(callbackUrl ? { callback_url: callbackUrl } : {}) });
   if (!init.authorization_url) throw new Error("payment_failed");
-  const r = await WebBrowser.openBrowserAsync(init.authorization_url);
-  if (r.type === "opened") await waitForForeground(AppState); // Android returns immediately; iOS waits until the person closes the browser
+  // preferEphemeralSession: a payment page should not share the phone browser's cookies, and iOS skips its "wants to use … to sign in" prompt for it
+  await WebBrowser.openAuthSessionAsync(init.authorization_url, redirectUrl, { preferEphemeralSession: true });
   return verifyPayment(init.reference);
 }
