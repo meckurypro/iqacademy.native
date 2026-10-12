@@ -9,6 +9,7 @@ import { place } from "@/shared/web/centre";
 import { fmtDay, fmtWhen } from "@/shared/web/time";
 import { useTheme } from "@/theme/ThemeProvider";
 import { Badge, Button, Card, Chip, ChipRow, Heading, List, Place, Section, Skeleton, Stat, Text, useFeedback } from "@/ui";
+import BankAccountSheet from "@/features/wallet/BankAccountSheet";
 import { useEachRpc } from "./common";
 
 const DAYS = ["", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -21,6 +22,7 @@ export function DirectorHome() {
   const { p } = useTheme(); const { roles } = useAuth(); const { run, confirm } = useFeedback();
   const ids = useMemo(() => [...new Set(roles.filter((r) => r.role === "centre_director" && r.centre_id).map((r) => r.centre_id as string))].sort(), [roles]);
   const [sel, setSel] = useState("all"); const [monthSel, setMonthSel] = useState("");
+  const [bankFor, setBankFor] = useState<{ id: string; label: string } | null>(null);
   const dq = useEachRpc<any>("centre_dashboard", ids, ["income", "payments", "attendance"]);
   const iq = useEachRpc<any>("centre_income_months", ids, ["income", "payments"]);
   const ds = dq.data?.map((r) => r.data).filter(Boolean) as any[] | undefined;
@@ -94,8 +96,9 @@ export function DirectorHome() {
                   : <>
                       <Button style={{ height: 44 }} disabled={!m.can_withdraw} onPress={() => withdraw(c.centre_id, label, m)}>{`Withdraw ${m.available > 0 ? naira(m.available) : ""}`.trim()}</Button>
                       <Text size={13} tone="muted">
-                        {m.available <= 0 ? "Nothing to withdraw yet." : !c.account?.ready ? "Add your bank details with an admin first." : !m.can_withdraw ? `Opens ${niceDay(m.opens_on)}, when the month ends.` : "You can also leave it here and withdraw later."}
+                        {m.available <= 0 ? "Nothing to withdraw yet." : !c.account?.ready ? "Add your bank account to withdraw." : !m.can_withdraw ? `Opens ${niceDay(m.opens_on)}, when the month ends.` : "You can also leave it here and withdraw later."}
                       </Text>
+                      {!c.account?.ready ? <Button variant="ghost" onPress={() => setBankFor({ id: c.centre_id, label })}>Add bank account</Button> : null}
                     </>}
               </Card>);
           })}
@@ -143,6 +146,7 @@ export function DirectorHome() {
               </View>))}</List>}
         </Section>
       </>}
+      {bankFor ? <BankAccountSheet open onClose={() => setBankFor(null)} target={{ kind: "centre", centreId: bankFor.id, label: bankFor.label }} onSaved={reload} /> : null}
     </View>
   );
 }

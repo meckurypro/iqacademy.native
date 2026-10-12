@@ -9,14 +9,16 @@ import { placeLabel } from "@/shared/web/centre";
 import { fmtDay } from "@/shared/web/time";
 import { useTheme } from "@/theme/ThemeProvider";
 import { radius } from "@/theme/tokens";
-import { Badge, Button, Card, Empty, Err, Heading, Place, Skeleton, Text, useFeedback } from "@/ui";
+import { Badge, Button, Card, Empty, Err, Heading, Place, Segmented, Skeleton, Text, useFeedback } from "@/ui";
 import { callAdminFunction } from "./adminFn";
+import InstructorPayouts from "./InstructorPayouts";
 
  
 const tone = (s: string) => (s === "paid" ? "ok" : s === "failed" ? "bad" : s === "processing" ? "warn" : "muted") as "ok" | "bad" | "warn" | "muted";
 
 export default function Payouts() {
   const { p: th } = useTheme(); const { run, confirm } = useFeedback();
+  const [tab, setTab] = useState<"centres" | "instructors">("centres");
   const [msg, setMsg] = useState(""); const [err, setErr] = useState("");
   const q = useQuery<any[]>({ key: ["adminPayouts"], tags: ["payments", "income"], ttlMs: 30_000, fn: async (sb) => (ok(await sb.from("payouts").select("id,amount,status,reference,period_start,period_end,period_month,paid_at,failure_reason,centres(name,city,address)").order("created_at", { ascending: false }).limit(50)) as any[]) ?? [] });
   const rows = q.data; const loadErr = q.error && !rows ? friendly(q.error) : "";
@@ -42,6 +44,8 @@ export default function Payouts() {
   return (
     <View style={{ gap: 16 }}>
       <Heading size={26} lh={32}>Payouts</Heading>
+      <Segmented value={tab} onChange={setTab} options={[{ value: "centres", label: "Centres" }, { value: "instructors", label: "Instructors" }]} />
+      {tab === "instructors" ? <InstructorPayouts /> : <>
       <Text size={14} tone="muted">{"Directors ask to withdraw a month at a time. Review each request, then send it to the centre's bank account."}</Text>
       {msg ? <View style={{ borderRadius: radius.xl, backgroundColor: th.a("ok", 0.1), paddingHorizontal: 12, paddingVertical: 8 }}><Text size={14} tone="ok">{msg}</Text></View> : null}
       <Err>{err || loadErr}</Err>
@@ -57,6 +61,7 @@ export default function Payouts() {
           {p.failure_reason ? <Text size={14} tone="bad">{p.failure_reason}</Text> : null}
           {p.status === "draft" && <View style={{ flexDirection: "row", gap: 8 }}><Button style={{ height: 40, flex: 1 }} onPress={() => send(p)}>{`Send ${naira(p.amount)}`}</Button><Button variant="secondary" style={{ height: 40 }} onPress={() => cancel(p)}>Cancel</Button></View>}
         </Card>))}
+      </>}
     </View>
   );
 }

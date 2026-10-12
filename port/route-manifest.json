@@ -283,6 +283,15 @@
       "guard": [
         "centre_director"
       ]
+    },
+    {
+      "web": "/wallet",
+      "file": "(app)/wallet.tsx",
+      "module": "M9b",
+      "page": "src/pages/Wallet.tsx",
+      "guard": [
+        "instructor"
+      ]
     }
   ],
   "homes": [

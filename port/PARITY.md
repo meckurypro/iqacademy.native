@@ -2,12 +2,13 @@
 
 Generated from `port/parity.json` by `scripts/parity.mjs`. Edit with `node scripts/parity.mjs set <web-file> --status … --native … --sha …`, never by hand.
 
-wip: 1 · ported: 95 · skip: 2 · diverged: 2
+wip: 1 · ported: 97 · skip: 2 · diverged: 3
 
 | web file | module | mode | status | native | ported from | note |
 |---|---|---|---|---|---|---|
 | `App.tsx` | M5 | port | wip | `src/app/_layout.tsx, src/app/(app)/_layout.tsx, src/shell/*` | 1a13ada | shell, gate, guards, tab bars, avatar button, drawer done; /pay/return added at web 1a13ada |
 | `components/AssignSheet.tsx` | M10b | port | ported | `src/features/admin-classes/AssignSheet.tsx` | d14323f |  |
+| `components/BankAccountSheet.tsx` | unassigned | port | ported | `src/features/wallet/BankAccountSheet.tsx` | 911f86b | uses SearchField + SelectSheet; also used by DirectorHome |
 | `components/ChannelRow.tsx` | M8 | port | ported | `src/features/channels/ChannelRow.tsx` | d14323f |  |
 | `components/ChatBubble.tsx` | M8 | port | ported | `src/features/channels/ChatBubble.tsx, src/features/channels/MessageActions.tsx` | d14323f | tap opens actions (copy / share / save / send on / select more), long-press starts selecting (instructor), checkbox selection, 2 h copy/share window for students (server-corrected clock, re-checked at the tap). Share of text uses the system share sheet; a file is downloaded to cache and shared, then deleted |
 | `components/CheckInVerdict.tsx` | M7a | port | ported | `src/features/student/CheckInVerdict.tsx` | d14323f |  |
@@ -22,7 +23,7 @@ wip: 1 · ported: 95 · skip: 2 · diverged: 2
 | `components/DoorToday.tsx` | M9b | port | ported | `src/features/staff/DoorToday.tsx` | d14323f | reads today's classes from the cache, refreshed by the "sessions" tag |
 | `components/ErrorBoundary.tsx` | M0 | port | ported | `src/shell/ErrorBoundary.tsx` | 0081e66 |  |
 | `components/feedback.tsx` | M2 | port | ported | `src/ui/feedback.tsx` | 64bc5f7 | offline notice + Back online/Refresh added (64bc5f7); toasts in root view, covered by an open sheet; Refresh revalidates instead of reloading |
-| `components/Icon.tsx` | M2 | generated | ported | `src/ui/icons.generated.tsx + src/ui/Icon.tsx` | 1a13ada |  |
+| `components/Icon.tsx` | M2 | generated | ported | `src/ui/icons.generated.tsx + src/ui/Icon.tsx` | 911f86b |  |
 | `components/MakeupCard.tsx` | M7a | port | ported | `src/features/student/MakeupCard.tsx` | d14323f |  |
 | `components/MessageBubble.tsx` | M8 | port | ported | `src/features/channels/MessageBubble.tsx` | d14323f | card style for lists; used by ClassMessagesAdmin (Delete passed as footer). ClassScreen's admin view keeps ChatBubble + Composer, as M9a asked |
 | `components/MessagesRoute.tsx` | M5 | port | ported | `src/features/channels/Messages.tsx, src/app/(app)/messages/index.tsx, src/app/(app)/messages/[id].tsx` | d14323f | role choice (instructor list vs student list) lives in Messages.tsx; routes are real screens, no longer stubs |
@@ -41,25 +42,25 @@ wip: 1 · ported: 95 · skip: 2 · diverged: 2
 | `components/SoloPrices.tsx` | M10b | port | ported | `src/features/admin-classes/SoloPrices.tsx` | d14323f |  |
 | `components/Stars.tsx` | M2 | port | ported | `src/ui/Stars.tsx` | 0081e66 |  |
 | `components/ui.tsx` | M2 | port | ported | `src/ui/ui.tsx, src/ui/Sheet.tsx, src/ui/SelectSheet.tsx` | 64bc5f7 | Stat compact, StatStrip, Chip, ChipRow added (64bc5f7); Split/Main/Rail single-column on phones |
-| `index.css` | M2 | generated | ported | `src/theme/tokens.generated.ts` | 1a13ada |  |
+| `index.css` | M2 | generated | ported | `src/theme/tokens.generated.ts` | 911f86b |  |
 | `lib/auth.tsx` | M3 | port | ported | `src/core/auth.tsx, src/core/session.tsx` | 0081e66 | roles via data layer (cached/offline) + rolesReady |
-| `lib/centre.ts` | M3 | generated | ported | `src/shared/web/centre.ts` | 1a13ada |  |
-| `lib/channels.ts` | M3 | generated | ported | `src/shared/web/channels.ts` | 1a13ada |  |
+| `lib/centre.ts` | M3 | generated | ported | `src/shared/web/centre.ts` | 911f86b |  |
+| `lib/channels.ts` | M3 | generated | ported | `src/shared/web/channels.ts` | 911f86b |  |
 | `lib/checkin.ts` | M7a | port | ported | `src/shared/checkin.ts, src/features/student/hooks.ts` | d14323f | useCheckedIn is in hooks.ts |
 | `lib/classClock.ts` | M7a | port | ported | `src/shared/classClock.ts, src/features/student/hooks.ts` | d14323f | useClassClock is in hooks.ts; M9a/M9b reuse it |
-| `lib/db.ts` | M3 | generated | ported | `src/shared/web/db.ts` | 1a13ada |  |
+| `lib/db.ts` | M3 | generated | ported | `src/shared/web/db.ts` | 911f86b |  |
 | `lib/doorLock.ts` | M9a | port | ported | `src/features/class/doorLock.ts` | d14323f | pure rules in doorLockCore.ts (unit-tested); AppState background replaces visibilitychange; needsDoorPin re-exported from profile/doorPin |
 | `lib/messages.ts` | M8 | port | ported | `src/features/channels/format.ts, src/features/channels/media.ts, src/features/channels/sendToChats.ts, src/shell/TabBar.tsx` | d14323f | copy window, merge, download/share/copy, send to other chats (retry-safe) and the unread count (TabBar) are all native |
-| `lib/nav.ts` | M5 | generated | ported | `src/shell/nav.generated.ts` | 1a13ada |  |
+| `lib/nav.ts` | M5 | generated | ported | `src/shell/nav.generated.ts` | 911f86b |  |
 | `lib/notifications.ts` | M11a | port | ported | `src/shell/Bell.tsx` | d14323f | unread count (useNotificationCount) is in the shell Bell; live refresh comes from the shared realtime channel's "notifications" tag, no per-screen channel |
 | `lib/offline.ts` | M7b | port | ported | `src/shared/offline.ts, src/features/enrol/receipt.ts, src/features/enrol/receiptDevice.ts` | d14323f | prepareReceipt split into pure rules (unit-tested) and the device part |
 | `lib/online.ts` | M4a | port | ported | `src/data/net.ts` | 64bc5f7 | NetInfo link + same server probe, 2-strike rule, 20s/4s cadence; pauses in background (ADR-016) |
-| `lib/password.ts` | M3 | generated | ported | `src/shared/web/password.ts` | 1a13ada |  |
+| `lib/password.ts` | M3 | generated | ported | `src/shared/web/password.ts` | 911f86b |  |
 | `lib/payment.ts` | M7b | port | ported | `src/features/enrol/pay.ts, src/features/enrol/payFlow.ts` | d14323f | pay.ts/payFlow.ts existed from M3; M7b adds verifyPayment (shared by Enrol, OfflinePay, PayCallback) and the return handling: callback_url = WEB_BASE/pay/return + openAuthSessionAsync back to iqacademy://pay/return (ADR-012 amendment). Needs the web /pay/return page deployed first, and a device check on iOS and Android |
-| `lib/roster.ts` | M3 | generated | ported | `src/shared/web/roster.ts` | 1a13ada |  |
-| `lib/supabase.ts` | M3 | generated | ported | `src/shared/web/errors.ts (MESSAGES, friendly) + src/core/errors.ts` | 1a13ada |  |
+| `lib/roster.ts` | M3 | generated | ported | `src/shared/web/roster.ts` | 911f86b |  |
+| `lib/supabase.ts` | M3 | generated | ported | `src/shared/web/errors.ts (MESSAGES, friendly) + src/core/errors.ts` | 911f86b |  |
 | `lib/theme.ts` | M2 | port | ported | `src/theme/ThemeProvider.tsx` | 0081e66 |  |
-| `lib/time.ts` | M3 | generated | ported | `src/shared/web/time.ts` | 1a13ada |  |
+| `lib/time.ts` | M3 | generated | ported | `src/shared/web/time.ts` | 911f86b |  |
 | `lib/useMedia.ts` | skip | skip | skip |  |  | desktop-only / not used on phones |
 | `lib/useStaffCentres.ts` | M9b | port | ported | `src/features/staff/useStaffCentres.ts` | d14323f | branches cached for 10 min so staff screens open offline |
 | `lib/verify.ts` | M3 | port | ported | `src/shared/verify.ts` | 0081e66 | localStorage → kv |
@@ -81,6 +82,7 @@ wip: 1 · ported: 95 · skip: 2 · diverged: 2
 | `pages/InstructorHistory.tsx` | M9a | port | ported | `src/features/class/InstructorHistory.tsx` | d14323f | first page cached; Load more is online-only |
 | `pages/InstructorHome.tsx` | M9a | port | ported | `src/features/class/InstructorHome.tsx` | d14323f | cached dashboard; mounts the student ClassCountdown and RunReminder |
 | `pages/InstructorMessages.tsx` | M8 | port | ported | `src/features/channels/Messages.tsx` | d14323f | instructor list, chosen by role like web MessagesRoute |
+| `pages/InstructorPayouts.tsx` | unassigned | port | diverged | `src/features/admin-money/InstructorPayouts.tsx` | 911f86b | no date-range earnings explorer: earnings are per instructor (tap a wallet). Send is behind step-up. |
 | `pages/Instructors.tsx` | M10a | port | ported | `src/features/admin-people/Instructors.tsx` | d14323f |  |
 | `pages/Landing.tsx` | M6 | port | diverged | `src/features/auth/Landing.tsx` | d14323f | web's 'Get the app' / 'Continue on PC' buttons become 'Create an account' / 'Sign in' (already in the app) |
 | `pages/Login.tsx` | M6 | port | ported | `src/features/auth/Login.tsx` | d14323f |  |
@@ -106,3 +108,4 @@ wip: 1 · ported: 95 · skip: 2 · diverged: 2
 | `pages/Team.tsx` | M9b | port | ported | `src/features/staff/Team.tsx` | d14323f | online-only role changes; admin lands via a centre card, directors on their own centre |
 | `pages/Users.tsx` | M10a | port | ported | `src/features/admin-people/Users.tsx` | d14323f |  |
 | `pages/VerifyEmail.tsx` | M6 | port | ported | `src/features/auth/VerifyEmail.tsx` | d14323f |  |
+| `pages/Wallet.tsx` | unassigned | port | ported | `src/features/wallet/Wallet.tsx` | 911f86b | instructor wallet; display rules in walletUi.ts (tested) |
