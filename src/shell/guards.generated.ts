@@ -31,6 +31,12 @@ export const GUARDS: Record<string, string[]> = {
     "admin",
     "super_admin"
   ],
+  "/cash": [
+    "admin",
+    "super_admin",
+    "coordinator",
+    "centre_director"
+  ],
   "/students": [
     "coordinator",
     "centre_director"

@@ -28,6 +28,15 @@
       "note": "uses SearchField + SelectSheet; also used by DirectorHome"
     },
     {
+      "web": "src/components/CashParts.tsx",
+      "module": "M16",
+      "mode": "port",
+      "native": "src/features/cash/CashParts.tsx",
+      "status": "ported",
+      "ported_from_sha": "bbc9758",
+      "note": ""
+    },
+    {
       "web": "src/components/ChannelRow.tsx",
       "module": "M8",
       "mode": "port",
@@ -159,7 +168,7 @@
       "mode": "generated",
       "native": "src/ui/icons.generated.tsx + src/ui/Icon.tsx",
       "status": "ported",
-      "ported_from_sha": "911f86b",
+      "ported_from_sha": "bbc9758",
       "note": ""
     },
     {
@@ -253,6 +262,15 @@
       "note": "expo-camera CameraView instead of BarcodeDetector"
     },
     {
+      "web": "src/components/RecordCash.tsx",
+      "module": "M16",
+      "mode": "port",
+      "native": "src/features/cash/RecordCashSheet.tsx",
+      "status": "ported",
+      "ported_from_sha": "bbc9758",
+      "note": ""
+    },
+    {
       "web": "src/components/ReviewSheet.tsx",
       "module": "M7a",
       "mode": "port",
@@ -330,7 +348,7 @@
       "mode": "generated",
       "native": "src/theme/tokens.generated.ts",
       "status": "ported",
-      "ported_from_sha": "911f86b",
+      "ported_from_sha": "bbc9758",
       "note": ""
     },
     {
@@ -343,12 +361,21 @@
       "note": "roles via data layer (cached/offline) + rolesReady"
     },
     {
+      "web": "src/lib/cash.ts",
+      "module": "M16",
+      "mode": "port",
+      "native": "src/features/cash/cash.ts, src/features/cash/receiptUpload.ts",
+      "status": "ported",
+      "ported_from_sha": "bbc9758",
+      "note": "types/logic in cash.ts; device receipt upload in receiptUpload.ts"
+    },
+    {
       "web": "src/lib/centre.ts",
       "module": "M3",
       "mode": "generated",
       "native": "src/shared/web/centre.ts",
       "status": "ported",
-      "ported_from_sha": "911f86b",
+      "ported_from_sha": "bbc9758",
       "note": ""
     },
     {
@@ -357,7 +384,7 @@
       "mode": "generated",
       "native": "src/shared/web/channels.ts",
       "status": "ported",
-      "ported_from_sha": "911f86b",
+      "ported_from_sha": "bbc9758",
       "note": ""
     },
     {
@@ -384,7 +411,7 @@
       "mode": "generated",
       "native": "src/shared/web/db.ts",
       "status": "ported",
-      "ported_from_sha": "911f86b",
+      "ported_from_sha": "bbc9758",
       "note": ""
     },
     {
@@ -411,7 +438,7 @@
       "mode": "generated",
       "native": "src/shell/nav.generated.ts",
       "status": "ported",
-      "ported_from_sha": "911f86b",
+      "ported_from_sha": "bbc9758",
       "note": ""
     },
     {
@@ -447,7 +474,7 @@
       "mode": "generated",
       "native": "src/shared/web/password.ts",
       "status": "ported",
-      "ported_from_sha": "911f86b",
+      "ported_from_sha": "bbc9758",
       "note": ""
     },
     {
@@ -465,7 +492,7 @@
       "mode": "generated",
       "native": "src/shared/web/roster.ts",
       "status": "ported",
-      "ported_from_sha": "911f86b",
+      "ported_from_sha": "bbc9758",
       "note": ""
     },
     {
@@ -474,7 +501,7 @@
       "mode": "generated",
       "native": "src/shared/web/errors.ts (MESSAGES, friendly) + src/core/errors.ts",
       "status": "ported",
-      "ported_from_sha": "911f86b",
+      "ported_from_sha": "bbc9758",
       "note": ""
     },
     {
@@ -492,7 +519,7 @@
       "mode": "generated",
       "native": "src/shared/web/time.ts",
       "status": "ported",
-      "ported_from_sha": "911f86b",
+      "ported_from_sha": "bbc9758",
       "note": ""
     },
     {
@@ -537,7 +564,7 @@
       "mode": "port",
       "native": "src/features/admin-people/AdminHome.tsx",
       "status": "ported",
-      "ported_from_sha": "d14323f",
+      "ported_from_sha": "bbc9758",
       "note": ""
     },
     {
@@ -548,6 +575,33 @@
       "status": "ported",
       "ported_from_sha": "d14323f",
       "note": "DIFFERS: the pinned \"N people will get this / Send\" bar is the last card on the page instead of fixed to the bottom"
+    },
+    {
+      "web": "src/pages/Cash.tsx",
+      "module": "M16",
+      "mode": "port",
+      "native": "src/features/cash/Cash.tsx, src/app/(app)/cash.tsx",
+      "status": "ported",
+      "ported_from_sha": "bbc9758",
+      "note": "role switch: centre staff or admin view"
+    },
+    {
+      "web": "src/pages/CashAdmin.tsx",
+      "module": "M16",
+      "mode": "port",
+      "native": "src/features/cash/AdminCash.tsx",
+      "status": "ported",
+      "ported_from_sha": "bbc9758",
+      "note": "approve/decline behind step-up"
+    },
+    {
+      "web": "src/pages/CashCentre.tsx",
+      "module": "M16",
+      "mode": "port",
+      "native": "src/features/cash/CentreCash.tsx",
+      "status": "ported",
+      "ported_from_sha": "bbc9758",
+      "note": "online-only; transfer + PIN hand-over sheets"
     },
     {
       "web": "src/pages/CentreClasses.tsx",
@@ -609,7 +663,7 @@
       "mode": "port",
       "native": "src/features/staff/CoordinatorHome.tsx",
       "status": "ported",
-      "ported_from_sha": "d14323f",
+      "ported_from_sha": "bbc9758",
       "note": "invite QR drawn by react-native-qrcode-svg (JS only); mounts the student ClassCountdown"
     },
     {
@@ -636,7 +690,7 @@
       "mode": "port",
       "native": "src/features/staff/DirectorHome.tsx",
       "status": "ported",
-      "ported_from_sha": "d14323f",
+      "ported_from_sha": "bbc9758",
       "note": "withdraw/cancel are online-only and confirmed; no step-up (web has none; director requests, admin pays)"
     },
     {
@@ -645,7 +699,7 @@
       "mode": "port",
       "native": "src/features/enrol/Enrol.tsx, src/features/enrol/logic.ts",
       "status": "ported",
-      "ported_from_sha": "d14323f",
+      "ported_from_sha": "bbc9758",
       "note": "4 steps with a pinned Back/Continue bar (Screen footer). A retry after a failed or still-confirming payment reuses the registration already made (the web would create another). Paystack not yet run live (keys not configured); no screenshot pair"
     },
     {
@@ -726,7 +780,7 @@
       "mode": "port",
       "native": "src/features/admin-people/Manage.tsx",
       "status": "ported",
-      "ported_from_sha": "d14323f",
+      "ported_from_sha": "bbc9758",
       "note": "counts come from cached queries"
     },
     {
@@ -753,7 +807,7 @@
       "mode": "port",
       "native": "src/features/notifications/Notifications.tsx",
       "status": "ported",
-      "ported_from_sha": "d14323f",
+      "ported_from_sha": "bbc9758",
       "note": "list kept on the phone and refreshed with changes-since (full reload every 2 min); opening marks read (queued offline); \"Show older\" pages online only. Not yet: tapping a push to open this screen, app badge. No screenshot pair yet"
     },
     {
@@ -762,7 +816,7 @@
       "mode": "port",
       "native": "src/features/enrol/OfflinePay.tsx, src/features/enrol/receiptDevice.ts",
       "status": "ported",
-      "ported_from_sha": "d14323f",
+      "ported_from_sha": "bbc9758",
       "note": "receipt from library, camera or PDF; photos shrunk to 1600 px JPEG .82 with ImageManipulator.manipulate (manipulateAsync is deprecated); sent through the upload queue so it works offline and shows on Pending. Not run on a device; no screenshot pair"
     },
     {
@@ -771,7 +825,7 @@
       "mode": "port",
       "native": "src/features/admin-money/OfflinePayments.tsx",
       "status": "ported",
-      "ported_from_sha": "d14323f",
+      "ported_from_sha": "bbc9758",
       "note": "approve, decline and \"where students pay\" need the M12 step-up; receipts via 5-minute signed link"
     },
     {
@@ -789,7 +843,7 @@
       "mode": "port",
       "native": "src/features/admin-money/Payments.tsx",
       "status": "ported",
-      "ported_from_sha": "d14323f",
+      "ported_from_sha": "bbc9758",
       "note": "refund send and manual record need the M12 step-up; error detail kept via adminFn.ts"
     },
     {
@@ -879,7 +933,7 @@
       "mode": "port",
       "native": "src/features/student/Home.tsx",
       "status": "ported",
-      "ported_from_sha": "d14323f",
+      "ported_from_sha": "bbc9758",
       "note": "rating sheet is the M8 one; pull-to-refresh not wired (shell RoleHome)"
     },
     {

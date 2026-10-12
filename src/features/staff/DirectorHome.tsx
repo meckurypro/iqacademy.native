@@ -8,7 +8,7 @@ import { mutate } from "@/data";
 import { place } from "@/shared/web/centre";
 import { fmtDay, fmtWhen } from "@/shared/web/time";
 import { useTheme } from "@/theme/ThemeProvider";
-import { Badge, Button, Card, Chip, ChipRow, Heading, List, Place, Section, Skeleton, Stat, Text, useFeedback } from "@/ui";
+import { Badge, Button, Card, Chip, ChipRow, Heading, List, NavRow, Place, Section, Skeleton, Stat, Text, useFeedback } from "@/ui";
 import BankAccountSheet from "@/features/wallet/BankAccountSheet";
 import { useEachRpc } from "./common";
 
@@ -63,6 +63,8 @@ export function DirectorHome() {
         {ids.length === 1 && view[0]?.centre && place(view[0].centre) !== view[0].centre.name && <Text size={14} tone="muted" numberOfLines={1}>{view[0].centre.name}</Text>}
         <Text size={14} tone="muted">{view.length === 1 ? `Your share here: ${view[0].share_pct}% of student payments` : "Each branch has its own agreed share"}</Text>
       </View>
+
+      <List><NavRow to="/cash" icon="cash" tone="ok" title="Cash payments" hint="Record cash a student paid, and send it to IQ Academy" /></List>
 
       {ids.length > 1 && <ChipRow>{[{ id: "all", name: "All branches" }, ...(ds ?? []).map((d) => ({ id: d.centre?.id as string, name: d.centre ? place(d.centre) : "" }))].map((c) => <Chip key={c.id} on={sel === c.id} onPress={() => setSel(c.id)}>{c.name}</Chip>)}</ChipRow>}
       {months.length > 1 && <ChipRow>{months.map((m) => <Chip key={m} on={month === m} onPress={() => setMonthSel(m)}>{m === thisMonth ? "This month" : monthLabel(m)}</Chip>)}</ChipRow>}

@@ -13,7 +13,8 @@ const GROUPS: [title: string, items: Item[]][] = [
   ]],
   ["Money", [
     ["/prices", "Prices & instalments", "prices", "Package prices and instalment amounts", "ok"],
-    ["/offline-payments", "Offline payments", "cash", "Cash and transfers waiting to be confirmed", "ok"],
+    ["/offline-payments", "Offline payments", "cash", "Bank transfers students sent, waiting to be confirmed", "ok"],
+    ["/cash", "Cash from centres", "cash", "Cash paid at centres, hand-overs and transfers to confirm", "ok"],
     ["/payments", "Payments & refunds", "receipt", "Student payments and refunds", "ok"],
     ["/payouts", "Payouts", "payout", "Monthly payments to centres", "ok"],
   ]],
@@ -30,6 +31,8 @@ export default function Manage() {
   const oq = useRpc<{ open?: number }>("offline_payment_counts", {}, { tags: ["payments"], ttlMs: 60_000 });
   const rq = useQuery<number>({ key: ["reportedReviews"], tags: ["reviews"], ttlMs: 60_000, fn: async (sb) => (await sb.from("class_reviews").select("id", { count: "exact", head: true }).eq("report_instructor", true)).count ?? 0 });
   const dq = useQuery<number>({ key: ["disputedCheckIns"], tags: ["checkins"], ttlMs: 60_000, fn: async (sb) => (await sb.from("hand_check_ins").select("id", { count: "exact", head: true }).not("disputed_at", "is", null)).count ?? 0 });
+  const cq = useRpc<{ to_review?: number }>("admin_cash_counts", {}, { tags: ["cash"], ttlMs: 60_000 });
+  const cashReview = cq.data?.to_review ?? 0;
   const open = oq.data?.open ?? 0, reports = rq.data ?? 0, disputes = dq.data ?? 0;
   return (
     <View style={{ gap: 28 }}>
@@ -38,7 +41,7 @@ export default function Manage() {
         <Section key={title} title={title}>
           <List>{items.map(([to, t, icon, hint, tone]) => (
             <NavRow key={to} to={to} icon={icon} title={t} hint={hint} tone={tone}
-              badge={to === "/offline-payments" && open > 0 ? <Badge tone="warn">{open} waiting</Badge> : to === "/reviews" && reports > 0 ? <Badge tone="bad">{reports} reported</Badge> : to === "/check-ins" && disputes > 0 ? <Badge tone="bad">{disputes} disputed</Badge> : undefined} />))}
+              badge={to === "/offline-payments" && open > 0 ? <Badge tone="warn">{open} waiting</Badge> : to === "/cash" && cashReview > 0 ? <Badge tone="warn">{cashReview} to review</Badge> : to === "/reviews" && reports > 0 ? <Badge tone="bad">{reports} reported</Badge> : to === "/check-ins" && disputes > 0 ? <Badge tone="bad">{disputes} disputed</Badge> : undefined} />))}
           </List>
         </Section>))}
     </View>

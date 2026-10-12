@@ -33,6 +33,7 @@ export const when = (d: string, at: number = now()) => {
 
 /** The link a notification of this type offers, if any (web: the small accent links under the title). */
 export function noteLink(type: string): { to: string; label: string } | null {
+  if (type.startsWith("cash_")) return { to: "/cash", label: "Open cash" };
   if (type.startsWith("run_") && type !== "run_cancelled") return { to: "/schedule", label: "Open schedule" };
   if (["class_assigned", "class_unassigned", "class_changed"].includes(type)) return { to: "/my-classes", label: "Open my classes" };
   if (["emergency_class", "custom_class_invite", "custom_class_changed"].includes(type)) return { to: "/", label: "Go to check-in" };

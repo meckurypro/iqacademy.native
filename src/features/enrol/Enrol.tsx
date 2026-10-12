@@ -165,7 +165,7 @@ export default function Enrol() {
             {inst.length > 0 ? <Option on={sel.plan === "instalment"} onPress={() => setSel({ ...sel, plan: "instalment" })} title="Pay in instalments" sub={later(inst)} right={naira(inst[0].amount)} /> : null}
             <Text size={14} weight="medium" tone="muted" style={{ paddingTop: 8 }}>How will you pay?</Text>
             <Option on={method === "online"} onPress={() => setMethod("online")} title="Pay online" sub="Card or bank transfer through Paystack. Confirmed straight away." />
-            <Option on={method === "offline"} onPress={() => setMethod("offline")} title="Pay offline" sub="Cash or bank transfer. Send your receipt and the team confirms it once the money arrives." />
+            <Option on={method === "offline"} onPress={() => setMethod("offline")} title="Pay offline" sub="Bank transfer. Send your receipt and the team confirms it once the money arrives. Paying cash? Pay at your centre: the coordinator records it and your classes unlock at once." />
             <Card style={{ gap: 4 }}><Text size={14} weight="medium">{pack.name}</Text><Text size={14} tone="muted">{sel.courses.map(title).join(" + ")}</Text></Card>
             <Err>{err}</Err>
             {confirming ? <Card variant="sunken" style={{ gap: 4 }}><Text weight="medium">Still confirming</Text><Text size={14} tone="muted">Your bank is taking a moment. We will update your account as soon as the payment lands. You do not need to pay again.</Text></Card> : null}

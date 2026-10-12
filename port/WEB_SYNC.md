@@ -1,4 +1,4 @@
-last_reviewed_web_sha: 1a13ada
+last_reviewed_web_sha: bbc9758
 
 # Web sync log
 
@@ -7,6 +7,7 @@ Bump it **only after** the triage below is written. Newest entry first.
 
 | date | from → to | by | what it meant for native |
 |---|---|---|---|
+| 2026-10-12 | 1a13ada → bbc9758 | M16 cash session | Two web commits: instructor wallet `911f86b` (ported meanwhile by the wallet session, `dd5b995`) and cash payments `bbc9758`. **Mine, done:** ported the cash screens (M16, `src/features/cash/*`, route `/cash`), entry rows on Admin/Coordinator/Director home and Manage, `cash_` notification link, `channel` shown on Payments, copy changes on Enrol/Home/OfflinePay/OfflinePayments, 13 new error messages (via `sync-web`), manifest guard, `gen-contracts` (121 RPCs), 10 unit tests. Rebased onto the wallet port: took their generated files and ledger rows and re-applied mine on top. **Open for the owner:** see the instructor-wallet note in `BACKEND.md` (cash counts as "collected" for instructor earnings when recorded, not when the academy receives it). |
 | 2026-10-11 | d14323f → 1a13ada | contract-check session | One web commit: public `/pay/return` page + route (`PayReturn.tsx`, `App.tsx`). It hands a payment made in the app back to `iqacademy://pay/return`. The native side already existed (`src/app/(app)/pay/return.tsx`, `payFlow.ts`, shipped by the M7b session); this session only registered the route in `port/route-manifest.json`, gave `PayReturn.tsx` a ledger row (M7b, ported) and bumped the sha. No backend or contract change. |
 | 2026-10-09 | 64bc5f7 → d14323f | native upgrade session | **Mine, done:** `sync-web` re-run (error message `not_eligible_for_solo` reworded), `gen-contracts` (`can_buy_solo` added, 96 RPCs). **Others':** `SoloCourses.tsx` (needs-a-pack notice, calls `can_buy_solo` before choosing a course; the database also enforces it in `create_solo_enrolment`) → M7a, noted in `port/inbox/M7a.md`; migration 56 `solo_needs_pack` is already live. |
 | 2026-10-08 | 0081e66 → 64bc5f7 | native upgrade session | **Mine, done:** nav/tab redesign (avatar button, MENU_EXTRA, student/coordinator/director tab bars), `ui.tsx` (`Stat compact`, `StatStrip`, `Chip`, `ChipRow`), `feedback.tsx` offline + back-online cards, `lib/online.ts` → `src/data/net.ts` (ADR-016), new icons, error message line, 3 new routes. **Others':** door PIN (`doorLock`, `DoorPinSheet`, ClassScreen, migration 55) → M9a; `PinSetup/ChangePinForm staff` flag → M7a/M13; Profile door-PIN card + student-only reg no/PIN + sign-out → M13; Students/CentreClasses/Statement/useStaffCentres/DirectorHome/CoordinatorHome/Team → M9b; migrations 53–55 → `port/BACKEND.md`. |

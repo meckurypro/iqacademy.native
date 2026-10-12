@@ -9,12 +9,15 @@ import { List, NavRow, PageHeader, Skeleton, Stat } from "@/ui";
 export function AdminHome() {
   const oq = useRpc<any>("admin_overview", {}, { tags: ["payments", "enrolments", "sessions"], ttlMs: 60_000 });
   const fq = useRpc<{ open: number; with_receipt: number }>("offline_payment_counts", {}, { tags: ["payments"], ttlMs: 60_000 });
+  const cq = useRpc<{ to_review: number; holding: number }>("admin_cash_counts", {}, { tags: ["cash"], ttlMs: 60_000 });
+  const cash = cq.data ?? { to_review: 0, holding: 0 };
   const d = oq.data ?? (oq.error ? {} : undefined); const off = fq.data ?? { open: 0, with_receipt: 0 };
   if (!d) return <View style={{ gap: 16 }}><Skeleton height={32} style={{ width: "50%" }} /><Skeleton height={96} /><Skeleton height={96} /></View>;
   const st = d.enrolments_by_status ?? {};
   return (
     <View style={{ gap: 24 }}>
       <PageHeader title="Overview" />
+      {(cash.to_review > 0 || cash.holding > 0) && <List><NavRow to="/cash" icon="cash" tone="warn" title={cash.to_review > 0 ? `${cash.to_review} cash ${cash.to_review === 1 ? "transfer" : "transfers"} to review` : "You are holding cash"} hint={cash.holding > 0 ? `You hold ${naira(cash.holding)} from centres` : "Check the receipt, then approve"} /></List>}
       {off.open > 0 && <List><NavRow to="/offline-payments" icon="cash" tone="warn" title={`${off.open} offline ${off.open === 1 ? "payment" : "payments"} to review`} hint={`${off.with_receipt} with a receipt uploaded`} /></List>}
       <RunReminder />
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>

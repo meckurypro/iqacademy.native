@@ -6,7 +6,7 @@ import { env } from "@/core/env";
 import { ok } from "@/core/errors";
 import { useQuery, useRpc } from "@/data";
 import { useTheme } from "@/theme/ThemeProvider";
-import { Avatar, Badge, Card, PageHeader, Section, Skeleton, Text } from "@/ui";
+import { Avatar, Badge, Card, List, NavRow, PageHeader, Section, Skeleton, Text } from "@/ui";
 import ClassCountdown from "@/features/student/ClassCountdown";
 import DoorToday from "./DoorToday";
 
@@ -25,6 +25,7 @@ export function CoordinatorHome() {
     <View style={{ gap: 24 }}>
       <PageHeader title={`Hi ${name.split(" ")[0]}`} sub={centre.name} />
       <ClassCountdown />
+      <List><NavRow to="/cash" icon="cash" tone="ok" title="Cash payments" hint="Record cash a student paid, and send it to IQ Academy" /></List>
       <Card style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
         <View style={{ borderRadius: 12, backgroundColor: "#fff", padding: 8 }}><QRCode value={APP_URL} size={96} backgroundColor="#fff" color="#000" /></View>
         <View style={{ flex: 1, minWidth: 0 }}><Text weight="medium">Invite students</Text><Text size={14} tone="muted">Let them scan this to open the app, create an account and enrol themselves.</Text></View>

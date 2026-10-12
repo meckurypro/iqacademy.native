@@ -213,6 +213,18 @@
       "page": "src/pages/OfflinePayments.tsx"
     },
     {
+      "web": "/cash",
+      "file": "(app)/cash.tsx",
+      "module": "M16",
+      "page": "src/pages/Cash.tsx",
+      "guard": [
+        "admin",
+        "super_admin",
+        "coordinator",
+        "centre_director"
+      ]
+    },
+    {
       "web": "/pay/offline/:id",
       "file": "(app)/pay/offline/[id].tsx",
       "module": "M7b",

@@ -153,7 +153,7 @@ export function StudentHome() {
                 <Text weight="medium">Offline payment</Text><Badge tone={claim.receipt ? "info" : "warn"}>{claim.receipt ? "Awaiting confirmation" : "Receipt needed"}</Badge>
               </View>
               <Text size={14} tone="muted">{naira(claim.amount)} · {claim.instalment_label ?? "Payment"} · reference <Text size={14} weight="medium" num>{claim.reference}</Text></Text>
-              <Text size={14} tone="muted">{claim.receipt ? "The team has your receipt and will confirm once the money arrives. You'll get a notification." : "Pay by cash or transfer, then send your receipt so we can confirm it."}</Text>
+              <Text size={14} tone="muted">{claim.receipt ? "The team has your receipt and will confirm once the money arrives. You'll get a notification." : "Pay by bank transfer, then send your receipt so we can confirm it. Paying cash at your centre? Ask the coordinator to record it instead."}</Text>
               <View style={{ flexDirection: "row", gap: 8 }}>
                 <Button style={{ flex: 1 }} onPress={() => router.push(`/pay/offline/${claim.id}`)}>{claim.receipt ? "View details" : "Send receipt"}</Button>
                 <Button variant="secondary" style={{ flex: 1 }} onPress={() => payOnlineInstead(claim.id, i.id)}>Pay online</Button>

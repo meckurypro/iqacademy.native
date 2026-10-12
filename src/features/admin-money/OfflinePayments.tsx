@@ -91,7 +91,7 @@ export default function OfflinePayments() {
   const pending = (rows ?? []).filter((r) => r.status === "pending"); const withReceipt = pending.filter((r) => r.receipt).length;
   return (
     <View style={{ gap: 16 }}>
-      <View><Heading size={26} lh={32}>Offline payments</Heading><Text size={14} tone="muted">Students who chose to pay by cash or transfer. Leave a payment here until the money arrives: nothing changes for the student until you approve or decline it.</Text></View>
+      <View><Heading size={26} lh={32}>Offline payments</Heading><Text size={14} tone="muted">Students who chose to pay by bank transfer. (Cash paid at a centre is recorded by the centre and handled on the Cash page.) Leave a payment here until the money arrives: nothing changes for the student until you approve or decline it.</Text></View>
 
       <Card style={{ gap: 8 }}>
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}><Text weight="medium">Where students pay</Text><Pressable accessibilityRole="button" onPress={() => setEditBank({ ...bank })} style={{ minHeight: 44, justifyContent: "center" }}><Text size={14} tone="accent">Edit</Text></Pressable></View>

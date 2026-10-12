@@ -26,7 +26,7 @@ export default function Payments() {
     key: ["adminPayments"], tags: ["payments"], ttlMs: 30_000,
     fn: async (sb) => {
       const [a, b] = await Promise.all([
-        sb.from("payments").select("id,reference,amount,refunded_amount,status,paid_at,provider,centres(name,city,address),students(profiles(full_name))").in("status", ["succeeded", "partially_refunded", "refunded"]).order("paid_at", { ascending: false }).limit(100),
+        sb.from("payments").select("id,reference,amount,refunded_amount,status,paid_at,provider,channel,centres(name,city,address),students(profiles(full_name))").in("status", ["succeeded", "partially_refunded", "refunded"]).order("paid_at", { ascending: false }).limit(100),
         sb.from("refunds").select("id,amount,status,method,reason,failure_reason,created_at,account_name,account_last4,bank_name,centres(name,city,address),students(profiles(full_name))").order("created_at", { ascending: false }).limit(50),
       ]);
       return { pay: (ok(a) as any[]) ?? [], refs: (ok(b) as any[]) ?? [] };
@@ -88,7 +88,7 @@ export default function Payments() {
           <Card key={x.id} onPress={() => open(x)} style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, paddingVertical: 12 }}>
             <View style={{ flex: 1, minWidth: 0 }}>
               <Text weight="medium" numberOfLines={1}>{name(x)}</Text>
-              <View style={{ flexDirection: "row", alignItems: "center", flexWrap: "wrap" }}>{x.centres ? <Place centre={x.centres} nameOnly size={14} tone="muted" /> : null}<Text size={14} tone="muted">{` · ${x.paid_at ? fmtWhen(x.paid_at, { dateStyle: "short" }) : ""} · ${x.provider}`}</Text></View>
+              <View style={{ flexDirection: "row", alignItems: "center", flexWrap: "wrap" }}>{x.centres ? <Place centre={x.centres} nameOnly size={14} tone="muted" /> : null}<Text size={14} tone="muted">{` · ${x.paid_at ? fmtWhen(x.paid_at, { dateStyle: "short" }) : ""} · ${x.channel === "cash" ? "cash" : x.provider}`}</Text></View>
             </View>
             <View style={{ alignItems: "flex-end", gap: 4 }}><Text weight="semibold" num>{naira(x.amount)}</Text>{x.refunded_amount > 0 ? <Badge tone="info">−{naira(x.refunded_amount)} refunded</Badge> : <Badge tone={tone(x.status)}>{x.status}</Badge>}</View>
           </Card>))}
