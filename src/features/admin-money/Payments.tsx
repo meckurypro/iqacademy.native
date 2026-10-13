@@ -16,7 +16,7 @@ import { callAdminFunction } from "./adminFn";
  
 const tone = (s: string) => (s === "succeeded" || s === "paid" ? "ok" : s === "failed" ? "bad" : s.includes("refund") || s === "processing" ? "warn" : "muted") as "ok" | "bad" | "warn" | "muted";
 type F = { amt: string; why: string; cancel: boolean; method: "paystack" | "manual"; bank: string; acct: string; note: string; accName: string };
-const blank = (x: any): F => ({ amt: String((x.amount - x.refunded_amount) / 100), why: "", cancel: x.refunded_amount === 0, method: "paystack", bank: "", acct: "", note: "", accName: "" });
+const blank = (x: any): F => ({ amt: "", why: "", cancel: x.refunded_amount === 0, method: "paystack", bank: "", acct: "", note: "", accName: "" });
 
 export default function Payments() {
   const { p: th } = useTheme(); const { run, confirm } = useFeedback();
@@ -36,7 +36,10 @@ export default function Payments() {
   const banks = useBanks(!!p).data ?? [];
   const name = (x: any) => x.students?.profiles?.full_name ?? "Unknown";
   const shown = (rows ?? []).filter((x) => !q.trim() || (name(x) + x.reference + (x.centres ? placeLabel(x.centres) : "")).toLowerCase().includes(q.trim().toLowerCase()));
-  const left = p ? p.amount - p.refunded_amount : 0; const kobo = Math.round(Number(f.amt || 0) * 100);
+  const infoQ = useQuery<any>({ key: ["refundInfo", p?.id ?? ""], tags: ["payments"], ttlMs: 0, enabled: !!p, fn: async (sb) => ok(await sb.rpc("payment_refund_info", { p_payment_id: p.id })) });
+  const info = infoQ.data;
+  const left = p ? (info ? Number(info.max_refund) : p.amount - p.refunded_amount) : 0; // never more than the unused classes are worth
+  const kobo = f.amt === "" ? left : Math.round(Number(f.amt) * 100);
 
   const open = (x: any) => { setP(x); setErr(""); setDone(""); setF(blank(x)); };
   const verify = async () => {
@@ -64,7 +67,7 @@ export default function Payments() {
         const bankName = banks.find((b) => b.code === f.bank)?.name ?? null;
         await online(async (sb) => {
           const { error } = await sb.rpc("record_manual_refund", { p_payment_id: p.id, p_amount: kobo, p_reason: f.why || null, p_cancel_enrolment: f.cancel, p_note: f.note || null, p_bank_name: bankName, p_account_name: f.accName || null, p_account_last4: f.acct ? f.acct.slice(-4) : null });
-          if (error) throw error.message.includes("invalid_refund_amount") ? new UserMessage("That's more than can still be refunded.") : error;
+          if (error) throw error.message.includes("invalid_refund_amount") ? new UserMessage("That's more than can still be refunded.") : error.message.includes("refund_exceeds_unused_classes") ? new UserMessage("Classes the student already attended can't be refunded.") : error;
         }, { invalidates: ["payments", "refunds"] });
         message = "Refund recorded. The student and the centre have been updated.";
       }
@@ -113,8 +116,9 @@ export default function Payments() {
         ) : (
           <View style={{ gap: 16 }}>
             <View><Text weight="medium">{name(p)}</Text><View style={{ flexDirection: "row", alignItems: "center", flexWrap: "wrap" }}><Text size={14} tone="muted">{`Paid ${naira(p.amount)} · `}</Text>{p.centres ? <Place centre={p.centres} nameOnly size={14} tone="muted" /> : null}</View></View>
-            {left <= 0 ? <Text tone="muted">This payment has already been fully refunded.</Text> : <>
-              <Field label={`Amount to refund (₦, up to ${left / 100})`} keyboardType="decimal-pad" value={f.amt} onChangeText={(v) => setF({ ...f, amt: v.replace(/[^\d.]/g, "") })} />
+            {info && info.attended > 0 ? <Text size={14} tone="muted">{`This student attended ${info.attended} of ${info.total_classes} classes. Attended classes can't be refunded, so you can refund up to ${naira(Math.max(0, left))}.`}</Text> : null}
+            {left <= 0 ? <Text tone="muted">{p.amount - p.refunded_amount > 0 ? "Nothing can be refunded: the classes attended are worth what was paid." : "This payment has already been fully refunded."}</Text> : <>
+              <Field label={`Amount to refund (₦, up to ${left / 100})`} keyboardType="decimal-pad" value={f.amt === "" ? String(left / 100) : f.amt} onChangeText={(v) => setF({ ...f, amt: v.replace(/[^\d.]/g, "") })} />
               <Field label="Reason" value={f.why} onChangeText={(v) => setF({ ...f, why: v })} placeholder="Optional" />
               <SwitchRow title="Also cancel their enrolment" hint="Removes access to classes." value={f.cancel} onChange={(v) => setF({ ...f, cancel: v })} />
               <Segmented value={f.method} onChange={(m) => setF({ ...f, method: m })} options={[{ value: "paystack", label: "Pay with Paystack" }, { value: "manual", label: "I paid manually" }]} />

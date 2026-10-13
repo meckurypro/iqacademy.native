@@ -24,7 +24,7 @@
       "mode": "port",
       "native": "src/features/wallet/BankAccountSheet.tsx",
       "status": "ported",
-      "ported_from_sha": "911f86b",
+      "ported_from_sha": "d1139f4",
       "note": "uses SearchField + SelectSheet; also used by DirectorHome"
     },
     {
@@ -168,7 +168,7 @@
       "mode": "generated",
       "native": "src/ui/icons.generated.tsx + src/ui/Icon.tsx",
       "status": "ported",
-      "ported_from_sha": "bbc9758",
+      "ported_from_sha": "d1139f4",
       "note": ""
     },
     {
@@ -348,7 +348,7 @@
       "mode": "generated",
       "native": "src/theme/tokens.generated.ts",
       "status": "ported",
-      "ported_from_sha": "bbc9758",
+      "ported_from_sha": "d1139f4",
       "note": ""
     },
     {
@@ -375,7 +375,7 @@
       "mode": "generated",
       "native": "src/shared/web/centre.ts",
       "status": "ported",
-      "ported_from_sha": "bbc9758",
+      "ported_from_sha": "d1139f4",
       "note": ""
     },
     {
@@ -384,7 +384,7 @@
       "mode": "generated",
       "native": "src/shared/web/channels.ts",
       "status": "ported",
-      "ported_from_sha": "bbc9758",
+      "ported_from_sha": "d1139f4",
       "note": ""
     },
     {
@@ -411,7 +411,7 @@
       "mode": "generated",
       "native": "src/shared/web/db.ts",
       "status": "ported",
-      "ported_from_sha": "bbc9758",
+      "ported_from_sha": "d1139f4",
       "note": ""
     },
     {
@@ -438,7 +438,7 @@
       "mode": "generated",
       "native": "src/shell/nav.generated.ts",
       "status": "ported",
-      "ported_from_sha": "bbc9758",
+      "ported_from_sha": "d1139f4",
       "note": ""
     },
     {
@@ -474,7 +474,7 @@
       "mode": "generated",
       "native": "src/shared/web/password.ts",
       "status": "ported",
-      "ported_from_sha": "bbc9758",
+      "ported_from_sha": "d1139f4",
       "note": ""
     },
     {
@@ -492,7 +492,7 @@
       "mode": "generated",
       "native": "src/shared/web/roster.ts",
       "status": "ported",
-      "ported_from_sha": "bbc9758",
+      "ported_from_sha": "d1139f4",
       "note": ""
     },
     {
@@ -501,7 +501,7 @@
       "mode": "generated",
       "native": "src/shared/web/errors.ts (MESSAGES, friendly) + src/core/errors.ts",
       "status": "ported",
-      "ported_from_sha": "bbc9758",
+      "ported_from_sha": "d1139f4",
       "note": ""
     },
     {
@@ -519,7 +519,7 @@
       "mode": "generated",
       "native": "src/shared/web/time.ts",
       "status": "ported",
-      "ported_from_sha": "bbc9758",
+      "ported_from_sha": "d1139f4",
       "note": ""
     },
     {
@@ -744,7 +744,7 @@
       "mode": "port",
       "native": "src/features/admin-money/InstructorPayouts.tsx",
       "status": "diverged",
-      "ported_from_sha": "911f86b",
+      "ported_from_sha": "d1139f4",
       "note": "no date-range earnings explorer: earnings are per instructor (tap a wallet). Send is behind step-up."
     },
     {
@@ -843,8 +843,8 @@
       "mode": "port",
       "native": "src/features/admin-money/Payments.tsx",
       "status": "ported",
-      "ported_from_sha": "bbc9758",
-      "note": "refund send and manual record need the M12 step-up; error detail kept via adminFn.ts"
+      "ported_from_sha": "d1139f4",
+      "note": "refund capped to unused classes (payment_refund_info)"
     },
     {
       "web": "src/pages/Payouts.tsx",
@@ -978,8 +978,8 @@
       "mode": "port",
       "native": "src/features/wallet/Wallet.tsx",
       "status": "ported",
-      "ported_from_sha": "911f86b",
-      "note": "instructor wallet; display rules in walletUi.ts (tested)"
+      "ported_from_sha": "d1139f4",
+      "note": "per-month like DirectorHome; display rules in walletUi.ts (tested)"
     }
   ]
 }

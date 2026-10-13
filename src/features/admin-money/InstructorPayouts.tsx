@@ -67,7 +67,7 @@ export default function InstructorPayouts() {
           <Card key={x.id} style={{ gap: 8 }}>
             <View style={{ flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
               <View style={{ flex: 1, minWidth: 0 }}><Text size={20} weight="semibold" num>{naira(x.amount)}</Text>
-                <Text size={14} tone="muted">{`${x.instructor} · ${fmtWhen(x.created_at, { dateStyle: "medium" })} · through ${fmtDay(x.eligible_through, { month: "long", year: "numeric" })}`}</Text></View>
+                <Text size={14} tone="muted">{`${x.instructor} · ${fmtWhen(x.created_at, { dateStyle: "medium" })} · for ${fmtDay(x.eligible_through, { month: "long", year: "numeric" })}`}</Text></View>
               <Badge tone={statusInfo(x.status).tone}>{x.status === "draft" ? "Needs review" : statusInfo(x.status).label}</Badge>
             </View>
             <Text size={14} tone="muted">{`${x.bank_name} ••${x.account_last4} · ${x.account_name}`}</Text>
