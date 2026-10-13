@@ -10,7 +10,7 @@ import { useTheme } from "@/theme/ThemeProvider";
 import { radius } from "@/theme/tokens";
 import { Badge, Button, Card, Empty, Err, Field, Heading, Icon, SelectSheet, Sheet, Skeleton, SwitchRow, Text, useFeedback } from "@/ui";
 import SoloPrices from "./SoloPrices";
-import { MAX_INST, blankPackage, defaultRows, digits, nextRule, packageProblems, ruleText, split, toKobo, type InstRow, type PackageForm } from "./pricing";
+import { MAX_INST, blankPackage, chargedAmounts, defaultRows, digits, nextRule, packageProblems, partsFromCharged, ruleText, split, toKobo, type InstRow, type PackageForm } from "./pricing";
 
  
 export default function Prices() {
@@ -19,7 +19,7 @@ export default function Prices() {
   const [f, setF] = useState<PackageForm | null>(null); const [show, setShow] = useState(false); const [err, setErr] = useState("");
   const q = useQuery<any[]>({
     key: ["packages"], tags: ["packages", "courses"], ttlMs: 30_000,
-    fn: async (sb) => (ok(await sb.from("packages").select("id,code,name,description,course_count,duration_weeks,price_full,is_active,sort_order,package_instalments(number,label,amount,due_rule)").neq("code", "SOLO").order("sort_order")) as any[]) ?? [],
+    fn: async (sb) => (ok(await sb.from("packages").select("id,code,name,description,course_count,duration_weeks,price_full,instalment_fee,is_active,sort_order,package_instalments(number,label,amount,due_rule)").neq("code", "SOLO").order("sort_order")) as any[]) ?? [],
   });
   const cq = useQuery<number>({ key: ["activeCourseCount"], tags: ["courses"], ttlMs: 5 * 60_000, fn: async (sb) => (await sb.from("courses").select("id", { count: "exact", head: true }).eq("is_active", true)).count ?? 10 });
   const rows = q.data ?? (q.error ? [] : undefined); const loadErr = q.error ? friendly(q.error) : ""; const courseMax = cq.data || 10;
@@ -30,25 +30,26 @@ export default function Prices() {
   const open = (next: PackageForm) => { setErr(""); setShow(false); setF(next); };
   const edit = (pk: any) => {
     const inst = [...(pk.package_instalments ?? [])].sort((a: any, b: any) => a.number - b.number);
-    open({ id: pk.id, code: pk.code, name: pk.name, description: pk.description ?? "", courses: String(pk.course_count), weeks: pk.duration_weeks ? String(pk.duration_weeks) : "", price: String(pk.price_full / 100), active: pk.is_active, instOn: inst.length > 0, inst: inst.map((i: any) => ({ label: i.label, amount: String(i.amount / 100), rule: i.due_rule })) });
+    open({ id: pk.id, code: pk.code, name: pk.name, description: pk.description ?? "", courses: String(pk.course_count), weeks: pk.duration_weeks ? String(pk.duration_weeks) : "", price: String(pk.price_full / 100), fee: pk.instalment_fee ? String(pk.instalment_fee / 100) : "", active: pk.is_active, instOn: inst.length > 0,
+      inst: partsFromCharged(inst.map((i: any) => i.amount), pk.instalment_fee ?? 0).map((amount, k) => ({ label: inst[k].label, amount, rule: inst[k].due_rule })) });
   };
 
   const courseN = f ? Number(f.courses) : 0; const priceN = f ? Number(f.price) : 0;
   const instTotal = f ? f.inst.reduce((s, r) => s + (Number(r.amount) || 0), 0) : 0; const diff = instTotal - priceN;
   const problems = f ? packageProblems(f, courseMax) : [];
-  const toggleInst = (on: boolean) => { if (f) set({ instOn: on, inst: on && f.inst.length === 0 ? defaultRows(f.price, courseN || 2) : f.inst }); };
+  const toggleInst = (on: boolean) => { if (f) set({ instOn: on, fee: on ? f.fee : "", inst: on && f.inst.length === 0 ? defaultRows(f.price, courseN || 2) : f.inst }); };
   const addRow = () => { if (f && f.inst.length < MAX_INST) set({ inst: [...f.inst, { label: `Instalment ${f.inst.length + 1}`, amount: "", rule: nextRule(f.inst, courseN) }] }); };
   const splitEvenly = () => { if (f && priceN > 0 && f.inst.length) { const a = split(priceN, f.inst.length); set({ inst: f.inst.map((r, i) => ({ ...r, amount: a[i] })) }); } };
 
   const save = async () => {
     if (!f) return;
     setShow(true); if (problems.length) return;
-    if (f.instOn && instTotal !== priceN && !(await confirm({ title: "Instalments don't add up to the full price", message: `The instalments add up to ${naira(instTotal * 100)} but the full price is ${naira(priceN * 100)}. Students paying by instalments will pay ${naira(instTotal * 100)} in total.`, confirmLabel: "Save anyway" }))) return;
     setErr("");
     const r = await run(f.id ? "Saving package…" : "Creating package…", async () => {
       await mutate.rpc("save_package", {
         p_package_id: f.id || null, p_code: f.code.trim(), p_name: f.name.trim(), p_description: f.description.trim() || null, p_course_count: courseN, p_duration_weeks: f.weeks ? Number(f.weeks) : null,
         p_price_full: toKobo(f.price), p_is_active: f.active, p_instalments: f.instOn ? f.inst.map((r, i) => ({ label: r.label.trim(), amount: toKobo(r.amount), due_rule: i === 0 ? "before_start" : r.rule })) : [],
+        p_instalment_fee: f.instOn ? toKobo(f.fee) : 0,
       }, { invalidates: ["packages"] });
       await q.refetch();
     }, { success: "Package saved. New enrolments will use these prices.", quiet: true });
@@ -81,8 +82,8 @@ export default function Prices() {
             </View>
             {inst.length === 0 ? <Text size={14} tone="muted">Pay in full only</Text> : (
               <View style={{ gap: 4 }}>
-                {inst.map((i: any) => <View key={i.number} style={{ flexDirection: "row", justifyContent: "space-between", gap: 12 }}><Text size={14} tone="muted" numberOfLines={1} style={{ flex: 1 }}>{i.number}. {i.label}</Text><Text size={14} num>{naira(i.amount)}</Text></View>)}
-                {total !== pk.price_full && <Text size={14} tone="warn">Instalments total {naira(total)}, {total > pk.price_full ? "more" : "less"} than paying in full.</Text>}
+                {inst.map((i: any, k: number) => <View key={i.number} style={{ flexDirection: "row", justifyContent: "space-between", gap: 12 }}><Text size={14} tone="muted" numberOfLines={1} style={{ flex: 1 }}>{`${i.number}. ${i.label}${k === inst.length - 1 && pk.instalment_fee > 0 ? ` (includes ${naira(pk.instalment_fee)} extra fee)` : ""}`}</Text><Text size={14} num>{naira(i.amount)}</Text></View>)}
+                <Text size={14} tone={total - (pk.instalment_fee ?? 0) === pk.price_full ? "muted" : "warn"}>{total - (pk.instalment_fee ?? 0) === pk.price_full ? `Students pay ${naira(total)} in instalments: ${naira(pk.price_full)} + ${naira(pk.instalment_fee ?? 0)} extra fee for IQ Academy.` : `Instalments (without the fee) total ${naira(total - (pk.instalment_fee ?? 0))}, not the full price. Edit and fix it.`}</Text>
               </View>)}
             <Button variant="secondary" style={{ height: 40 }} onPress={() => edit(pk)}>Edit</Button>
           </Card>);
@@ -123,7 +124,10 @@ export default function Prices() {
               </View>
               {instTotal > 0 && priceN > 0 && (diff === 0
                 ? <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}><Icon name="check" size={16} color={p.c.ok} /><Text size={14} tone="ok">The instalments add up to the full price.</Text></View>
-                : <Text size={14} tone="warn">Instalments total {naira(instTotal * 100)}, {naira(Math.abs(diff) * 100)} {diff > 0 ? "more" : "less"} than the full price. Students paying by instalments will pay {naira(instTotal * 100)} in total.</Text>)}
+                : <Text size={14} tone="warn">{`The instalments total ${naira(instTotal * 100)}, ${naira(Math.abs(diff) * 100)} ${diff > 0 ? "more" : "less"} than the full price. They must add up to ${naira(priceN * 100)}.`}</Text>)}
+              <Field label="Extra fee for paying in instalments (₦, optional)" keyboardType="number-pad" value={f.fee} onChangeText={(v) => set({ fee: digits(v).slice(0, 9) })} />
+              <Text size={14} tone="muted">{"Charged together with the last instalment. It goes to IQ Academy only: instructors and centres don't earn from it."}</Text>
+              {f.inst.length > 0 && diff === 0 ? <Text size={14}>{`A student paying in instalments pays ${chargedAmounts(f.inst, f.fee).map((a) => naira(a * 100)).join(", then ")}. Total ${naira((instTotal + (Number(f.fee) || 0)) * 100)}.`}</Text> : null}
             </>}
           </View>
 

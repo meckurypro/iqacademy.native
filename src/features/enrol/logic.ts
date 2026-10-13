@@ -6,7 +6,7 @@ import { fmtDay, today } from "@/shared/web/time";
 export type Centre = { id: string; name: string; address: string | null; city: string | null };
 export type Start = { centre_id: string; starts_on: string };
 export type Instalment = { number: number; label: string; amount: number; due_rule: string };
-export type Pack = { id: string; name: string; description: string | null; course_count: number; price_full: number; package_instalments: Instalment[] };
+export type Pack = { id: string; name: string; description: string | null; course_count: number; price_full: number; instalment_fee?: number; package_instalments: Instalment[] };
 export type Course = { id: string; title: string; summary: string | null; sort_order: number };
 export type Pre = { course_id: string; prerequisite_id: string; group_no: number };
 export const STEPS = ["Pack", "Courses", "Centre", "Payment"] as const;
@@ -23,6 +23,8 @@ export const later = (inst: Pick<Instalment, "amount" | "label" | "due_rule">[])
 
 export const startsLabel = (iso: string, todayIso = today()) => (iso <= todayIso ? "Starts today" : `Starts ${fmtDay(iso, { day: "numeric", month: "long", year: "numeric" })}`);
 
+/** "Includes a ₦5,000 instalment fee" shown next to the instalment option (empty when the pack has no fee). */
+export const feeNote = (p: Pick<Pack, "instalment_fee"> | undefined, fmt: (kobo: number) => string) => (p?.instalment_fee && p.instalment_fee > 0 ? `Includes a ${fmt(p.instalment_fee)} instalment fee` : "");
 export const sortInstalments = (p: Pack | undefined) => [...(p?.package_instalments ?? [])].sort((a, b) => a.number - b.number);
 export const dueNow = (plan: Sel["plan"], pack: Pack | undefined, inst: Instalment[]) => (plan === "full" ? pack?.price_full ?? 0 : inst[0]?.amount ?? 0);
 

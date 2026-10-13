@@ -168,7 +168,7 @@
       "mode": "generated",
       "native": "src/ui/icons.generated.tsx + src/ui/Icon.tsx",
       "status": "ported",
-      "ported_from_sha": "d1139f4",
+      "ported_from_sha": "68c7d7c",
       "note": ""
     },
     {
@@ -348,7 +348,7 @@
       "mode": "generated",
       "native": "src/theme/tokens.generated.ts",
       "status": "ported",
-      "ported_from_sha": "d1139f4",
+      "ported_from_sha": "68c7d7c",
       "note": ""
     },
     {
@@ -375,7 +375,7 @@
       "mode": "generated",
       "native": "src/shared/web/centre.ts",
       "status": "ported",
-      "ported_from_sha": "d1139f4",
+      "ported_from_sha": "68c7d7c",
       "note": ""
     },
     {
@@ -384,7 +384,7 @@
       "mode": "generated",
       "native": "src/shared/web/channels.ts",
       "status": "ported",
-      "ported_from_sha": "d1139f4",
+      "ported_from_sha": "68c7d7c",
       "note": ""
     },
     {
@@ -411,7 +411,7 @@
       "mode": "generated",
       "native": "src/shared/web/db.ts",
       "status": "ported",
-      "ported_from_sha": "d1139f4",
+      "ported_from_sha": "68c7d7c",
       "note": ""
     },
     {
@@ -438,7 +438,7 @@
       "mode": "generated",
       "native": "src/shell/nav.generated.ts",
       "status": "ported",
-      "ported_from_sha": "d1139f4",
+      "ported_from_sha": "68c7d7c",
       "note": ""
     },
     {
@@ -474,7 +474,7 @@
       "mode": "generated",
       "native": "src/shared/web/password.ts",
       "status": "ported",
-      "ported_from_sha": "d1139f4",
+      "ported_from_sha": "68c7d7c",
       "note": ""
     },
     {
@@ -492,7 +492,7 @@
       "mode": "generated",
       "native": "src/shared/web/roster.ts",
       "status": "ported",
-      "ported_from_sha": "d1139f4",
+      "ported_from_sha": "68c7d7c",
       "note": ""
     },
     {
@@ -501,7 +501,7 @@
       "mode": "generated",
       "native": "src/shared/web/errors.ts (MESSAGES, friendly) + src/core/errors.ts",
       "status": "ported",
-      "ported_from_sha": "d1139f4",
+      "ported_from_sha": "68c7d7c",
       "note": ""
     },
     {
@@ -519,7 +519,7 @@
       "mode": "generated",
       "native": "src/shared/web/time.ts",
       "status": "ported",
-      "ported_from_sha": "d1139f4",
+      "ported_from_sha": "68c7d7c",
       "note": ""
     },
     {
@@ -697,10 +697,10 @@
       "web": "src/pages/Enrol.tsx",
       "module": "M7b",
       "mode": "port",
-      "native": "src/features/enrol/Enrol.tsx, src/features/enrol/logic.ts",
+      "native": "src/features/enrol/Enrol.tsx",
       "status": "ported",
-      "ported_from_sha": "bbc9758",
-      "note": "4 steps with a pinned Back/Continue bar (Screen footer). A retry after a failed or still-confirming payment reuses the registration already made (the web would create another). Paystack not yet run live (keys not configured); no screenshot pair"
+      "ported_from_sha": "68c7d7c",
+      "note": "shows the instalment fee note"
     },
     {
       "web": "src/pages/HandCheckIns.tsx",
@@ -870,8 +870,8 @@
       "mode": "port",
       "native": "src/features/admin-classes/Prices.tsx",
       "status": "ported",
-      "ported_from_sha": "d14323f",
-      "note": "rules in pricing.ts (unit-tested)"
+      "ported_from_sha": "68c7d7c",
+      "note": "extra instalment fee: parts + fee (pricing.ts, tested)"
     },
     {
       "web": "src/pages/Profile.tsx",

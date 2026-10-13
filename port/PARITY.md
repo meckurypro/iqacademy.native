@@ -24,7 +24,7 @@ wip: 1 · ported: 103 · skip: 2 · diverged: 3
 | `components/DoorToday.tsx` | M9b | port | ported | `src/features/staff/DoorToday.tsx` | d14323f | reads today's classes from the cache, refreshed by the "sessions" tag |
 | `components/ErrorBoundary.tsx` | M0 | port | ported | `src/shell/ErrorBoundary.tsx` | 0081e66 |  |
 | `components/feedback.tsx` | M2 | port | ported | `src/ui/feedback.tsx` | 64bc5f7 | offline notice + Back online/Refresh added (64bc5f7); toasts in root view, covered by an open sheet; Refresh revalidates instead of reloading |
-| `components/Icon.tsx` | M2 | generated | ported | `src/ui/icons.generated.tsx + src/ui/Icon.tsx` | d1139f4 |  |
+| `components/Icon.tsx` | M2 | generated | ported | `src/ui/icons.generated.tsx + src/ui/Icon.tsx` | 68c7d7c |  |
 | `components/MakeupCard.tsx` | M7a | port | ported | `src/features/student/MakeupCard.tsx` | d14323f |  |
 | `components/MessageBubble.tsx` | M8 | port | ported | `src/features/channels/MessageBubble.tsx` | d14323f | card style for lists; used by ClassMessagesAdmin (Delete passed as footer). ClassScreen's admin view keeps ChatBubble + Composer, as M9a asked |
 | `components/MessagesRoute.tsx` | M5 | port | ported | `src/features/channels/Messages.tsx, src/app/(app)/messages/index.tsx, src/app/(app)/messages/[id].tsx` | d14323f | role choice (instructor list vs student list) lives in Messages.tsx; routes are real screens, no longer stubs |
@@ -44,26 +44,26 @@ wip: 1 · ported: 103 · skip: 2 · diverged: 3
 | `components/SoloPrices.tsx` | M10b | port | ported | `src/features/admin-classes/SoloPrices.tsx` | d14323f |  |
 | `components/Stars.tsx` | M2 | port | ported | `src/ui/Stars.tsx` | 0081e66 |  |
 | `components/ui.tsx` | M2 | port | ported | `src/ui/ui.tsx, src/ui/Sheet.tsx, src/ui/SelectSheet.tsx` | 64bc5f7 | Stat compact, StatStrip, Chip, ChipRow added (64bc5f7); Split/Main/Rail single-column on phones |
-| `index.css` | M2 | generated | ported | `src/theme/tokens.generated.ts` | d1139f4 |  |
+| `index.css` | M2 | generated | ported | `src/theme/tokens.generated.ts` | 68c7d7c |  |
 | `lib/auth.tsx` | M3 | port | ported | `src/core/auth.tsx, src/core/session.tsx` | 0081e66 | roles via data layer (cached/offline) + rolesReady |
 | `lib/cash.ts` | M16 | port | ported | `src/features/cash/cash.ts, src/features/cash/receiptUpload.ts` | bbc9758 | types/logic in cash.ts; device receipt upload in receiptUpload.ts |
-| `lib/centre.ts` | M3 | generated | ported | `src/shared/web/centre.ts` | d1139f4 |  |
-| `lib/channels.ts` | M3 | generated | ported | `src/shared/web/channels.ts` | d1139f4 |  |
+| `lib/centre.ts` | M3 | generated | ported | `src/shared/web/centre.ts` | 68c7d7c |  |
+| `lib/channels.ts` | M3 | generated | ported | `src/shared/web/channels.ts` | 68c7d7c |  |
 | `lib/checkin.ts` | M7a | port | ported | `src/shared/checkin.ts, src/features/student/hooks.ts` | d14323f | useCheckedIn is in hooks.ts |
 | `lib/classClock.ts` | M7a | port | ported | `src/shared/classClock.ts, src/features/student/hooks.ts` | d14323f | useClassClock is in hooks.ts; M9a/M9b reuse it |
-| `lib/db.ts` | M3 | generated | ported | `src/shared/web/db.ts` | d1139f4 |  |
+| `lib/db.ts` | M3 | generated | ported | `src/shared/web/db.ts` | 68c7d7c |  |
 | `lib/doorLock.ts` | M9a | port | ported | `src/features/class/doorLock.ts` | d14323f | pure rules in doorLockCore.ts (unit-tested); AppState background replaces visibilitychange; needsDoorPin re-exported from profile/doorPin |
 | `lib/messages.ts` | M8 | port | ported | `src/features/channels/format.ts, src/features/channels/media.ts, src/features/channels/sendToChats.ts, src/shell/TabBar.tsx` | d14323f | copy window, merge, download/share/copy, send to other chats (retry-safe) and the unread count (TabBar) are all native |
-| `lib/nav.ts` | M5 | generated | ported | `src/shell/nav.generated.ts` | d1139f4 |  |
+| `lib/nav.ts` | M5 | generated | ported | `src/shell/nav.generated.ts` | 68c7d7c |  |
 | `lib/notifications.ts` | M11a | port | ported | `src/shell/Bell.tsx` | d14323f | unread count (useNotificationCount) is in the shell Bell; live refresh comes from the shared realtime channel's "notifications" tag, no per-screen channel |
 | `lib/offline.ts` | M7b | port | ported | `src/shared/offline.ts, src/features/enrol/receipt.ts, src/features/enrol/receiptDevice.ts` | d14323f | prepareReceipt split into pure rules (unit-tested) and the device part |
 | `lib/online.ts` | M4a | port | ported | `src/data/net.ts` | 64bc5f7 | NetInfo link + same server probe, 2-strike rule, 20s/4s cadence; pauses in background (ADR-016) |
-| `lib/password.ts` | M3 | generated | ported | `src/shared/web/password.ts` | d1139f4 |  |
+| `lib/password.ts` | M3 | generated | ported | `src/shared/web/password.ts` | 68c7d7c |  |
 | `lib/payment.ts` | M7b | port | ported | `src/features/enrol/pay.ts, src/features/enrol/payFlow.ts` | d14323f | pay.ts/payFlow.ts existed from M3; M7b adds verifyPayment (shared by Enrol, OfflinePay, PayCallback) and the return handling: callback_url = WEB_BASE/pay/return + openAuthSessionAsync back to iqacademy://pay/return (ADR-012 amendment). Needs the web /pay/return page deployed first, and a device check on iOS and Android |
-| `lib/roster.ts` | M3 | generated | ported | `src/shared/web/roster.ts` | d1139f4 |  |
-| `lib/supabase.ts` | M3 | generated | ported | `src/shared/web/errors.ts (MESSAGES, friendly) + src/core/errors.ts` | d1139f4 |  |
+| `lib/roster.ts` | M3 | generated | ported | `src/shared/web/roster.ts` | 68c7d7c |  |
+| `lib/supabase.ts` | M3 | generated | ported | `src/shared/web/errors.ts (MESSAGES, friendly) + src/core/errors.ts` | 68c7d7c |  |
 | `lib/theme.ts` | M2 | port | ported | `src/theme/ThemeProvider.tsx` | 0081e66 |  |
-| `lib/time.ts` | M3 | generated | ported | `src/shared/web/time.ts` | d1139f4 |  |
+| `lib/time.ts` | M3 | generated | ported | `src/shared/web/time.ts` | 68c7d7c |  |
 | `lib/useMedia.ts` | skip | skip | skip |  |  | desktop-only / not used on phones |
 | `lib/useStaffCentres.ts` | M9b | port | ported | `src/features/staff/useStaffCentres.ts` | d14323f | branches cached for 10 min so staff screens open offline |
 | `lib/verify.ts` | M3 | port | ported | `src/shared/verify.ts` | 0081e66 | localStorage → kv |
@@ -83,7 +83,7 @@ wip: 1 · ported: 103 · skip: 2 · diverged: 3
 | `pages/CourseBuilder.tsx` | M10b | port | ported | `src/features/admin-classes/CourseBuilder.tsx` | d14323f | DIFFERS: the sticky save bar becomes a Save button at the top (when there are changes) and one at the end; read-back-after-save kept |
 | `pages/CustomClasses.tsx` | M9b | port | ported | `src/features/staff/CustomClasses.tsx` | d14323f |  |
 | `pages/DirectorHome.tsx` | M9b | port | ported | `src/features/staff/DirectorHome.tsx` | bbc9758 | withdraw/cancel are online-only and confirmed; no step-up (web has none; director requests, admin pays) |
-| `pages/Enrol.tsx` | M7b | port | ported | `src/features/enrol/Enrol.tsx, src/features/enrol/logic.ts` | bbc9758 | 4 steps with a pinned Back/Continue bar (Screen footer). A retry after a failed or still-confirming payment reuses the registration already made (the web would create another). Paystack not yet run live (keys not configured); no screenshot pair |
+| `pages/Enrol.tsx` | M7b | port | ported | `src/features/enrol/Enrol.tsx` | 68c7d7c | shows the instalment fee note |
 | `pages/HandCheckIns.tsx` | M10a | port | ported | `src/features/admin-people/HandCheckIns.tsx` | d14323f |  |
 | `pages/InstructorHistory.tsx` | M9a | port | ported | `src/features/class/InstructorHistory.tsx` | d14323f | first page cached; Load more is online-only |
 | `pages/InstructorHome.tsx` | M9a | port | ported | `src/features/class/InstructorHome.tsx` | d14323f | cached dashboard; mounts the student ClassCountdown and RunReminder |
@@ -102,7 +102,7 @@ wip: 1 · ported: 103 · skip: 2 · diverged: 3
 | `pages/Payments.tsx` | M10c | port | ported | `src/features/admin-money/Payments.tsx` | d1139f4 | refund capped to unused classes (payment_refund_info) |
 | `pages/Payouts.tsx` | M10c | port | ported | `src/features/admin-money/Payouts.tsx` | d14323f | "send" needs the M12 step-up; cancelling a draft does not |
 | `pages/PayReturn.tsx` | M7b | port | ported | `src/app/(app)/pay/return.tsx, src/features/enrol/payFlow.ts` | 1a13ada | public web page hands back to iqacademy://pay/return; native confirms with the server and never claims success on its own |
-| `pages/Prices.tsx` | M10b | port | ported | `src/features/admin-classes/Prices.tsx` | d14323f | rules in pricing.ts (unit-tested) |
+| `pages/Prices.tsx` | M10b | port | ported | `src/features/admin-classes/Prices.tsx` | 68c7d7c | extra instalment fee: parts + fee (pricing.ts, tested) |
 | `pages/Profile.tsx` | M13 | port | diverged | `src/features/profile/Profile.tsx` | d14323f | native-only additions: Notifications, Security (M12), Delete my account; photo from the phone library. Interim screen deleted |
 | `pages/ResetPassword.tsx` | M6 | port | ported | `src/features/auth/ResetPassword.tsx` | d14323f |  |
 | `pages/Roster.tsx` | M10b | port | ported | `src/features/admin-classes/Roster.tsx` | d14323f | reads ?centre= and ?course= from Schedule's deep link |

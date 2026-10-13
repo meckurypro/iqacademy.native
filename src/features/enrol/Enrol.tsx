@@ -14,7 +14,7 @@ import type { MyOffline } from "@/shared/offline";
 import { place, placeSub } from "@/shared/web/centre";
 import { useTheme } from "@/theme/ThemeProvider";
 import { Button, Card, Err, Heading, Icon, Skeleton, Text, useFeedback } from "@/ui";
-import { canContinue, dueNow, emptySel, later, missingFor, selKey, sortCentres, sortInstalments, startsLabel, STEPS, toggleCourse, type Centre, type Course, type Pack, type Pre, type Start } from "./logic";
+import { canContinue, dueNow, emptySel, feeNote, later, missingFor, selKey, sortCentres, sortInstalments, startsLabel, STEPS, toggleCourse, type Centre, type Course, type Pack, type Pre, type Start } from "./logic";
 import type { PayStatus } from "./pay";
 import { payInstalment } from "./payFlow";
 
@@ -52,7 +52,7 @@ export default function Enrol() {
   const claimsQ = useRpc<MyOffline[]>("my_offline_payments", {}, { tags: ["payments", "enrolments"], ttlMs: 15_000 });
   const claims = claimsQ.data?.filter((c) => c.enrolment_status === "pending_payment");
   const centresQ = useQuery<Centre[]>({ key: ["enrol", "centres"], tags: CATALOGUE, ttlMs: TTL, fn: async (sb) => (ok(await sb.from("centres").select("id,name,address,city").eq("is_active", true).order("name")) as Centre[]) ?? [] });
-  const packsQ = useQuery<Pack[]>({ key: ["enrol", "packs"], tags: CATALOGUE, ttlMs: TTL, fn: async (sb) => (ok(await sb.from("packages").select("id,name,description,course_count,price_full,package_instalments(number,label,amount,due_rule)").eq("is_active", true).order("sort_order")) as Pack[]) ?? [] });
+  const packsQ = useQuery<Pack[]>({ key: ["enrol", "packs"], tags: CATALOGUE, ttlMs: TTL, fn: async (sb) => (ok(await sb.from("packages").select("id,name,description,course_count,price_full,instalment_fee,package_instalments(number,label,amount,due_rule)").eq("is_active", true).order("sort_order")) as Pack[]) ?? [] });
   const coursesQ = useQuery<Course[]>({ key: ["enrol", "courses"], tags: CATALOGUE, ttlMs: TTL, fn: async (sb) => (ok(await sb.from("courses").select("id,title,summary,sort_order").eq("is_active", true).order("sort_order")) as Course[]) ?? [] });
   const presQ = useQuery<Pre[]>({ key: ["enrol", "pres"], tags: CATALOGUE, ttlMs: TTL, fn: async (sb) => (ok(await sb.from("course_prerequisites").select("course_id,prerequisite_id,group_no")) as Pre[]) ?? [] });
   const doneQ = useQuery<string[]>({ key: ["enrol", "done"], tags: ["enrolments", "progress"], ttlMs: 60_000, fn: async (sb) => ((ok(await sb.from("v_student_progress").select("course_id").eq("course_status", "completed")) as { course_id: string }[]) ?? []).map((x) => x.course_id) });
@@ -162,7 +162,7 @@ export default function Enrol() {
 
           {step === 3 && pack ? <>
             <Option on={sel.plan === "full"} onPress={() => setSel({ ...sel, plan: "full" })} title="Pay in full" sub="One payment, all set" right={naira(pack.price_full)} />
-            {inst.length > 0 ? <Option on={sel.plan === "instalment"} onPress={() => setSel({ ...sel, plan: "instalment" })} title="Pay in instalments" sub={later(inst)} right={naira(inst[0].amount)} /> : null}
+            {inst.length > 0 ? <Option on={sel.plan === "instalment"} onPress={() => setSel({ ...sel, plan: "instalment" })} title="Pay in instalments" sub={[later(inst), feeNote(pack, naira)].filter(Boolean).join(" · ")} right={naira(inst[0].amount)} /> : null}
             <Text size={14} weight="medium" tone="muted" style={{ paddingTop: 8 }}>How will you pay?</Text>
             <Option on={method === "online"} onPress={() => setMethod("online")} title="Pay online" sub="Card or bank transfer through Paystack. Confirmed straight away." />
             <Option on={method === "offline"} onPress={() => setMethod("offline")} title="Pay offline" sub="Bank transfer. Send your receipt and the team confirms it once the money arrives. Paying cash? Pay at your centre: the coordinator records it and your classes unlock at once." />
