@@ -20,7 +20,7 @@
     },
     {
       "web": "src/components/BankAccountSheet.tsx",
-      "module": "unassigned",
+      "module": "M9a",
       "mode": "port",
       "native": "src/features/wallet/BankAccountSheet.tsx",
       "status": "ported",
@@ -740,7 +740,7 @@
     },
     {
       "web": "src/pages/InstructorPayouts.tsx",
-      "module": "unassigned",
+      "module": "M10c",
       "mode": "port",
       "native": "src/features/admin-money/InstructorPayouts.tsx",
       "status": "diverged",
@@ -974,7 +974,7 @@
     },
     {
       "web": "src/pages/Wallet.tsx",
-      "module": "unassigned",
+      "module": "M9a",
       "mode": "port",
       "native": "src/features/wallet/Wallet.tsx",
       "status": "ported",

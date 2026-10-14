@@ -47,5 +47,8 @@ export const GUARDS: Record<string, string[]> = {
   ],
   "/statement": [
     "centre_director"
+  ],
+  "/wallet": [
+    "instructor"
   ]
 };

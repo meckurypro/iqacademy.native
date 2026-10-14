@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // scripts/parity.mjs — the parity ledger: every web source file → its native counterpart, owner module and status.
 //   node scripts/parity.mjs                       add rows for any web file not yet in port/parity.json, then render port/PARITY.md
-//   node scripts/parity.mjs set <web-file> --status ported --native src/features/x.tsx --sha 0081e66 [--note "…"]
+//   node scripts/parity.mjs set <web-file> --status ported --native src/features/x.tsx --sha 0081e66 [--note "…"] [--module M9a]
 // status: todo | wip | ported | stale (web changed after ported_from_sha) | diverged (intentionally different, see note) | skip (not applicable on phones)
 // mode:   generated (scripts/sync-web.mjs writes it) | port (hand-ported) | new (native-only, no web file) | skip
 import { execSync } from "node:child_process";
@@ -26,12 +26,12 @@ const OWN = {
   M7a: ["src/pages/StudentHome.tsx", "src/components/QrScanner.tsx", "src/components/CheckInVerdict.tsx", "src/components/CourseOutline.tsx", "src/components/MakeupCard.tsx", "src/components/SoloCourses.tsx", "src/components/ClassCountdown.tsx", "src/components/PinGate.tsx", "src/components/ReviewSheet.tsx", "src/lib/checkin.ts", "src/lib/classClock.ts"],
   M7b: ["src/pages/PayReturn.tsx", "src/pages/Enrol.tsx", "src/pages/PayCallback.tsx", "src/pages/OfflinePay.tsx", "src/lib/payment.ts", "src/lib/offline.ts"],
   M8: ["src/pages/Messages.tsx", "src/pages/ClassChannel.tsx", "src/pages/InstructorMessages.tsx", "src/components/ClassComposer.tsx", "src/components/ChatBubble.tsx", "src/components/MessageBubble.tsx", "src/components/ChannelRow.tsx", "src/components/ShareToChats.tsx", "src/lib/messages.ts", "src/pages/ClassMessagesAdmin.tsx"],
-  M9a: ["src/pages/InstructorHome.tsx", "src/pages/MyClasses.tsx", "src/pages/InstructorHistory.tsx", "src/pages/ClassScreen.tsx", "src/components/DoorPinSheet.tsx", "src/lib/doorLock.ts"],
+  M9a: ["src/pages/InstructorHome.tsx", "src/pages/MyClasses.tsx", "src/pages/InstructorHistory.tsx", "src/pages/ClassScreen.tsx", "src/components/DoorPinSheet.tsx", "src/lib/doorLock.ts", "src/pages/Wallet.tsx", "src/components/BankAccountSheet.tsx"],
   M16: ["src/pages/Cash.tsx", "src/pages/CashCentre.tsx", "src/pages/CashAdmin.tsx", "src/components/RecordCash.tsx", "src/components/CashParts.tsx", "src/lib/cash.ts"],
   M9b: ["src/pages/CoordinatorHome.tsx", "src/pages/DirectorHome.tsx", "src/pages/StaffHome.tsx", "src/pages/Team.tsx", "src/pages/Schedule.tsx", "src/pages/CustomClasses.tsx", "src/components/CustomClassCard.tsx", "src/components/CustomClassSheet.tsx", "src/components/CustomClassStudents.tsx", "src/components/DoorToday.tsx", "src/components/RunReminder.tsx", "src/pages/Students.tsx", "src/pages/CentreClasses.tsx", "src/pages/Statement.tsx", "src/lib/useStaffCentres.ts"],
   M10a: ["src/pages/AdminHome.tsx", "src/pages/Users.tsx", "src/pages/Announce.tsx", "src/pages/Manage.tsx", "src/pages/Centres.tsx", "src/pages/Instructors.tsx", "src/pages/ClassReviews.tsx", "src/pages/HandCheckIns.tsx"],
   M10b: ["src/pages/Roster.tsx", "src/pages/CourseBuilder.tsx", "src/pages/Prices.tsx", "src/components/AssignSheet.tsx", "src/components/SoloPrices.tsx"],
-  M10c: ["src/pages/Payments.tsx", "src/pages/OfflinePayments.tsx", "src/pages/Payouts.tsx"],
+  M10c: ["src/pages/Payments.tsx", "src/pages/OfflinePayments.tsx", "src/pages/Payouts.tsx", "src/pages/InstructorPayouts.tsx"],
   M11a: ["src/pages/Notifications.tsx", "src/lib/notifications.ts"],
   M13: ["src/pages/Profile.tsx", "src/components/MyCentres.tsx"],
   skip: ["src/components/Sidebar.tsx", "src/lib/useMedia.ts"],
@@ -43,7 +43,7 @@ const args = process.argv.slice(2);
 if (args[0] === "set") {
   const [, w] = args; const get = (k) => { const i = args.indexOf("--" + k); return i > 0 ? args[i + 1] : undefined; };
   const row = byWeb.get(w); if (!row) { console.error("no such row:", w); process.exit(1); }
-  for (const k of ["status", "native", "sha", "note"]) { const v = get(k); if (v !== undefined) row[k === "sha" ? "ported_from_sha" : k] = v; }
+  for (const k of ["status", "native", "sha", "note", "module"]) { const v = get(k); if (v !== undefined) row[k === "sha" ? "ported_from_sha" : k] = v; }
   console.log("updated", w);
 } else {
   const sha = execSync("git rev-parse --short HEAD", { cwd: web }).toString().trim();

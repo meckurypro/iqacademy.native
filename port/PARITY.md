@@ -8,7 +8,7 @@ wip: 1 · ported: 103 · skip: 2 · diverged: 3
 |---|---|---|---|---|---|---|
 | `App.tsx` | M5 | port | wip | `src/app/_layout.tsx, src/app/(app)/_layout.tsx, src/shell/*` | 1a13ada | shell, gate, guards, tab bars, avatar button, drawer done; /pay/return added at web 1a13ada |
 | `components/AssignSheet.tsx` | M10b | port | ported | `src/features/admin-classes/AssignSheet.tsx` | d14323f |  |
-| `components/BankAccountSheet.tsx` | unassigned | port | ported | `src/features/wallet/BankAccountSheet.tsx` | d1139f4 | uses SearchField + SelectSheet; also used by DirectorHome |
+| `components/BankAccountSheet.tsx` | M9a | port | ported | `src/features/wallet/BankAccountSheet.tsx` | d1139f4 | uses SearchField + SelectSheet; also used by DirectorHome |
 | `components/CashParts.tsx` | M16 | port | ported | `src/features/cash/CashParts.tsx` | bbc9758 |  |
 | `components/ChannelRow.tsx` | M8 | port | ported | `src/features/channels/ChannelRow.tsx` | d14323f |  |
 | `components/ChatBubble.tsx` | M8 | port | ported | `src/features/channels/ChatBubble.tsx, src/features/channels/MessageActions.tsx` | d14323f | tap opens actions (copy / share / save / send on / select more), long-press starts selecting (instructor), checkbox selection, 2 h copy/share window for students (server-corrected clock, re-checked at the tap). Share of text uses the system share sheet; a file is downloaded to cache and shared, then deleted |
@@ -88,7 +88,7 @@ wip: 1 · ported: 103 · skip: 2 · diverged: 3
 | `pages/InstructorHistory.tsx` | M9a | port | ported | `src/features/class/InstructorHistory.tsx` | d14323f | first page cached; Load more is online-only |
 | `pages/InstructorHome.tsx` | M9a | port | ported | `src/features/class/InstructorHome.tsx` | d14323f | cached dashboard; mounts the student ClassCountdown and RunReminder |
 | `pages/InstructorMessages.tsx` | M8 | port | ported | `src/features/channels/Messages.tsx` | d14323f | instructor list, chosen by role like web MessagesRoute |
-| `pages/InstructorPayouts.tsx` | unassigned | port | diverged | `src/features/admin-money/InstructorPayouts.tsx` | d1139f4 | no date-range earnings explorer: earnings are per instructor (tap a wallet). Send is behind step-up. |
+| `pages/InstructorPayouts.tsx` | M10c | port | diverged | `src/features/admin-money/InstructorPayouts.tsx` | d1139f4 | no date-range earnings explorer: earnings are per instructor (tap a wallet). Send is behind step-up. |
 | `pages/Instructors.tsx` | M10a | port | ported | `src/features/admin-people/Instructors.tsx` | d14323f |  |
 | `pages/Landing.tsx` | M6 | port | diverged | `src/features/auth/Landing.tsx` | d14323f | web's 'Get the app' / 'Continue on PC' buttons become 'Create an account' / 'Sign in' (already in the app) |
 | `pages/Login.tsx` | M6 | port | ported | `src/features/auth/Login.tsx` | d14323f |  |
@@ -114,4 +114,4 @@ wip: 1 · ported: 103 · skip: 2 · diverged: 3
 | `pages/Team.tsx` | M9b | port | ported | `src/features/staff/Team.tsx` | d14323f | online-only role changes; admin lands via a centre card, directors on their own centre |
 | `pages/Users.tsx` | M10a | port | ported | `src/features/admin-people/Users.tsx` | d14323f |  |
 | `pages/VerifyEmail.tsx` | M6 | port | ported | `src/features/auth/VerifyEmail.tsx` | d14323f |  |
-| `pages/Wallet.tsx` | unassigned | port | ported | `src/features/wallet/Wallet.tsx` | d1139f4 | per-month like DirectorHome; display rules in walletUi.ts (tested) |
+| `pages/Wallet.tsx` | M9a | port | ported | `src/features/wallet/Wallet.tsx` | d1139f4 | per-month like DirectorHome; display rules in walletUi.ts (tested) |
