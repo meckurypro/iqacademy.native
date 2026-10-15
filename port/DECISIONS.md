@@ -66,3 +66,7 @@ Header = Bell, avatar button (opens `/profile`), hamburger **only** for roles wi
 
 ## ADR-018 Security: nullable comparisons in permission gates (2026-10-10)
 A NULL inside `if not (a or b = c)` skips the check. It affected nine live functions and `send_class_message` (instructor-less classes); fixed by SEC1/SEC2 and verified with rolled-back tests (details in `port/BACKEND.md`). Standing rules: SQL gates use `coalesce(... , false)`; every permission change is tested with a **non-privileged** account for the refusal and a privileged one for the allowed path; and tests run inside a block that ends by raising an exception so nothing persists.
+
+
+## ADR-019 Advisor findings: what is indexed, documented or left alone (2026-10-15)
+FK indexes only on tables that will grow or are joined often (PERF1); the 22 tiny/admin-table findings stay open. Unused-index warnings for the new indexes are expected pre-launch; do not drop them or the older 17. `v_staff_directory` stays SECURITY DEFINER and is documented in the database (SEC4). Helper functions get an empty `search_path` only when SECURITY INVOKER and built-ins only (SEC3); SECURITY DEFINER functions need `set search_path` with explicit schema qualification, reviewed one by one. Multiple-permissive-policy merges only on request, one table at a time, testing allow and deny for every role.
